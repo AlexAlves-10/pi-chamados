@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,6 +22,8 @@ export default function RootLayout({ children }) {
     <html lang="pt">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
+
+        <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" />
       </body>
     </html>
   );
