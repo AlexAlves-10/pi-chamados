@@ -1,5 +1,6 @@
 "use client";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Link from 'next/link';
 export default function Setores() {
 
 
@@ -15,9 +16,12 @@ export default function Setores() {
                     </div>
 
                     <div className="list-group list-group-flush my-5">
-                        <a href="#" className="list-group-item list-group-item-action">Início</a>
-                        <a href="#" className="list-group-item list-group-item-action">Usúarios</a>
-                        <a href="#" className="list-group-item list-group-item-action">Produtos</a>
+                        <Link href="/" className="list-group-item list-group-item-action">Início</Link>
+                        <Link href="gerenciador_usuarios" className="list-group-item list-group-item-action">Usúarios</Link>
+                        <Link href="setores" className="list-group-item list-group-item-action">Setores</Link>
+                        <Link href="pedidos" className="list-group-item list-group-item-action">Pedidos</Link>
+                        <Link href="equipamentos" className="list-group-item list-group-item-action">Equipamentos</Link>
+                        <Link href="dashboard" className="list-group-item list-group-item-action">Dashboard</Link>
                     </div>
 
                     <div className="text-center manuLateralPerfil">
@@ -42,7 +46,7 @@ export default function Setores() {
 
                     {/* <!-- Introdução --> */}
                     <div>
-                        <h2>Gerenciamento de usúario</h2>
+                        <h2>Setores</h2>
                         <hr />
                     </div>
 
@@ -81,7 +85,6 @@ export default function Setores() {
                                         <th scope="col">#</th>
                                         <th scope="col">ID</th>
                                         <th scope="col">NOMES</th>
-                                        <th scope="col">FOTOS</th>
                                     </tr>
                                 </thead>
                                 <tbody className="table-group-divider">
@@ -89,19 +92,16 @@ export default function Setores() {
                                         <th scope="row">1</th>
                                         <td>Mark</td>
                                         <td>Otto</td>
-                                        <td> <img className="rounded-circle" src="https://placehold.co/40" /> Luan</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">2</th>
                                         <td>Jacob</td>
                                         <td>Thornton</td>
-                                        <td> <img className="rounded-circle" src="https://placehold.co/40" /> Lua</td>
                                     </tr>
                                     <tr>
                                         <th scope="row">3</th>
                                         <td>John</td>
                                         <td>Doe</td>
-                                        <td> <img className="rounded-circle" src="https://placehold.co/40" /> Ruan</td>
                                     </tr>
                                 </tbody>
                             </table>
