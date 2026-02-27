@@ -2,6 +2,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Script from "next/script";
 
+import "./globals.css"
+import MenuLateral from "./components/MenuLateral";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -21,7 +24,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+        
+
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-2 menuLateral">
+              <MenuLateral/>
+            </div>
+            <div class="col-10">
+              {children}
+            </div>
+          </div>
+        </div>
 
         <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" />
       </body>

@@ -1,0 +1,31 @@
+/* MENU LATERAL */
+.menuLateral {
+    background-color: #1e293b;
+    min-height: 100vh;
+    padding: 25px;
+}
+
+.menuLateral h4 {
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    font-size: 50px;
+}
+
+.menuLateral .list-group-item {
+    background-color: transparent;
+    color: #cbd5e1;
+    border: none;
+    margin-bottom: 5px;
+    border-radius: 8px;
+}
+
+.menuLateral .list-group-item:hover {
+    background-color: #334155;
+    color: white;
+}
+
+.menuLateral .active {
+    background-color: #0d6efd;
+    color: white;
+}
