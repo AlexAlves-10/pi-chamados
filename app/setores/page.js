@@ -5,10 +5,18 @@ export default function Setores() {
 
 
     return (
-        <div className="dropdown bg-dark text-light min-vh-100" data-bs-theme="dark">
+        <div className="bg-dark text-light min-vh-100" data-bs-theme="dark">
+            <nav className='navbar navbar-dark bg-dark'>
+                <div className='container-fluid'>
+                    <button className='navbar-toggler' type='button' data-bs-toggle="collapse" data-bs-target="#menuLateral">
+                        <span className='navbar-toggler-icon'></span>
+                    </button>
+                </div>
+
+            </nav>
             <div className="row">
                 {/* Menu lateral */}
-                <div className="col-2 menuLateral">
+                <div className="col-2 menuLateral collapse show bg-black" id="menuLateral">
                     <div className="text-center mt-2">
                         <img className="mt-3 rounded-circle" src="https://placehold.co/75" />
                         <h1 className="fs-5 text">PAINEL</h1>
