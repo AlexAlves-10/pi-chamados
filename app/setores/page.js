@@ -6,6 +6,7 @@ export default function Setores() {
 
     return (
         <div className="bg-dark text-light min-vh-100" data-bs-theme="dark">
+            <div className="row">
             <nav className='navbar navbar-dark bg-dark'>
                 <div className='container-fluid'>
                     <button className='navbar-toggler' type='button' data-bs-toggle="collapse" data-bs-target="#menuLateral">
@@ -14,7 +15,6 @@ export default function Setores() {
                 </div>
 
             </nav>
-            <div className="row">
                 {/* Menu lateral */}
                 <div className="col-2 menuLateral collapse show bg-black" id="menuLateral">
                     <div className="text-center mt-2">
