@@ -6,28 +6,18 @@ export default function Pedidos() {
     return (
 
 
-        <div class="col-7">
+        <div >
 
-            <h1 className="titulo">Gerenciamento de pedidos🧾</h1>
-            <div className="list-group">
-
-                <Link href="dashboard" > <button>Dashbord</button></Link>
-                <Link href="gerenciador_usuarios"> <button>Usuarios</button></Link>
-                <Link href="pedidos"> <button color="rgba(52, 206, 60, 0.84)">Pedidos</button></Link>
-                <Link href="equipamentos" > <button>Equipamentos</button></Link>
-                <Link href="setores"> <button>Setores</button></Link>
-
-
-
-            </div>
+            <h1 className="titulo ">Gerenciamento de pedidos🧾</h1>
+           <br/>
 
 
             <div class="col-">
 
 
 
-                <hr />
-                <h2>Pedidos em aberto(Administrador)</h2>
+                
+                <h2 className=" text-center">Pedidos em aberto🚨</h2>
 
                 <div className="row row-cols-1 row-cols-md-3 g-4">
                     <div className="col">
@@ -67,11 +57,11 @@ export default function Pedidos() {
                         </div>
                     </div>
                 </div>
-                <hr />
-                <hr />
-                <hr />
+                <br />
+                <br />
+                <br />
 
-                <h2>Cadastro de novo pedido</h2>
+                <h2 className=" text-center">Cadastro de novo pedido💻</h2>
 
                 <div className="mb-3">
                     <label for="exampleFormControlInput1" className="form-label">Nome de usuario</label>
@@ -79,6 +69,7 @@ export default function Pedidos() {
                 </div>
                 <label for="exampleFormControlInput1" className="form-label">Selecione o equipamento</label>
                 <select className="form-select" aria-label="Default select example">
+                    <option value selected="1"></option>
                     <option value="1">Oculos</option>
                     <option value="1">lousa</option>
                     <option value="2">notebook</option>
@@ -88,6 +79,7 @@ export default function Pedidos() {
 
                 <label for="exampleFormControlInput1" className="form-label">Selecione a quantidade</label>
                 <select className="form-select" aria-label="Default select example">
+                    <option value selected="1"></option>
                     <option value="1">1</option>
                     <option value="1">2</option>
                     <option value="2">3</option>
@@ -96,6 +88,7 @@ export default function Pedidos() {
 
                 <label for="exampleFormControlInput1" className="form-label">Selecione o turno</label>
                 <select className="form-select" aria-label="Default select example">
+                    <option value selected="1"></option>
                     <option value="1">Manhã</option>
                     <option value="1">Tarde</option>
                     <option value="2">Noite</option>
@@ -107,7 +100,7 @@ export default function Pedidos() {
                 </div>
 
 
-                <h2>Pedidos</h2>
+                <h2 className=" text-center">Pedidos🔍</h2>
 
                 <table className="table">
                     <thead>
@@ -164,19 +157,14 @@ export default function Pedidos() {
                         </tr>
                     </tbody>
                 </table>
-                <hr />
-                <hr />
+                <br />
+                <br />
 
             </div>
 
 
 
-            <hr />
-            <hr />
-            <hr />
-            <hr />
-            <hr />
-            <hr />
+            
 
 
 
