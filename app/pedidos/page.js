@@ -1,10 +1,6 @@
 export default function Pedidos() {
     return (
-        <div>
-            <h1>
-                Gerenciamento de pedidos - Manu
-            </h1>
-            <div>
+        
                 <div class="container-fluid">
                     <div className="row">
                         <h1 className="titulo">Gerenciamento de pedidos🧾</h1>
@@ -224,9 +220,9 @@ export default function Pedidos() {
 
 
                 </div>
-            </div >
+            
 
 
-        </div>
+        
     )
 }
