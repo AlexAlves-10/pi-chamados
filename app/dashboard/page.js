@@ -1,19 +1,35 @@
 import Link from "next/link";
 
-export default function Dashboard() {
+export default function Pedidos() {
     return (
-        <div>
+        <div className="container">
 
-            <h1> Dashboard Alex </h1>
+            <h2 className="text-center">Pedidos em aberto 🚨</h2>
 
-            <Link href="/" class="list-group-item list-group-item-action">Início</Link>
-            <Link href="dashboard" class="list-group-item list-group-item-action">Dashboard</Link>
-            <Link href="gerenciador_usuarios" class="list-group-item list-group-item-action">Usuários</Link>
-            <Link href="pedidos" class="list-group-item list-group-item-action">Pedidos</Link>
-            <Link href="equipamentos" class="list-group-item list-group-item-action">Equipamentos</Link>
-            <Link href="calendario" class="list-group-item list-group-item-action">Calendário</Link>
-            <Link href="setores" class="list-group-item list-group-item-action">Setores</Link>
+            <div className="row row-cols-1 row-cols-md-3 g-4">
+                {[
+                    { turno: "MANHÃ", total: 65 },
+                    { turno: "TARDE", total: 25 },
+                    { turno: "NOITE", total: 9 },
+                ].map((item) => (
+                    <div className="col" key={item.turno}>
+                        <div className="card h-100">
+                            <div className="card-body">
+                                <h5 className="card-title">{item.turno}</h5>
+                                <p className="card-text">
+                                    Total de pedidos em aberto: {item.total}
+                                </p>
+                            </div>
+                            <div className="card-footer">
+                                <button className="btn btn-outline-primary w-100">
+                                    Ver pedidos
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
 
         </div>
-    )
+    );
 }

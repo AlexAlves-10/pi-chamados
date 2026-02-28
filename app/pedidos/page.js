@@ -5,18 +5,18 @@ import GerenciadorUsuarios from "../gerenciador_usuarios/page";
 export default function Pedidos() {
     return (
 
-
+// TELA DASHBOARD
         <div >
 
             <h1 className="titulo ">Gerenciamento de pedidos🧾</h1>
-           <br/>
+            <br />
 
 
-            <div class="col-">
+            <div class="col-0">
 
 
 
-                
+
                 <h2 className=" text-center">Pedidos em aberto🚨</h2>
 
                 <div className="row row-cols-1 row-cols-md-3 g-4">
@@ -58,9 +58,8 @@ export default function Pedidos() {
                     </div>
                 </div>
                 <br />
-                <br />
-                <br />
 
+                {/* TELA DE CADASTRO */}
                 <h2 className=" text-center">Cadastro de novo pedido💻</h2>
 
                 <div className="mb-3">
@@ -98,6 +97,9 @@ export default function Pedidos() {
                     <button className="btn btn-success">Concluir</button>
 
                 </div>
+
+
+                {/* TELA DE PEDIDOS */}
 
 
                 <h2 className=" text-center">Pedidos🔍</h2>
@@ -164,7 +166,7 @@ export default function Pedidos() {
 
 
 
-            
+
 
 
 
