@@ -3,7 +3,7 @@ import "./Equipamentos.css"
 export default function Equipamentos() {
     return (
 
-        <div class="card shadow-sm p-4">
+        <div class="card shadow-sm p-4 mt-3">
             <h3 class="mb-4">Lista de Equipamentos</h3>
 
             <table class="table table-striped table-hover align-middle">
