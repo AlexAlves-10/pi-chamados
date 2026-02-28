@@ -6,35 +6,25 @@ export default function Pedidos() {
     return (
 
 
-        <div class="col-7">
+        <div >
 
-            <h1 className="titulo">Gerenciamento de pedidos🧾</h1>
-            <div className="list-group">
-
-                <Link href="dashboard" > <button>Dashbord</button></Link>
-                <Link href="gerenciador_usuarios"> <button>Usuarios</button></Link>
-                <Link href="pedidos"> <button color="rgba(52, 206, 60, 0.84)">Pedidos</button></Link>
-                <Link href="equipamentos" > <button>Equipamentos</button></Link>
-                <Link href="setores"> <button>Setores</button></Link>
-
-
-
-            </div>
+            <h1 className="titulo ">Pedidos🧾</h1>
+            <br />
 
 
             <div class="col-">
 
 
 
-                <hr />
-                <h2>Pedidos em aberto(Administrador)</h2>
 
+                <h2 className=" text-center">Pedidos em aberto🚨</h2>
+                <br />
                 <div className="row row-cols-1 row-cols-md-3 g-4">
                     <div className="col">
                         <div className="card h-100">
 
                             <div className="card-body">
-                                <h5 className="card-title">MANHÃ</h5>
+                                <h5 className="card-title text-center">MANHÃ</h5>
                                 <p className="card-text">Total de pedidos em aberto: 65</p>
                             </div>
                             <div className="card-footer">
@@ -46,7 +36,7 @@ export default function Pedidos() {
                         <div className="card h-100">
 
                             <div className="card-body">
-                                <h5 className="card-title">TARDE</h5>
+                                <h5 className="card-title text-center">TARDE</h5>
                                 <p className="card-text">Total de pedidos em aberto: 25</p>
                             </div>
                             <div className="card-footer">
@@ -58,7 +48,7 @@ export default function Pedidos() {
                         <div className="card h-100">
 
                             <div className="card-body">
-                                <h5 className="card-title">NOITE</h5>
+                                <h5 className="card-title text-center">NOITE</h5>
                                 <p className="card-text">Total de pedidos em aberto: 9</p>
                             </div>
                             <div className="card-footer">
@@ -67,18 +57,29 @@ export default function Pedidos() {
                         </div>
                     </div>
                 </div>
-                <hr />
-                <hr />
-                <hr />
+                <br />
+                <br />
+                <br />
 
-                <h2>Cadastro de novo pedido</h2>
-
+                <h2 className=" text-center">Cadastro de novo pedido💻</h2>
+<br/>
                 <div className="mb-3">
                     <label for="exampleFormControlInput1" className="form-label">Nome de usuario</label>
                     <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com" />
                 </div>
+
+<label for="exampleFormControlInput1" className="form-label">Selecione o setor</label>
+                <select className="form-select" aria-label="Default select example">
+                    <option value selected="1"></option>
+                    <option value="1">A</option>
+                    <option value="1">B</option>
+                    <option value="2">C</option>
+                    <option value="3">D</option>
+                </select>
+
                 <label for="exampleFormControlInput1" className="form-label">Selecione o equipamento</label>
                 <select className="form-select" aria-label="Default select example">
+                    <option value selected="1"></option>
                     <option value="1">Oculos</option>
                     <option value="1">lousa</option>
                     <option value="2">notebook</option>
@@ -88,6 +89,7 @@ export default function Pedidos() {
 
                 <label for="exampleFormControlInput1" className="form-label">Selecione a quantidade</label>
                 <select className="form-select" aria-label="Default select example">
+                    <option value selected="1"></option>
                     <option value="1">1</option>
                     <option value="1">2</option>
                     <option value="2">3</option>
@@ -96,6 +98,7 @@ export default function Pedidos() {
 
                 <label for="exampleFormControlInput1" className="form-label">Selecione o turno</label>
                 <select className="form-select" aria-label="Default select example">
+                    <option value selected="1"></option>
                     <option value="1">Manhã</option>
                     <option value="1">Tarde</option>
                     <option value="2">Noite</option>
@@ -107,8 +110,8 @@ export default function Pedidos() {
                 </div>
 
 
-                <h2>Pedidos</h2>
-
+                <h2 className=" text-center">Lista de pedidos🔍</h2>
+<br/>
                 <table className="table">
                     <thead>
                         <tr>
@@ -164,19 +167,14 @@ export default function Pedidos() {
                         </tr>
                     </tbody>
                 </table>
-                <hr />
-                <hr />
+                <br />
+                <br />
 
             </div>
 
 
 
-            <hr />
-            <hr />
-            <hr />
-            <hr />
-            <hr />
-            <hr />
+
 
 
 
