@@ -8,23 +8,23 @@ export default function Pedidos() {
 
         <div >
 
-            <h1 className="titulo ">Gerenciamento de pedidos🧾</h1>
-           <br/>
+            <h1 className="titulo ">Pedidos🧾</h1>
+            <br />
 
 
             <div class="col-">
 
 
 
-                
-                <h2 className=" text-center">Pedidos em aberto🚨</h2>
 
+                <h2 className=" text-center">Pedidos em aberto🚨</h2>
+                <br />
                 <div className="row row-cols-1 row-cols-md-3 g-4">
                     <div className="col">
                         <div className="card h-100">
 
                             <div className="card-body">
-                                <h5 className="card-title">MANHÃ</h5>
+                                <h5 className="card-title text-center">MANHÃ</h5>
                                 <p className="card-text">Total de pedidos em aberto: 65</p>
                             </div>
                             <div className="card-footer">
@@ -36,7 +36,7 @@ export default function Pedidos() {
                         <div className="card h-100">
 
                             <div className="card-body">
-                                <h5 className="card-title">TARDE</h5>
+                                <h5 className="card-title text-center">TARDE</h5>
                                 <p className="card-text">Total de pedidos em aberto: 25</p>
                             </div>
                             <div className="card-footer">
@@ -48,7 +48,7 @@ export default function Pedidos() {
                         <div className="card h-100">
 
                             <div className="card-body">
-                                <h5 className="card-title">NOITE</h5>
+                                <h5 className="card-title text-center">NOITE</h5>
                                 <p className="card-text">Total de pedidos em aberto: 9</p>
                             </div>
                             <div className="card-footer">
@@ -62,11 +62,21 @@ export default function Pedidos() {
                 <br />
 
                 <h2 className=" text-center">Cadastro de novo pedido💻</h2>
-
+<br/>
                 <div className="mb-3">
                     <label for="exampleFormControlInput1" className="form-label">Nome de usuario</label>
                     <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com" />
                 </div>
+
+<label for="exampleFormControlInput1" className="form-label">Selecione o setor</label>
+                <select className="form-select" aria-label="Default select example">
+                    <option value selected="1"></option>
+                    <option value="1">A</option>
+                    <option value="1">B</option>
+                    <option value="2">C</option>
+                    <option value="3">D</option>
+                </select>
+
                 <label for="exampleFormControlInput1" className="form-label">Selecione o equipamento</label>
                 <select className="form-select" aria-label="Default select example">
                     <option value selected="1"></option>
@@ -100,8 +110,8 @@ export default function Pedidos() {
                 </div>
 
 
-                <h2 className=" text-center">Pedidos🔍</h2>
-
+                <h2 className=" text-center">Lista de pedidos🔍</h2>
+<br/>
                 <table className="table">
                     <thead>
                         <tr>
@@ -164,7 +174,7 @@ export default function Pedidos() {
 
 
 
-            
+
 
 
 
