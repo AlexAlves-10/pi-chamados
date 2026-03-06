@@ -1,21 +1,51 @@
 "use client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from 'next/link';
+import { useState } from 'react';
+
+
 export default function Setores() {
 
+    const [sala, alteraSala] = useState("")
+    const [status, alteraStatus] = useState("")
+    const { status2, alteraStatus2 } = useState("")
+
+    const [listaTabela, alteraListaTabela] = useState(
+        [
+            {
+                sala: "206",
+                status: "Ocupado",
+                status2: "Livre"
+            }
+        ]
+
+    )
+
+    function salvar(e) {
+        e.preventDefault()
+
+        const objeto = {
+            sala: sala,
+            status: status,
+            status2: status2
+        }
+
+        alteraListaTabela(listaTabela.concat(objeto))
+    }
 
     return (
         <div className="bg-dark text-light min-vh-100" data-bs-theme="dark">
 
+            {/* Nav bar */}
             <div className="row m-0">
-            <nav className='navbar navbar-dark bg-dark'>
-                <div className='container-fluid'>
-                    <button className='navbar-toggler' type='button' data-bs-toggle="collapse" data-bs-target="#menuLateral">
-                        <span className='navbar-toggler-icon'></span>
-                    </button>
-                </div>
+                <nav className='navbar navbar-dark bg-dark'>
+                    <div className='container-fluid'>
+                        <button className='navbar-toggler' type='button' data-bs-toggle="collapse" data-bs-target="#menuLateral">
+                            <span className='navbar-toggler-icon'></span>
+                        </button>
+                    </div>
 
-            </nav>
+                </nav>
                 {/* Menu lateral */}
                 <div className="col-2 menuLateral collapse show bg-black" id="menuLateral">
                     <div className="text-center mt-2">
@@ -89,34 +119,27 @@ export default function Setores() {
                         {/* <!-- ID,foto,nome --> */}
                         <span>
 
-                        <div className="my-3">
-                            <table className="table table-dark table-hover table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">NOMES</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="table-group-divider">
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>John</td>
-                                        <td>Doe</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                            <div className="my-3">
+                                <table className="table table-dark table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Sala</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="table-group-divider">
+                                        {
+                                            listaTabela.map(
+                                                item =>
+                                                    <tr>
+                                                        <th scope="row"> {item.sala} </th>
+                                                        <td> {item.status} </td>
+                                                    </tr>
+                                            )
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
                         </span>
 
                     </div>
@@ -125,6 +148,7 @@ export default function Setores() {
 
 
             {/* <!-- Modals --> */}
+            <form onSubmit={salvar}>
             <div>
                 <div className="modal fade" id="exampleModal" tabindex="-1">
                     <div className="modal-dialog">
@@ -136,29 +160,43 @@ export default function Setores() {
                             <div className="modal-body">
                                 <div className="mb-3">
                                     <label className="form-label w-100">
-                                        Digite seu nome:
-                                        <input className="form-control" />
+                                        Digite a Sala:
+                                        <input onChange={e => alteraSala(e.target.value)} className="form-control" />
                                     </label>
                                 </div>
 
                                 <div>
+                                    
                                     <label className="form-label w-100">
-                                        Digite sua senha:
-                                        <input type="password" className="form-control" />
+                                        <div className="col-4">
+                                            <select onChange={e => alteraStatus(e.target.value)} className="form-select">
+                                                <option value="" disabled hidden>FIltros</option>
+                                                <option value="Status" disabled hidden>Status</option>
+                                                <option value="Livre">Livre</option>
+                                                <option value="Ocupado">Ocupado</option>
+                                            </select>
+                                        </div>
                                     </label>
                                 </div>
 
-
-
                             </div>
                             <div className="modal-footer">
-                                <button className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                 <button className="btn btn-primary">Salvar</button>
+                                <button type='button' className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            </form>
         </div>
     )
+
+    function Login() {
+
+        
+
+    }
+
 }
+
