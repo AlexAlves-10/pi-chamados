@@ -1,28 +1,66 @@
+
+'use client'
+import { Coral_Pixels } from "next/font/google";
+import { useState } from "react";
 import Link from "next/link";
 import Login from "../login/page";
 import GerenciadorUsuarios from "../gerenciador_usuarios/page";
 
+
+
 export default function Pedidos() {
+    const [nome, alteraNome] = useState("")
+    const [setor, alteraSetor] = useState("")
+    const [equipamento, alteraEquipamento] = useState("")
+    const [quantidade, alteraQuantidade] = useState("")
+    const [turno, alteraturno] = useState("")
+    const [listaPedidos, alteraListaPedidos] = useState(
+        [
+            {
+                nome: "usuario",
+                setor: "setor",
+                equipamento: "equipamento",
+                quantidade: 0,
+                turno: "turno",
+            },
+
+
+        ]
+    )
+    function salvar(e) {
+        e.preventDefault()
+        const objeto = {
+            nome: nome,
+            setor: setor,
+            equipamento: equipamento,
+            quantidade: 0,
+            turno: turno,
+        }
+
+
+    }
+
+    {
+        alteraListapedidos(listaPedidos.concat(objeto))
+
+    }
     return (
 
-// TELA DASHBOARD
+        // TELA DASHBOARD
         <div >
 
             <h1 className="titulo ">Gerenciamento de pedidos🧾</h1>
             <br />
 
 
-            <div class="col-0">
-
-
-
-
+            <div className="col-0">
 
                 <h2 className=" text-center">Pedidos em aberto🚨</h2>
                 <br />
                 <div className="row row-cols-1 row-cols-md-3 g-4">
                     <div className="col">
                         <div className="card h-100">
+
 
                             <div className="card-body">
                                 <h5 className="card-title text-center">MANHÃ</h5>
@@ -52,6 +90,7 @@ export default function Pedidos() {
                                 <h5 className="card-title text-center">NOITE</h5>
                                 <p className="card-text">Total de pedidos em aberto: 9</p>
                             </div>
+
                             <div className="card-footer">
                                 <button select className="form-select form-select-lg mb-3" aria-label="Large select example" ><small className="text-body-secondary">Ver pedidos</small></button>
                             </div>
@@ -62,56 +101,66 @@ export default function Pedidos() {
 
                 {/* TELA DE CADASTRO */}
                 <h2 className=" text-center">Cadastro de novo pedido💻</h2>
-<br/>
-                <div className="mb-3">
-                    <label for="exampleFormControlInput1" className="form-label">Nome de usuario</label>
-                    <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com" />
-                </div>
-
-<label for="exampleFormControlInput1" className="form-label">Selecione o setor</label>
-                <select className="form-select" aria-label="Default select example">
-                    <option value selected="1"></option>
-                    <option value="1">A</option>
-                    <option value="1">B</option>
-                    <option value="2">C</option>
-                    <option value="3">D</option>
-                </select>
-
-                <label for="exampleFormControlInput1" className="form-label">Selecione o equipamento</label>
-                <select className="form-select" aria-label="Default select example">
-                    <option value selected="1"></option>
-                    <option value="1">Oculos</option>
-                    <option value="1">lousa</option>
-                    <option value="2">notebook</option>
-                    <option value="3">livro</option>
-                </select>
-
-
-                <label for="exampleFormControlInput1" className="form-label">Selecione a quantidade</label>
-                <select className="form-select" aria-label="Default select example">
-                    <option value selected="1"></option>
-                    <option value="1">1</option>
-                    <option value="1">2</option>
-                    <option value="2">3</option>
-                    <option value="3">4</option>
-                </select>
-
-                <label for="exampleFormControlInput1" className="form-label">Selecione o turno</label>
-                <select className="form-select" aria-label="Default select example">
-                    <option value selected="1"></option>
-                    <option value="1">Manhã</option>
-                    <option value="1">Tarde</option>
-                    <option value="2">Noite</option>
-                </select>
                 <br />
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+
+
+
+
+                <div> <forms>
+
+
+                    <div className="mb-3">
+                        <label for="exampleFormControlInput1" className="form-label">Nome de usuario</label>
+                        <input onChange={nome} type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com" />
+                    </div>
+
+                    <label for="exampleFormControlInput1" className="form-label">Selecione o setor</label>
+                    <select value={setor} onChange={}  className="form-select" aria-label="Default select example">
+                        <option value selected="1"></option>
+                        <option value="1">A</option>
+                        <option value="1">B</option>
+                        <option value="2">C</option>
+                        <option value="3">D</option>
+                    </select>
+
+                    <label for="exampleFormControlInput1" className="form-label">Selecione o equipamento</label>
+                    <select className="form-select" aria-label="Default select example">
+                        <option value selected="1"></option>
+                        <option value="1">Oculos</option>
+                        <option value="1">lousa</option>
+                        <option value="2">notebook</option>
+                        <option value="3">livro</option>
+                    </select>
+
+
+                    <label for="exampleFormControlInput1" className="form-label">Selecione a quantidade</label>
+                    <select className="form-select" aria-label="Default select example">
+                        <option value selected="1"></option>
+                        <option value="1">1</option>
+                        <option value="1">2</option>
+                        <option value="2">3</option>
+                        <option value="3">4</option>
+                    </select>
+
+                    <label for="exampleFormControlInput1" className="form-label">Selecione o turno</label>
+                    <select className="form-select" aria-label="Default select example">
+                        <option value selected="1"></option>
+                        <option value="1">Manhã</option>
+                        <option value="1">Tarde</option>
+                        <option value="2">Noite</option>
+                    </select>
+                </forms></div>
+
+
+                <br />
+                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button className="btn btn-success">Concluir</button>
 
                 </div>
 
 
                 <h2 className=" text-center">Lista de pedidos🔍</h2>
-<br/>
+                <br />
                 <table className="table">
                     <thead>
                         <tr>
