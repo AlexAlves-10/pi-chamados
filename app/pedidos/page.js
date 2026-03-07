@@ -8,7 +8,7 @@ import GerenciadorUsuarios from "../gerenciador_usuarios/page";
 
 
 
-export default function Pedidos() {
+export default function Pedidos() { 
     const [nome, alteraNome] = useState("")
     const [setor, alteraSetor] = useState("")
     const [equipamento, alteraEquipamento] = useState("")
@@ -27,6 +27,7 @@ export default function Pedidos() {
 
         ]
     )
+    
     function salvar(e) {
         e.preventDefault()
         const objeto = {
@@ -37,18 +38,15 @@ export default function Pedidos() {
             turno: turno,
         }
 
+   alteraListaPedidos(listaPedidos.concat(objeto))
 
     }
 
-    {
-        alteraListapedidos(listaPedidos.concat(objeto))
-
-    }
     return (
 
-        // TELA DASHBOARD
         <div >
 
+       
             <h1 className="titulo ">Gerenciamento de pedidos🧾</h1>
             <br />
 
@@ -110,144 +108,81 @@ export default function Pedidos() {
 
 
                     <div className="mb-3">
-                        <label for="exampleFormControlInput1" className="form-label">Nome de usuario</label>
-                        <input onChange={nome} type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com" />
+                        <label for="exampleFormControlInput1" className="form-label">Digite nome do usuario</label>
+                        <input onChange={alteraNome} type="email" className="form-control" />
                     </div>
 
-                    <label for="exampleFormControlInput1" className="form-label">Selecione o setor</label>
-                    <select value={setor} onChange={}  className="form-select" aria-label="Default select example">
-                        <option value selected="1"></option>
-                        <option value="1">A</option>
-                        <option value="1">B</option>
-                        <option value="2">C</option>
-                        <option value="3">D</option>
-                    </select>
+                    <label for="exampleFormControlInput1" className="form-label">Nome do setor</label>
+                    <input onChange={alteraSetor} type="email" className="form-control" />
 
-                    <label for="exampleFormControlInput1" className="form-label">Selecione o equipamento</label>
-                    <select className="form-select" aria-label="Default select example">
-                        <option value selected="1"></option>
-                        <option value="1">Oculos</option>
-                        <option value="1">lousa</option>
-                        <option value="2">notebook</option>
-                        <option value="3">livro</option>
-                    </select>
+                    <label for="exampleFormControlInput1" className="form-label">Nome do equipamento</label>
+                    <input onChange={alteraEquipamento} type="email" className="form-control" />
 
 
-                    <label for="exampleFormControlInput1" className="form-label">Selecione a quantidade</label>
-                    <select className="form-select" aria-label="Default select example">
-                        <option value selected="1"></option>
-                        <option value="1">1</option>
-                        <option value="1">2</option>
-                        <option value="2">3</option>
-                        <option value="3">4</option>
-                    </select>
+                    <label for="exampleFormControlInput1" className="form-label">Digite a quantidade</label>
+                    <input onChange={alteraQuantidade} type="email" className="form-control" />
 
-                    <label for="exampleFormControlInput1" className="form-label">Selecione o turno</label>
-                    <select className="form-select" aria-label="Default select example">
-                        <option value selected="1"></option>
-                        <option value="1">Manhã</option>
-                        <option value="1">Tarde</option>
-                        <option value="2">Noite</option>
-                    </select>
+                    <label for="exampleFormControlInput1" className="form-label">Digite o turno</label>
+                    <input onChange={alteraturno} type="email" className="form-control" />
                 </forms></div>
 
 
-                <br />
-                <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button className="btn btn-success">Concluir</button>
-
-                </div>
 
 
-                <h2 className=" text-center">Lista de pedidos🔍</h2>
-                <br />
                 <table className="table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Usuario</th>
-                            <th scope="col">Equipamento</th>
-                            <th scope="col">Turno</th>
-                            <th scope="col">Concluir</th>
+                            <th scope="col"> nome  </th>
+                            <th scope="col"> setor </th>
+                            <th scope="col"> equipamento </th>
+                            <th scope="col"> quantidade  </th>
+                            <th scope="col"> turno  </th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>Otto</td>
-                            <button type="button" className="btn btn-success">Finalizar</button>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>Otto</td>
-                            <button type="button" className="btn btn-success">Finalizar</button>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>Otto</td>
-                            <button type="button" className="btn btn-success">Finalizar</button>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>Otto</td>
-                            <button type="button" className="btn btn-success">Finalizar</button>
-                        </tr>
-                        <tr>
-                            <th scope="row">5</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>Otto</td>
-                            <button type="button" className="btn btn-success">Finalizar</button>
-                        </tr>
-                        <tr>
-                            <th scope="row">6</th>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>Otto</td>
-                            <button type="button" className="btn btn-success">Finalizar</button>
-                        </tr>
+                        {listaPedidos.map(
+                            item => <tr>
+                                <td>{item.nome}</td>
+                                <td>{item.setor}</td>
+                                <td>{item.equipamento}</td>
+                                <td>{item.quantidade}</td>
+                                <td>{item.turno}</td>
+                            </tr>
+                        )
+
+
+                        }
                     </tbody>
+
                 </table>
-                <br />
-                <br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             </div>
+</div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </div>
-
-
-
-
-    )
-}
+                    ) 
+                }
