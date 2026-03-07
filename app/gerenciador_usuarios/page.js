@@ -9,7 +9,6 @@ export default function GerenciadorUsuarios() {
     const [email, alterarEmail] = useState("")
     const [status, alterarStatus] = useState("")
 
-    // chavinho escnde e aparece
     const [mostrarForm, alterarMostrarForm] = useState(false)
 
     const [listaUsuarios, alterarListaUsuarios] = useState(
@@ -22,6 +21,21 @@ export default function GerenciadorUsuarios() {
         ]
     )
 
+    function preencherFormulario(usuarioClicado) {
+        alterarId(usuarioClicado.id)
+        alterarNome(usuarioClicado.nome)
+        alterarEmail(usuarioClicado.email)
+        alterarStatus(usuarioClicado.status)
+        alterarMostrarForm(true)
+    }
+
+    function excluir(idParaRemover) {
+        const listaNova = listaUsuarios.filter(function(usuario) {
+            return usuario.id !== idParaRemover
+        })
+        alterarListaUsuarios(listaNova)
+    }
+
     function salvar(e) {
         e.preventDefault()
         const objeto = {
@@ -30,25 +44,41 @@ export default function GerenciadorUsuarios() {
             email: email,
             status: status,
         }
-        alterarListaUsuarios(listaUsuarios.concat(objeto))
 
-        // ensoncididnho da tela usuario
+        const usuarioExiste = listaUsuarios.find(function(usuario) {
+            return usuario.id == id
+        })
+
+        if (usuarioExiste) {
+            const listaEditada = listaUsuarios.map(function(usuario) {
+                if (usuario.id == id) {
+                    return objeto
+                } else {
+                    return usuario
+                }
+            })
+            alterarListaUsuarios(listaEditada)
+        } else {
+            alterarListaUsuarios(listaUsuarios.concat(objeto))
+        }
+
+        alterarId(""); alterarNome(""); alterarEmail(""); alterarStatus("")
         alterarMostrarForm(false)
     }
 
-    // tela usuario
     return (
         <div className="col-9 p-4 bg-light">
             <div className="card shadow-sm rounded-3">
 
-                {/* superior direito com adicionar usuarioo */}
                 <div className="card-header bg-white d-flex justify-content-between align-items-center border-bottom">
                     <h5 className="mb-0 fw-semibold">👤 Lista de Usuários</h5>
-
                    
                     <button
                         className="btn btn-success btn-sm"
-                        onClick={() => alterarMostrarForm(true)}
+                        onClick={function() {
+                            alterarId(""); alterarNome(""); alterarEmail(""); alterarStatus("");
+                            alterarMostrarForm(true);
+                        }}
                     >
                         + Adicionar Usuário
                     </button>
@@ -56,25 +86,23 @@ export default function GerenciadorUsuarios() {
 
                 <div className="card-body">
 
-
                     {mostrarForm && (
                         <form onSubmit={salvar} className="mb-4 p-3 border rounded bg-white shadow-sm">
-                            <h6 className="fw-bold">Cadastrar Novo Usuário:</h6>
+                            <h6 className="fw-bold">Dados do Usuário:</h6>
                             <div className="d-flex gap-2 mb-2">
-                                <input placeholder="ID" onChange={e => alterarId(e.target.value)} className="form-control" />
-                                <input placeholder="Nome" onChange={e => alterarNome(e.target.value)} className="form-control" />
-                                <input placeholder="Email" onChange={e => alterarEmail(e.target.value)} className="form-control" />
-                                <input placeholder="Status" onChange={e => alterarStatus(e.target.value)} className="form-control" />
+                                <input value={id} placeholder="ID" onChange={function(e) { alterarId(e.target.value) }} className="form-control" />
+                                <input value={nome} placeholder="Nome" onChange={function(e) { alterarNome(e.target.value) }} className="form-control" />
+                                <input value={email} placeholder="Email" onChange={function(e) { alterarEmail(e.target.value) }} className="form-control" />
+                                <input value={status} placeholder="Status" onChange={function(e) { alterarStatus(e.target.value) }} className="form-control" />
                             </div>
                             <button type="submit" className="btn btn-primary btn-sm me-2">Salvar</button>
                             <button
                                 type="button"
                                 className="btn btn-secondary btn-sm"
-                                onClick={() => alterarMostrarForm(false)}
+                                onClick={function() { alterarMostrarForm(false) }}
                             >
                                 Cancelar
                             </button>
-                            <hr />
                         </form>
                     )}
 
@@ -89,19 +117,30 @@ export default function GerenciadorUsuarios() {
                             </tr>
                         </thead>
                         <tbody>
-                            {listaUsuarios.map(usuario =>
-                                <tr>
-                                    <td>{usuario.id}</td>
-                                    <td>{usuario.nome}</td>
-                                    <td>{usuario.email}</td>
-                                    <td>{usuario.status}</td>
-                                    <td className="text-center">
-                                        <button className="btn btn-outline-primary btn-sm">
-                                            Editar
-                                        </button>
-                                    </td>
-                                </tr>
-                            )}
+                            {listaUsuarios.map(function(usuario) {
+                                return (
+                                    <tr>
+                                        <td>{usuario.id}</td>
+                                        <td>{usuario.nome}</td>
+                                        <td>{usuario.email}</td>
+                                        <td>{usuario.status}</td>
+                                        <td className="text-center">
+                                            <button 
+                                                className="btn btn-outline-primary btn-sm me-2"
+                                                onClick={function() { preencherFormulario(usuario) }}
+                                            >
+                                                Editar
+                                            </button>
+                                            <button 
+                                                className="btn btn-outline-danger btn-sm"
+                                                onClick={function() { excluir(usuario.id) }}
+                                            >
+                                                Excluir
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
                         </tbody>
                     </table>
                 </div>
