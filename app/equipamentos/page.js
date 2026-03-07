@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 'use client'
 import { useState } from "react";
 import "./Equipamentos.css"
@@ -160,6 +161,8 @@ export default function EquipamentosEscola() {
 
 
 // ESSE EU (MARCOS), QUE SALVOUU
+=======
+>>>>>>> Stashed changes
 // 'use client'
 // import { useState } from "react";
 // import "./Equipamentos.css"
@@ -317,6 +320,7 @@ export default function EquipamentosEscola() {
 
 
 
+<<<<<<< Updated upstream
 
 
 
@@ -517,6 +521,8 @@ export default function EquipamentosEscola() {
 
 
 
+=======
+>>>>>>> Stashed changes
 'use client'
 import { useState } from "react";
 import "./Equipamentos.css"
