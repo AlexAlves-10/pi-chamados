@@ -2,148 +2,116 @@
 import { useState } from "react";
 import "./Equipamentos.css"
 
-export default function equipamentosEscola() {
+export default function EquipamentosEscola() {
 
   const [showModal, setShowModal] = useState(false);
+  
+  // ESTADOS PARA LEITURA FUTURA: Criados para salvar o que for digitado
+  const [nome, setNome] = useState("");
+  const [descricao, setDescricao] = useState("");
 
   const equipamentosEscola = [
-    {
-      id: 1,
-      nome: "Projetor Multimídia",
-      descricao: "Equipamento utilizado para projetar imagens e vídeos em salas de aula.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 2,
-      nome: "Computador Desktop",
-      descricao: "Computador utilizado em laboratórios de informática para atividades educacionais.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 3,
-      nome: "Notebook",
-      descricao: "Computador portátil utilizado por professores para aulas e apresentações.",
-      disponivelEmEstoque: false
-    },
-    {
-      id: 4,
-      nome: "Impressora",
-      descricao: "Equipamento utilizado para impressão de provas, trabalhos e documentos administrativos.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 5,
-      nome: "Quadro Branco",
-      descricao: "Superfície utilizada para escrita com marcador em salas de aula.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 6,
-      nome: "Caixa de Som",
-      descricao: "Equipamento de áudio utilizado para reprodução de som em apresentações e eventos.",
-      disponivelEmEstoque: false
-    },
-    {
-      id: 7,
-      nome: "Microfone",
-      descricao: "Dispositivo utilizado para amplificação de voz em palestras e eventos escolares.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 8,
-      nome: "Tablet Educacional",
-      descricao: "Dispositivo móvel utilizado por alunos para atividades digitais e interativas.",
-      disponivelEmEstoque: false
-    },
-    {
-      id: 9,
-      nome: "Roteador Wi-Fi",
-      descricao: "Equipamento responsável por fornecer conexão à internet sem fio na escola.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 10,
-      nome: "Câmera de Segurança",
-      descricao: "Equipamento utilizado para monitoramento das dependências escolares.",
-      disponivelEmEstoque: true
-    }
+    { id: 1, nome: "Projetor Multimídia", descricao: "Equipamento utilizado para projetar imagens e vídeos em salas de aula.", disponivelEmEstoque: true },
+    { id: 2, nome: "Computador Desktop", descricao: "Computador utilizado em laboratórios de informática para atividades educacionais.", disponivelEmEstoque: true },
+    { id: 3, nome: "Notebook", descricao: "Computador portátil utilizado por professores para aulas e apresentações.", disponivelEmEstoque: false },
+    { id: 4, nome: "Impressora", descricao: "Equipamento utilizado para impressão de provas, trabalhos e documentos administrativos.", disponivelEmEstoque: true },
+    { id: 5, nome: "Quadro Branco", descricao: "Superfície utilizada para escrita com marcador em salas de aula.", disponivelEmEstoque: true },
+    { id: 6, nome: "Caixa de Som", descricao: "Equipamento de áudio utilizado para reprodução de som em apresentações e eventos.", disponivelEmEstoque: false },
+    { id: 7, nome: "Microfone", descricao: "Dispositivo utilizado para amplificação de voz em palestras e eventos escolares.", disponivelEmEstoque: true },
+    { id: 8, nome: "Tablet Educacional", disponivelEmEstoque: false },
+    { id: 9, nome: "Roteador Wi-Fi", descricao: "Equipamento responsável por fornecer conexão à internet sem fio na escola.", disponivelEmEstoque: true },
+    { id: 10, nome: "Câmera de Segurança", descricao: "Equipamento utilizado para monitoramento das dependências escolares.", disponivelEmEstoque: true }
   ];
 
-
-
-
   return (
+    <div className="card shadow-sm p-4 mt-3">
+      <h3 className="mb-4">Lista de Equipamentos</h3>
 
-  <div className="card shadow-sm p-4 mt-3">
-    <h3 className="mb-4">Lista de Equipamentos</h3>
-
-    {/* Tabela de Equipamentos */}
-    <table className="table table-striped table-hover align-middle">
-      <thead className="table-light">
-        <tr>
-          <th>ID</th>
-          <th>Equipamentos</th>
-          <th>Descrição</th>
-          <th>Estoque</th>
-        </tr>
-      </thead>
-      <tbody>
-        {equipamentosEscola.map((item) => (
-          <tr key={item.id}>
-            <td>{item.id}</td>
-            <td>{item.nome}</td>
-            <td>{item.descricao}</td>
-            <td>{item.disponivelEmEstoque}</td>
+      {/* Tabela de Equipamentos */}
+      <table className="table table-striped table-hover align-middle border">
+        <thead className="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Equipamentos</th>
+            <th>Descrição</th>
+            <th className="text-center">Estoque</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {equipamentosEscola.map((item) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td className="fw-bold">{item.nome}</td>
+              <td>{item.descricao}</td>
+              <td className="text-center">
+                {/* Transformando o true/false em badges bonitos */}
+                {item.disponivelEmEstoque ? 
+                  <span className="badge bg-success">Disponível</span> : 
+                  <span className="badge bg-danger">Indisponível</span>
+                }
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-    <div className="text-end mt-3">
-      {/* 1. FUNÇÃO NO CLIQUE DO BOTÃO */}
-      <button className="btn btn-success me-2" onClick={() => setShowModal(true)}>
-        Cadastrar
-      </button>
-    </div>
+      <div className="text-end mt-3">
+        <button className="btn btn-success px-4" onClick={() => setShowModal(true)}>
+          Cadastrar
+        </button>
+      </div>
 
-    
-    {showModal && (
-      <>
-       
-        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Novo Equipamento</h5>
-                <button 
-                  type="button" 
-                  className="btn-close" 
-                  onClick={() => setShowModal(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <p>Digite o nome do equipamento</p>
-                <input></input>
-                <p>Digite a descrição do equipamento</p>
-                <input></input>
-              </div>
-              <div className="modal-footer">
-                <button 
-                  type="button" 
-                  className="btn btn-secondary" 
-                  onClick={() => setShowModal(false)}
-                >
-                  Fechar
-                </button>
-                <button type="button" className="btn btn-primary">Salvar</button>
+      {showModal && (
+        <>
+          <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Novo Equipamento</h5>
+                  <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                </div>
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <p className="mb-1 fw-semibold">Digite o nome do equipamento</p>
+                    <input 
+                      className="form-control" 
+                      value={nome} 
+                      onChange={(e) => setNome(e.target.value)} 
+                      placeholder="Ex: Teclado"
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <p className="mb-1 fw-semibold">Digite a descrição do equipamento</p>
+                    <input 
+                      className="form-control" 
+                      value={descricao} 
+                      onChange={(e) => setDescricao(e.target.value)}
+                      placeholder="Ex: Entrada USB..."
+                    />
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                    Fechar
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-primary" 
+                    onClick={() => {
+                      console.log("Salvo:", { nome, descricao });
+                      setShowModal(false);
+                    }}
+                  >
+                    Salvar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="modal-backdrop fade show"></div>
-      </>
-    )}
-  </div>
+          <div className="modal-backdrop fade show"></div>
+        </>
+      )}
+    </div>
   )
 }
 
@@ -154,6 +122,240 @@ export default function equipamentosEscola() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ESSE EU (MARCOS), QUE SALVOUU
+// 'use client'
+// import { useState } from "react";
+// import "./Equipamentos.css"
+
+// export default function equipamentosEscola() {
+
+//   const [showModal, setShowModal] = useState(false);
+
+//   const equipamentosEscola = [
+//     {
+//       id: 1,
+//       nome: "Projetor Multimídia",
+//       descricao: "Equipamento utilizado para projetar imagens e vídeos em salas de aula.",
+//       disponivelEmEstoque: true
+//     },
+//     {
+//       id: 2,
+//       nome: "Computador Desktop",
+//       descricao: "Computador utilizado em laboratórios de informática para atividades educacionais.",
+//       disponivelEmEstoque: true
+//     },
+//     {
+//       id: 3,
+//       nome: "Notebook",
+//       descricao: "Computador portátil utilizado por professores para aulas e apresentações.",
+//       disponivelEmEstoque: false
+//     },
+//     {
+//       id: 4,
+//       nome: "Impressora",
+//       descricao: "Equipamento utilizado para impressão de provas, trabalhos e documentos administrativos.",
+//       disponivelEmEstoque: true
+//     },
+//     {
+//       id: 5,
+//       nome: "Quadro Branco",
+//       descricao: "Superfície utilizada para escrita com marcador em salas de aula.",
+//       disponivelEmEstoque: true
+//     },
+//     {
+//       id: 6,
+//       nome: "Caixa de Som",
+//       descricao: "Equipamento de áudio utilizado para reprodução de som em apresentações e eventos.",
+//       disponivelEmEstoque: false
+//     },
+//     {
+//       id: 7,
+//       nome: "Microfone",
+//       descricao: "Dispositivo utilizado para amplificação de voz em palestras e eventos escolares.",
+//       disponivelEmEstoque: true
+//     },
+//     {
+//       id: 8,
+//       nome: "Tablet Educacional",
+//       descricao: "Dispositivo móvel utilizado por alunos para atividades digitais e interativas.",
+//       disponivelEmEstoque: false
+//     },
+//     {
+//       id: 9,
+//       nome: "Roteador Wi-Fi",
+//       descricao: "Equipamento responsável por fornecer conexão à internet sem fio na escola.",
+//       disponivelEmEstoque: true
+//     },
+//     {
+//       id: 10,
+//       nome: "Câmera de Segurança",
+//       descricao: "Equipamento utilizado para monitoramento das dependências escolares.",
+//       disponivelEmEstoque: true
+//     }
+//   ];
+
+
+
+
+//   return (
+
+//   <div className="card shadow-sm p-4 mt-3">
+//     <h3 className="mb-4">Lista de Equipamentos</h3>
+
+//     {/* Tabela de Equipamentos */}
+//     <table className="table table-striped table-hover align-middle">
+//       <thead className="table-light">
+//         <tr>
+//           <th>ID</th>
+//           <th>Equipamentos</th>
+//           <th>Descrição</th>
+//           <th>Estoque</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//         {equipamentosEscola.map((item) => (
+//           <tr key={item.id}>
+//             <td>{item.id}</td>
+//             <td>{item.nome}</td>
+//             <td>{item.descricao}</td>
+//             <td>{item.disponivelEmEstoque}</td>
+//           </tr>
+//         ))}
+//       </tbody>
+//     </table>
+
+//     <div className="text-end mt-3">
+//       {/* 1. FUNÇÃO NO CLIQUE DO BOTÃO */}
+//       <button className="btn btn-success me-2" onClick={() => setShowModal(true)}>
+//         Cadastrar
+//       </button>
+//     </div>
+
+    
+//     {showModal && (
+//       <>
+       
+//         <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+//           <div className="modal-dialog">
+//             <div className="modal-content">
+//               <div className="modal-header">
+//                 <h5 className="modal-title">Novo Equipamento</h5>
+//                 <button 
+//                   type="button" 
+//                   className="btn-close" 
+//                   onClick={() => setShowModal(false)}
+//                 ></button>
+//               </div>
+//               <div className="modal-body">
+//                 <p>Digite o nome do equipamento</p>
+//                 <input></input>
+//                 <p>Digite a descrição do equipamento</p>
+//                 <input></input>
+//               </div>
+//               <div className="modal-footer">
+//                 <button 
+//                   type="button" 
+//                   className="btn btn-secondary" 
+//                   onClick={() => setShowModal(false)}
+//                 >
+//                   Fechar
+//                 </button>
+//                 <button type="button" className="btn btn-primary">Salvar</button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//         <div className="modal-backdrop fade show"></div>
+//       </>
+//     )}
+//   </div>
+//   )
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// SEU CODIGO QUE VOCE MESMO SALVOU (ALEX)
 
 // 'use client'
 // import { useState } from "react";
