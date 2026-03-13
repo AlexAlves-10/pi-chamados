@@ -13,11 +13,7 @@ export default function GerenciadorUsuarios() {
 
     const [listaUsuarios, alterarListaUsuarios] = useState(
         [
-            { id: 1, nome: "João Silva", email: "joaosilva@gmail.com", status: "admin" },
-            { id: 2, nome: "Maria Oliveira", email: "maria.oliveira@gmail.com", status: "usuario" },
-            { id: 3, nome: "Carlos Mendes", email: "carlos.mendes@gmail.com", status: "usuario" },
-            { id: 4, nome: "Ana Costa", email: "ana.costa@gmail.com", status: "admin" },
-            { id: 5, nome: "Pedro Santos", email: "pedro.santos@gmail.com", status: "usuario" }
+           
         ]
     )
 
@@ -32,21 +28,23 @@ export default function GerenciadorUsuarios() {
     // --- FUNÇÃO CORRIGIDA ---
     function excluir(idParaRemover) {
         // Remove da lista
-        const listaNova = listaUsuarios.filter(function(usuario) {
+        const listaNova = listaUsuarios.filter(function (usuario) {
             return usuario.id !== idParaRemover
         })
         alterarListaUsuarios(listaNova)
 
         // Se o usuário que você apagou é o que estava aberto para editar, limpa tudo
         if (idParaRemover == id) {
-            alterarId(""); 
-            alterarNome(""); 
-            alterarEmail(""); 
+            alterarId("");
+            alterarNome("");
+            alterarEmail("");
             alterarStatus("");
             alterarMostrarForm(false);
         }
     }
-    // ------------------------
+
+
+
 
     function salvar(e) {
         e.preventDefault()
@@ -57,12 +55,12 @@ export default function GerenciadorUsuarios() {
             status: status,
         }
 
-        const usuarioExiste = listaUsuarios.find(function(usuario) {
+        const usuarioExiste = listaUsuarios.find(function (usuario) {
             return usuario.id == id
         })
 
         if (usuarioExiste) {
-            const listaEditada = listaUsuarios.map(function(usuario) {
+            const listaEditada = listaUsuarios.map(function (usuario) {
                 if (usuario.id == id) {
                     return objeto
                 } else {
@@ -84,10 +82,10 @@ export default function GerenciadorUsuarios() {
 
                 <div className="card-header bg-white d-flex justify-content-between align-items-center border-bottom">
                     <h5 className="mb-0 fw-semibold">👤 Lista de Usuários</h5>
-                   
+
                     <button
                         className="btn btn-success btn-sm"
-                        onClick={function() {
+                        onClick={function () {
                             alterarId(""); alterarNome(""); alterarEmail(""); alterarStatus("");
                             alterarMostrarForm(true);
                         }}
@@ -102,16 +100,16 @@ export default function GerenciadorUsuarios() {
                         <form onSubmit={salvar} className="mb-4 p-3 border rounded bg-white shadow-sm">
                             <h6 className="fw-bold">Dados do Usuário:</h6>
                             <div className="d-flex gap-2 mb-2">
-                                <input value={id} placeholder="ID" onChange={function(e) { alterarId(e.target.value) }} className="form-control" />
-                                <input value={nome} placeholder="Nome" onChange={function(e) { alterarNome(e.target.value) }} className="form-control" />
-                                <input value={email} placeholder="Email" onChange={function(e) { alterarEmail(e.target.value) }} className="form-control" />
-                                <input value={status} placeholder="Status" onChange={function(e) { alterarStatus(e.target.value) }} className="form-control" />
+                                <input value={id} placeholder="ID" onChange={function (e) { alterarId(e.target.value) }} className="form-control" />
+                                <input value={nome} placeholder="Nome" onChange={function (e) { alterarNome(e.target.value) }} className="form-control" />
+                                <input value={email} placeholder="Email" onChange={function (e) { alterarEmail(e.target.value) }} className="form-control" />
+                                <input value={status} placeholder="Status" onChange={function (e) { alterarStatus(e.target.value) }} className="form-control" />
                             </div>
                             <button type="submit" className="btn btn-primary btn-sm me-2">Salvar</button>
                             <button
                                 type="button"
                                 className="btn btn-secondary btn-sm"
-                                onClick={function() { alterarMostrarForm(false) }}
+                                onClick={function () { alterarMostrarForm(false) }}
                             >
                                 Cancelar
                             </button>
@@ -129,7 +127,7 @@ export default function GerenciadorUsuarios() {
                             </tr>
                         </thead>
                         <tbody>
-                            {listaUsuarios.map(function(usuario) {
+                            {listaUsuarios.map(function (usuario) {
                                 return (
                                     <tr key={usuario.id}>
                                         <td>{usuario.id}</td>
@@ -137,15 +135,15 @@ export default function GerenciadorUsuarios() {
                                         <td>{usuario.email}</td>
                                         <td>{usuario.status}</td>
                                         <td className="text-center">
-                                            <button 
+                                            <button
                                                 className="btn btn-outline-primary btn-sm me-2"
-                                                onClick={function() { preencherFormulario(usuario) }}
+                                                onClick={function () { preencherFormulario(usuario) }}
                                             >
                                                 Editar
                                             </button>
-                                            <button 
+                                            <button
                                                 className="btn btn-outline-danger btn-sm"
-                                                onClick={function() { excluir(usuario.id) }}
+                                                onClick={function () { excluir(usuario.id) }}
                                             >
                                                 Excluir
                                             </button>
