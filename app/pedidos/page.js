@@ -59,7 +59,6 @@ export default function Pedidos() {
                     <div className="col">
                         <div className="card h-100">
 
-
                             <div className="card-body">
                                 <h5 className="card-title text-center">MANHÃ</h5>
                                 <p className="card-text">Total de pedidos em aberto: 65</p>
@@ -104,7 +103,7 @@ export default function Pedidos() {
 
 
 
-                <div> <forms>
+                <div> <form>
 
 
                     <div className="mb-3">
@@ -124,8 +123,8 @@ export default function Pedidos() {
 
                     <label for="exampleFormControlInput1" className="form-label">Digite o turno</label>
                     <input onChange={alteraturno} type="email" className="form-control" />
-                </forms></div>
-
+                </form></div>
+<button onClick>Salvar</button>
 
 
 
@@ -149,33 +148,13 @@ export default function Pedidos() {
                                 <td>{item.quantidade}</td>
                                 <td>{item.turno}</td>
                             </tr>
-                        )
-
+                
+            )
 
                         }
                     </tbody>
 
                 </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
