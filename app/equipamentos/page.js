@@ -1,17 +1,20 @@
 'use client'
+import { createClient } from '@supabase/supabase-js'
 import { useState } from "react";
 import "./Equipamentos.css"
 
+const supabase = createClient('https://vjlmxlfucsrezgekhoht.supabase.co', 'sb_publishable_aw8f1-yorX7fd9M5usuImw_0G_bIi8v')
+
 export default function EquipamentosEscola() {
 
-  const [showModal, setShowModal] = useState(false);
+  const [verModal, alteraVerModal] = useState(false);
 
   // Estados para inputs
-  const [nome, setNome] = useState("");
-  const [descricao, setDescricao] = useState("");
+  const [nome, alteraNome] = useState("");
+  const [descricao, alteraDescricao] = useState("");
 
   // Lista agora é um estado
-  const [equipamentos, setEquipamentos] = useState([
+  const [equipamentos, alteraEquipamentos] = useState([
     {
       id: 1,
       nome: "Projetor Multimídia",
@@ -89,14 +92,14 @@ export default function EquipamentosEscola() {
       disponivelEmEstoque: true
     };
 
-    setEquipamentos([...equipamentos, novoEquipamento]);
+    alteraEquipamentos([...equipamentos, novoEquipamento]);
 
     // limpar campos
-    setNome("");
-    setDescricao("");
+    alteraNome("");
+    alteraDescricao("");
 
     // fechar modal
-    setShowModal(false);
+    alteraVerModal(false);
   };
 
   return (
@@ -133,13 +136,13 @@ export default function EquipamentosEscola() {
     <div className="text-end mt-3">
       <button
         className="btn btn-success me-2"
-        onClick={() => setShowModal(true)}
+        onClick={() => alteraVerModal(true)}
       >
         Cadastrar
       </button>
     </div>
 
-    {showModal && (
+    {verModal && (
       <>
         <div
           className="modal d-block"
@@ -154,7 +157,7 @@ export default function EquipamentosEscola() {
                 <button
                   type="button"
                   className="btn-close"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => alteraVerModal(false)}
                 ></button>
               </div>
 
@@ -164,14 +167,14 @@ export default function EquipamentosEscola() {
                 <input
                   className="form-control mb-3"
                   value={nome}
-                  onChange={(e) => setNome(e.target.value)}
+                  onChange={(e) => alteraNome(e.target.value)}
                 />
 
                 <p>Digite a descrição do equipamento</p>
                 <input
                   className="form-control"
                   value={descricao}
-                  onChange={(e) => setDescricao(e.target.value)}
+                  onChange={(e) => alteraDescricao(e.target.value)}
                 />
 
               </div>
@@ -180,7 +183,7 @@ export default function EquipamentosEscola() {
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => alteraVerModal(false)}
                 >
                   Fechar
                 </button>
