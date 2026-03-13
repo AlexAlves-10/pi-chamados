@@ -1,6 +1,10 @@
 'use client'
+import { createClient } from '@supabase/supabase-js'
 import "./Gerenciador_usuarios.css";
 import { useState } from "react";
+
+// OBS: Coloque sua key de volta aqui depois
+const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co',)
 
 export default function GerenciadorUsuarios() {
 
@@ -8,16 +12,23 @@ export default function GerenciadorUsuarios() {
     const [nome, alterarNome] = useState("")
     const [email, alterarEmail] = useState("")
     const [status, alterarStatus] = useState("")
-
     const [mostrarForm, alterarMostrarForm] = useState(false)
+    const [listaUsuarios, alterarListaUsuarios] = useState([])
 
-    const [listaUsuarios, alterarListaUsuarios] = useState(
-        [
-           
-        ]
-    )
 
-    function preencherFormulario(usuarioClicado) {
+    async function buscar() {
+        const { data, error } = await supabase
+            .from('usuarios')
+            .select()
+
+        console.log(error)
+        // Mudança aqui: Salvando os dados na lista para aparecer na tela
+        if (data) {
+            alterarListaUsuarios(data)
+        }
+    }
+
+    async function preencherFormulario(usuarioClicado) {
         alterarId(usuarioClicado.id)
         alterarNome(usuarioClicado.nome)
         alterarEmail(usuarioClicado.email)
@@ -25,28 +36,38 @@ export default function GerenciadorUsuarios() {
         alterarMostrarForm(true)
     }
 
-    // --- FUNÇÃO CORRIGIDA ---
-    function excluir(idParaRemover) {
-        // Remove da lista
+    async function excluir(idParaRemover) {
+
+        // Remove da lista na tela
         const listaNova = listaUsuarios.filter(function (usuario) {
             return usuario.id !== idParaRemover
         })
         alterarListaUsuarios(listaNova)
 
+        // Mudança aqui: Sintaxe corrigida para deletar no banco
+        const { error } = await supabase
+            .from('usuarios')
+            .delete()
+            .eq('id', idParaRemover)
+
+        console.log(error)
+
         // Se o usuário que você apagou é o que estava aberto para editar, limpa tudo
         if (idParaRemover == id) {
+            alert("Cadastro efetuado")
             alterarId("");
             alterarNome("");
             alterarEmail("");
             alterarStatus("");
             alterarMostrarForm(false);
+        } else {
+            alert("Dados invalidos,verifique os campos e tente novamente")
         }
     }
 
 
-
-
-    function salvar(e) {
+    // Mudança aqui: transformado em async para salvar no banco
+    async function salvar(e) {
         e.preventDefault()
         const objeto = {
             id: id,
@@ -60,6 +81,12 @@ export default function GerenciadorUsuarios() {
         })
 
         if (usuarioExiste) {
+            // Mudança aqui: Atualiza no banco de dados (Supabase)
+            await supabase
+                .from('usuarios')
+                .update({ nome: nome, email: email, status: status })
+                .eq('id', id)
+
             const listaEditada = listaUsuarios.map(function (usuario) {
                 if (usuario.id == id) {
                     return objeto
@@ -69,10 +96,18 @@ export default function GerenciadorUsuarios() {
             })
             alterarListaUsuarios(listaEditada)
         } else {
+            // Mudança aqui: Insere novo no banco de dados (Supabase)
+            await supabase
+                .from('usuarios')
+                .insert([objeto])
+
             alterarListaUsuarios(listaUsuarios.concat(objeto))
         }
 
-        alterarId(""); alterarNome(""); alterarEmail(""); alterarStatus("")
+        alterarId("");
+        alterarNome("");
+        alterarEmail("");
+        alterarStatus("")
         alterarMostrarForm(false)
     }
 
@@ -83,10 +118,18 @@ export default function GerenciadorUsuarios() {
                 <div className="card-header bg-white d-flex justify-content-between align-items-center border-bottom">
                     <h5 className="mb-0 fw-semibold">👤 Lista de Usuários</h5>
 
+                    {/* Botão para testar a busca */}
+                    <button className="btn btn-outline-primary btn-sm me-2" onClick={buscar}>
+                        Buscar Dados
+                    </button>
+
                     <button
                         className="btn btn-success btn-sm"
                         onClick={function () {
-                            alterarId(""); alterarNome(""); alterarEmail(""); alterarStatus("");
+                            alterarId("");
+                            alterarNome("");
+                            alterarEmail("");
+                            alterarStatus("");
                             alterarMostrarForm(true);
                         }}
                     >
@@ -127,9 +170,10 @@ export default function GerenciadorUsuarios() {
                             </tr>
                         </thead>
                         <tbody>
+                            {/* Mudança aqui: tag 'key' removida do 'tr' conforme pedido */}
                             {listaUsuarios.map(function (usuario) {
                                 return (
-                                    <tr key={usuario.id}>
+                                    <tr>
                                         <td>{usuario.id}</td>
                                         <td>{usuario.nome}</td>
                                         <td>{usuario.email}</td>
