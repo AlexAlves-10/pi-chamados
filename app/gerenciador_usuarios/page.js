@@ -29,12 +29,24 @@ export default function GerenciadorUsuarios() {
         alterarMostrarForm(true)
     }
 
+    // --- FUNÇÃO CORRIGIDA ---
     function excluir(idParaRemover) {
+        // Remove da lista
         const listaNova = listaUsuarios.filter(function(usuario) {
             return usuario.id !== idParaRemover
         })
         alterarListaUsuarios(listaNova)
+
+        // Se o usuário que você apagou é o que estava aberto para editar, limpa tudo
+        if (idParaRemover == id) {
+            alterarId(""); 
+            alterarNome(""); 
+            alterarEmail(""); 
+            alterarStatus("");
+            alterarMostrarForm(false);
+        }
     }
+    // ------------------------
 
     function salvar(e) {
         e.preventDefault()
@@ -119,7 +131,7 @@ export default function GerenciadorUsuarios() {
                         <tbody>
                             {listaUsuarios.map(function(usuario) {
                                 return (
-                                    <tr>
+                                    <tr key={usuario.id}>
                                         <td>{usuario.id}</td>
                                         <td>{usuario.nome}</td>
                                         <td>{usuario.email}</td>
