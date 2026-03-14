@@ -1,6 +1,6 @@
 "use client";
 import { createClient } from '@supabase/supabase-js'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ')
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from 'next/link';
@@ -9,32 +9,20 @@ import Link from 'next/link';
 
 export default function Setores() {
 
-    const [sala, alteraSala] = useState("")
+    const [salas, alteraSalas] = useState("")
     const [status, alteraStatus] = useState("")
-    const { status2, alteraStatus2 } = useState("")
+    const [setores, alteraSetores] = useState([])
 
     const [listaTabela, alteraListaTabela] = useState(
         [
             {
-                sala: "206",
+                salas: "206",
                 status: "Ocupado",
                 status2: "Livre"
             }
         ]
 
     )
-
-    function salvar(e) {
-        e.preventDefault()
-
-        const objeto = {
-            sala: sala,
-            status: status,
-            status2: status2
-        }
-
-        alteraListaTabela(listaTabela.concat(objeto))
-    }
 
     async function buscar() {
         const { data, error } = await supabase
@@ -45,40 +33,21 @@ export default function Setores() {
         alteraListaTabela(data)
     }
 
-      async function salvar() {
+    async function salvar() {
 
         const objeto = {
-           sala: sala,
-           status: status,
-           status2: status2
-        }
-
-        if (objeto.nome.length < 3) {
-            alert("Usuário muito curto")
-            return
-        }
-
-        if (objeto.nome.length > 100) {
-            alert("Usuário muito longo")
-            return
+            salas: salas,
+            status: status
         }
 
         const { error } = await supabase
             .from('setores')
             .insert(objeto)
-
-        console.log(error)
-
-        if (error == null) {
-            alert("Livro cadastrado com sucesso!")
-            alteraNome("")
-            alteraAutor("")
-            alteraEditora("")
-            alteraPreco("")
-        } else {
-            alert("Dados invalidos, verifique os campos e tente novamente...")
-        }
     }
+
+    useEffect(() => {
+        buscar()
+    }, [])
 
     return (
         <div className="bg-dark text-light min-vh-100" data-bs-theme="dark">
@@ -179,7 +148,7 @@ export default function Setores() {
                                             listaTabela.map(
                                                 item =>
                                                     <tr>
-                                                        <th scope="row"> {item.sala} </th>
+                                                        <th scope="row"> {item.salas} </th>
                                                         <td> {item.status} </td>
                                                     </tr>
                                             )
@@ -196,52 +165,52 @@ export default function Setores() {
 
             {/* <!-- Modals --> */}
             <form onSubmit={salvar}>
-            <div>
-                <div className="modal fade" id="exampleModal" tabindex="-1">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h3 className="modal-title fs-5">Cadastro de novo usúario</h3>
-                                <button className="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="mb-3">
-                                    <label className="form-label w-100">
-                                        Digite a Sala:
-                                        <input onChange={e => alteraSala(e.target.value)} className="form-control" />
-                                    </label>
+                <div>
+                    <div className="modal fade" id="exampleModal" tabindex="-1">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h3 className="modal-title fs-5">Cadastro de novo usúario</h3>
+                                    <button className="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
+                                <div className="modal-body">
+                                    <div className="mb-3">
+                                        <label className="form-label w-100">
+                                            Digite a Sala:
+                                            <input onChange={e => alteraSalas(e.target.value)} className="form-control" />
+                                        </label>
+                                    </div>
 
-                                <div>
-                                    
-                                    <label className="form-label w-100">
-                                        <div className="col-4">
-                                            <select onChange={e => alteraStatus(e.target.value)} className="form-select">
-                                                <option value="" disabled hidden>FIltros</option>
-                                                <option value="Status" disabled hidden>Status</option>
-                                                <option value="Livre">Livre</option>
-                                                <option value="Ocupado">Ocupado</option>
-                                            </select>
-                                        </div>
-                                    </label>
+                                    <div>
+
+                                        <label className="form-label w-100">
+                                            <div className="col-4">
+                                                <select onChange={e => alteraStatus(e.target.value)} className="form-select">
+                                                    <option value="" disabled hidden>FIltros</option>
+                                                    <option value="Status" disabled hidden>Status</option>
+                                                    <option value="Livre">Livre</option>
+                                                    <option value="Ocupado">Ocupado</option>
+                                                </select>
+                                            </div>
+                                        </label>
+                                    </div>
+
                                 </div>
-
-                            </div>
-                            <div className="modal-footer">
-                                <button className="btn btn-primary">Salvar</button>
-                                <button type='button' className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <div className="modal-footer">
+                                    <button onChange={salvar} className="btn btn-primary">Salvar</button>
+                                    <button type='button' className="btn btn-secondary">Cancelar</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </form>
         </div>
     )
 
     function Login() {
 
-        
+
 
     }
 
