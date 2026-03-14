@@ -1,7 +1,10 @@
 "use client";
+import { createClient } from '@supabase/supabase-js'
+import { useState } from 'react';
+const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ')
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from 'next/link';
-import { useState } from 'react';
+
 
 
 export default function Setores() {
@@ -31,6 +34,50 @@ export default function Setores() {
         }
 
         alteraListaTabela(listaTabela.concat(objeto))
+    }
+
+    async function buscar() {
+        const { data, error } = await supabase
+            .from('setores')
+            .select()
+
+        console.log(data)
+        alteraListaTabela(data)
+    }
+
+      async function salvar() {
+
+        const objeto = {
+           sala: sala,
+           status: status,
+           status2: status2
+        }
+
+        if (objeto.nome.length < 3) {
+            alert("Usuário muito curto")
+            return
+        }
+
+        if (objeto.nome.length > 100) {
+            alert("Usuário muito longo")
+            return
+        }
+
+        const { error } = await supabase
+            .from('setores')
+            .insert(objeto)
+
+        console.log(error)
+
+        if (error == null) {
+            alert("Livro cadastrado com sucesso!")
+            alteraNome("")
+            alteraAutor("")
+            alteraEditora("")
+            alteraPreco("")
+        } else {
+            alert("Dados invalidos, verifique os campos e tente novamente...")
+        }
     }
 
     return (
