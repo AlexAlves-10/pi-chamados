@@ -1,103 +1,64 @@
 'use client'
-import { useState } from "react";
+import { createClient } from '@supabase/supabase-js'
+import { useState, useEffect } from "react";
 import "./Equipamentos.css"
+
+const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ')
 
 export default function EquipamentosEscola() {
 
-  const [showModal, setShowModal] = useState(false);
+  const [verModal, alteraVerModal] = useState(false);
 
-  // Estados para inputs
-  const [nome, setNome] = useState("");
-  const [descricao, setDescricao] = useState("");
+  const [equipamentos, alteraEquipamentos] = useState([]);
+  const [nome, alteraNome] = useState("");
+  const [descricao, alteraDescricao] = useState("");
+  const [estoque, alteraEstoque] = useState(false)
+  
 
-  // Lista agora é um estado
-  const [equipamentos, setEquipamentos] = useState([
-    {
-      id: 1,
-      nome: "Projetor Multimídia",
-      descricao: "Equipamento utilizado para projetar imagens e vídeos em salas de aula.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 2,
-      nome: "Computador Desktop",
-      descricao: "Computador utilizado em laboratórios de informática para atividades educacionais.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 3,
-      nome: "Notebook",
-      descricao: "Computador portátil utilizado por professores para aulas e apresentações.",
-      disponivelEmEstoque: false
-    },
-    {
-      id: 4,
-      nome: "Impressora",
-      descricao: "Equipamento utilizado para impressão de provas, trabalhos e documentos administrativos.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 5,
-      nome: "Quadro Branco",
-      descricao: "Superfície utilizada para escrita com marcador em salas de aula.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 6,
-      nome: "Caixa de Som",
-      descricao: "Equipamento de áudio utilizado para reprodução de som em apresentações e eventos.",
-      disponivelEmEstoque: false
-    },
-    {
-      id: 7,
-      nome: "Microfone",
-      descricao: "Dispositivo utilizado para amplificação de voz em palestras e eventos escolares.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 8,
-      nome: "Tablet Educacional",
-      descricao: "Dispositivo móvel utilizado por alunos para atividades digitais e interativas.",
-      disponivelEmEstoque: false
-    },
-    {
-      id: 9,
-      nome: "Roteador Wi-Fi",
-      descricao: "Equipamento responsável por fornecer conexão à internet sem fio na escola.",
-      disponivelEmEstoque: true
-    },
-    {
-      id: 10,
-      nome: "Câmera de Segurança",
-      descricao: "Equipamento utilizado para monitoramento das dependências escolares.",
-      disponivelEmEstoque: true
-    }
-  ]);
 
-  // Função para salvar novo equipamento
-  const salvarEquipamento = () => {
+  async function buscar() {
 
-    if (!nome || !descricao) {
-      alert("Preencha todos os campos!");
-      return;
+
+        const { data, error } = await supabase
+            .from('equipamentos')
+            .select()
+            console.log(data)
+            alteraEquipamentos(data)
+
     }
 
-    const novoEquipamento = {
-      id: equipamentos.length + 1,
-      nome: nome,
-      descricao: descricao,
-      disponivelEmEstoque: true
-    };
+    useEffect(() => {
+      buscar();
+  }, []);
 
-    setEquipamentos([...equipamentos, novoEquipamento]);
 
-    // limpar campos
-    setNome("");
-    setDescricao("");
 
-    // fechar modal
-    setShowModal(false);
+  async function salvar() {
+
+        const objeto = {
+            nome: nome,
+            descricao: descricao,
+            estoque: estoque
+        }
+
+        const { error } = await supabase
+            .from('equipamentos')
+            .insert(objeto) 
+            
+
+            if(error == null){
+              alert("Equipamento cadastrado com sucesso!")
+              alteraNome("")
+              alteraDescricao("")
+              alteraEstoque("")
+            }else{
+               alert("Dados inválidos, verifique os campos e tente novamente...")
+            }
+
+    alteraVerModal(false);
+
   };
+
 
   return (
 
@@ -133,13 +94,13 @@ export default function EquipamentosEscola() {
     <div className="text-end mt-3">
       <button
         className="btn btn-success me-2"
-        onClick={() => setShowModal(true)}
+        onClick={() => alteraVerModal(true)}
       >
         Cadastrar
       </button>
     </div>
 
-    {showModal && (
+    {verModal && (
       <>
         <div
           className="modal d-block"
@@ -154,7 +115,7 @@ export default function EquipamentosEscola() {
                 <button
                   type="button"
                   className="btn-close"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => alteraVerModal(false)}
                 ></button>
               </div>
 
@@ -164,14 +125,14 @@ export default function EquipamentosEscola() {
                 <input
                   className="form-control mb-3"
                   value={nome}
-                  onChange={(e) => setNome(e.target.value)}
+                  onChange={(e) => alteraNome(e.target.value)}
                 />
 
                 <p>Digite a descrição do equipamento</p>
                 <input
                   className="form-control"
                   value={descricao}
-                  onChange={(e) => setDescricao(e.target.value)}
+                  onChange={(e) => alteraDescricao(e.target.value)}
                 />
 
               </div>
@@ -180,7 +141,7 @@ export default function EquipamentosEscola() {
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => alteraVerModal(false)}
                 >
                   Fechar
                 </button>
@@ -188,7 +149,7 @@ export default function EquipamentosEscola() {
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={salvarEquipamento}
+                  onClick={salvar}
                 >
                   Salvar
                 </button>
