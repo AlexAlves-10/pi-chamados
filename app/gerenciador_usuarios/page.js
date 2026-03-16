@@ -1,133 +1,96 @@
 'use client'
 import { createClient } from '@supabase/supabase-js'
+import { useState } from 'react'
 import "./Gerenciador_usuarios.css";
-import { useEffect, useState } from "react";
+
 const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ')
 
+function GerenciadorUsuarios() {
 
-
-
-export default function GerenciadorUsuarios() {
-
-    const [nome, alterarNome] = useState("")
-    const [email, alterarEmail] = useState("")
-    const [senha, alterarSenha] = useState("")
-    const [administrador, alterarAdministrador] = useState(false)
-    const [listaUsuarios, alterarListaUsuarios] = useState([])
-    const [mostrarForm, alterarMostrarForm] = useState(false)
+    const [nome, alteraNome] = useState("")
+    const [email, alteraEmail] = useState("")
+    const [senha, alteraSenha] = useState("")
+    const [administrador, alteraAdministrador] = useState("false")
+    const [usuarios, alteraUsuarios] = useState([])
+    const [mostrarForm, alteraMostrarForm] = useState(false)
 
     async function buscar() {
-
         const { data, error } = await supabase
             .from('usuarios')
-            .select('*')
+            .select()
 
-        if (!error) {
-            alterarListaUsuarios(data)
-        }
-
+        console.log(data)
+        alteraUsuarios(data)
     }
 
-    useEffect(function () {
-        buscar()
-    }, [])
-
-    async function salvar(e) {
-
-        e.preventDefault()
+    async function salvar() {
 
         const objeto = {
             nome: nome,
             email: email,
             senha: senha,
-            administrador: administrador
+            administrador: administrador === "true"
         }
 
         const { error } = await supabase
             .from('usuarios')
-            .insert([objeto])
+            .insert(objeto)
 
-        if (error) {
-            console.log(error)
+        console.log(error)
+
+        if (error == null) {
+            alert("Usuário cadastrado com sucesso!")
+            alteraNome("")
+            alteraEmail("")
+            alteraSenha("")
+            alteraAdministrador("false")
+            alteraMostrarForm(false)
+            buscar()
+        } else {
+            alert("Dados invalidos, verifique os campos e tente novamente...")
         }
-
-        buscar()
-
-        alterarNome("")
-        alterarEmail("")
-        alterarSenha("")
-        alterarAdministrador(false)
-        alterarMostrarForm(false)
-
     }
 
     return (
-
         <div className="col-9 p-4 bg-light">
-
             <div className="card shadow-sm rounded-3">
 
                 <div className="card-header d-flex justify-content-between">
-
                     <h5>Lista de Usuários</h5>
-
-                    <button
-                        className="btn btn-success btn-sm"
-                        onClick={() => alterarMostrarForm(true)}
-                    >
-                        + Adicionar
+                    <button className="btn btn-success btn-sm" onClick={() => alteraMostrarForm(!mostrarForm)}>
+                        {mostrarForm ? "Fechar" : "+ Adicionar"}
                     </button>
-
                 </div>
 
                 <div className="card-body">
 
                     {mostrarForm && (
+                        <div>
+                            <p> Digite o nome do Usuário: </p>
+                            <input className="form-control" value={nome} onChange={e => alteraNome(e.target.value)} />
 
-                        <form onSubmit={salvar} className="mb-3">
+                            <p> Digite o email do Usuário: </p>
+                            <input className="form-control" value={email} onChange={e => alteraEmail(e.target.value)} />
 
-                            <input
-                                value={nome}
-                                placeholder="Nome"
-                                onChange={(e) => alterarNome(e.target.value)}
-                                className="form-control mb-2"
-                            />
+                            <p> Digite a senha do Usuário: </p>
+                            <input className="form-control" type="password" value={senha} onChange={e => alteraSenha(e.target.value)} />
 
-                            <input
-                                value={email}
-                                placeholder="Email"
-                                onChange={(e) => alterarEmail(e.target.value)}
-                                className="form-control mb-2"
-                            />
-
-                            <input
-                                value={senha}
-                                placeholder="Senha"
-                                onChange={(e) => alterarSenha(e.target.value)}
-                                className="form-control mb-2"
-                            />
-
-                            <select
-                                value={administrador ? "true" : "false"}
-                                onChange={(e) => alterarAdministrador(e.target.value === "true")}
-                                className="form-control mb-2"
-                            >
-
-                                <option value="false">Usuário</option>
-                                <option value="true">Administrador</option>
-
+                            <p> O usuário é administrador? </p>
+                            <select className="form-control" value={administrador} onChange={e => alteraAdministrador(e.target.value)}>
+                                <option value="false">Não (Usuário Comum)</option>
+                                <option value="true">Sim (Admin)</option>
                             </select>
+                            <br />
 
-                            <button className="btn btn-primary btn-sm">
-                                Salvar
-                            </button>
-
-                        </form>
-
+                            <button onClick={salvar} type='button' className='btn btn-success' > Salvar Usuário </button>
+                            <hr />
+                        </div>
                     )}
 
-                    <table className="table">
+                    <button onClick={buscar} type='button' className='btn btn-primary' > Carregar Usuários </button>
+                    <br /><br />
 
+                    <table className="table">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -136,36 +99,22 @@ export default function GerenciadorUsuarios() {
                                 <th>ADMIN</th>
                             </tr>
                         </thead>
-
                         <tbody>
-
-                            {listaUsuarios.map(function (usuario) {
-
-                                return (
-
-                                    <tr key={usuario.id}>
-
-                                        <td>{usuario.id}</td>
-                                        <td>{usuario.nome}</td>
-                                        <td>{usuario.email}</td>
-                                        <td>{usuario.administrador ? "Admin" : "Usuário"}</td>
-
-                                    </tr>
-
-                                )
-
-                            })}
-
+                            {usuarios.map(item => (
+                                <tr key={item.id}>
+                                    <td>{item.id}</td>
+                                    <td>{item.nome}</td>
+                                    <td>{item.email}</td>
+                                    <td>{item.administrador ? "Sim" : "Não"}</td>
+                                </tr>
+                            ))}
                         </tbody>
-
                     </table>
 
                 </div>
-
             </div>
-
         </div>
-
-    )
-
+    );
 }
+
+export default GerenciadorUsuarios;
