@@ -82,9 +82,7 @@ export default function EquipamentosEscola() {
             <td>{item.id}</td>
             <td>{item.nome}</td>
             <td>{item.descricao}</td>
-            <td>
-              {item.disponivelEmEstoque}
-            </td>
+            <td>{item.disponivelEmEstoque}</td>
           </tr>
         ))}
       </tbody>
