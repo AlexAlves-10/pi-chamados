@@ -77,7 +77,7 @@ export default function EquipamentosEscola() {
 
       <tbody>
         {equipamentos.map((item) => (
-          <tr key={item.id}>
+          <tr>
             <td>{item.id}</td>
             <td>{item.nome}</td>
             <td>{item.descricao}</td>
