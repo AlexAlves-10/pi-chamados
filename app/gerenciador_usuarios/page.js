@@ -100,7 +100,7 @@ function GerenciadorUsuarios() {
                         </thead>
                         <tbody>
                             {usuarios.map(item => (
-                                <tr key={item.id}>
+                                <tr >
                                     <td>{item.id}</td>
                                     <td>{item.nome}</td>
                                     <td>{item.email}</td>
