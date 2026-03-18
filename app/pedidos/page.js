@@ -1,10 +1,153 @@
+// 'use client'
+
+// import { useEffect, useState } from "react";
+// import { createClient } from '@supabase/supabase-js'
+
+// const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
+
+// export default function Pedidos() {
+//     const [id_usuario, alteraIdusuario] = useState("")
+//     const [id_setor, alteraIdsetor] = useState("")
+//     const [id_equipamento, alteraIdequipamento] = useState("")
+//     const [quantidade, alteraQuantidade] = useState("")
+//     const [turno, alteraTurno] = useState("")
+//     const [pedidos, alteraPedidos] = useState([])
+    
+//     // ESTADO PARA MOSTRAR/ESCONDER
+//     const [exibirLista, alteraExibirLista] = useState(false)
+
+//     function formataTurno(turno) {
+//         if (turno == "manhã") return <span className="badge rounded-pill text-bg-primary">Manha</span>
+//         if (turno == "tarde") return <span className="badge rounded-pill text-bg-danger">Tarde</span>
+//         if (turno == "noite") return <span className="badge rounded-pill text-bg-warning">Noite</span>
+//         return <span className="badge rounded-pill text-bg-secondary">{turno}</span>
+//     }
+
+//     // FUNÇÃO PARA INVERTER A TELA
+//     function alternarVisualizacao() {
+//         alteraExibirLista(!exibirLista)
+//     }
+
+//     async function buscarPedidos() {
+//         const { data, error } = await supabase
+//             .from("pedidos")
+//             .select('*, id_usuario(nome), id_equipamento(nome), id_setor(salas)')
+
+//         if (data) {
+//             alteraPedidos(data)
+//         }
+//     }
+
+//     async function salvar() {
+//         const objeto = {
+//             id_usuario: id_usuario,
+//             id_setor: id_setor,
+//             id_equipamento: id_equipamento,
+//             quantidade: quantidade,
+//             turno: turno
+//         }
+
+//         const { data, error } = await supabase
+//             .from('pedidos')
+//             .insert(objeto)
+
+//         if (error == null) {
+//             alert("Pedido cadastrado com sucesso!")
+//             buscarPedidos() 
+//             alteraExibirLista(true) // Mostra a lista após salvar
+//         } else {
+//             alert("Dados incorretos, tente novamente...")
+//         }
+//     }
+
+//     useEffect(() => {
+//         buscarPedidos()
+//     }, [])
+
+//     return (
+//         <div className="container mt-5">
+//             <div className="text-center mb-4">
+//                 <h1 className="fw-bold text-primary">Sistema de Pedidos 🧾</h1>
+                
+//                 {/* BOTÃO DE ALTERNAR */}
+//                 <button className="btn btn-outline-secondary mt-3" onClick={alternarVisualizacao}>
+//                     {exibirLista ? "⬅️ Voltar para Cadastro" : "📊 Gerar Dados (Ver Lista)"}
+//                 </button>
+//             </div>
+
+//             {/* SE FOR FALSE: MOSTRA O CADASTRO */}
+//             { !exibirLista && (
+//                 <div className="card shadow border-0 p-4">
+//                     <h2 className="text-center mb-4">Novo Pedido 💻</h2>
+//                     <div className="row g-3">
+//                         <div className="col-md-6">
+//                             <label className="form-label fw-bold">Nome do usuario</label>
+//                             <input onChange={e => alteraIdusuario(e.target.value)} className="form-control" />
+//                         </div>
+//                         <div className="col-md-6">
+//                             <label className="form-label fw-bold">Nome do setor</label>
+//                             <input onChange={e => alteraIdsetor(e.target.value)} className="form-control" />
+//                         </div>
+//                         <div className="col-md-4">
+//                             <label className="form-label fw-bold">Equipamento</label>
+//                             <input onChange={e => alteraIdequipamento(e.target.value)} className="form-control" />
+//                         </div>
+//                         <div className="col-md-4">
+//                             <label className="form-label fw-bold">Quantidade</label>
+//                             <input onChange={e => alteraQuantidade(e.target.value)} className="form-control" />
+//                         </div>
+//                         <div className="col-md-4">
+//                             <label className="form-label fw-bold">Turno</label>
+//                             <input onChange={e => alteraTurno(e.target.value)} className="form-control" />
+//                         </div>
+//                         <div className="col-12 mt-4">
+//                             <button className="btn btn-primary btn-lg w-100" onClick={salvar}>Salvar Pedido</button>
+//                         </div>
+//                     </div>
+//                 </div>
+//             )}
+
+//             {/* SE FOR TRUE: MOSTRA A LISTA */}
+//             { exibirLista && (
+//                 <div className="mt-2 animate__animated animate__fadeIn">
+//                     <h2 className="text-center mb-4">Lista de Pedidos no Banco 📁</h2>
+//                     <div className="table-responsive shadow-sm">
+//                         <table className="table table-striped table-hover mb-0">
+//                             <thead className="table-dark">
+//                                 <tr>
+//                                     <th>Nome</th>
+//                                     <th>Setor</th>
+//                                     <th>Equipamento</th>
+//                                     <th>Qtd</th>
+//                                     <th>Turno</th>
+//                                 </tr>
+//                             </thead>
+//                             <tbody>
+//                                 {pedidos.map(item => (
+//                                     <tr>
+//                                         <td>{item.id_usuario?.nome}</td>
+//                                         <td>{item.id_setor?.salas}</td>
+//                                         <td>{item.id_equipamento?.nome}</td>
+//                                         <td className="fw-bold">{item.quantidade}</td>
+//                                         <td>{formataTurno(item.turno)}</td>
+//                                     </tr>
+//                                 ))}
+//                             </tbody>
+//                         </table>
+//                     </div>
+//                 </div>
+//             )}
+//         </div>
+//     )
+// }
+
+
+
 
 'use client'
-import { Coral_Pixels } from "next/font/google";
+
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import Login from "../login/page";
-import GerenciadorUsuarios from "../gerenciador_usuarios/page";
+
 import { createClient } from '@supabase/supabase-js'
 const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
 
@@ -17,14 +160,36 @@ export default function Pedidos() {
     const [turno, alteraTurno] = useState("")
     const [pedidos, alteraPedidos] = useState([])
 
+function formataTurno (turno){
+
+if(turno == "manhã"){
+    return <span className="badge rounded-pill text-bg-primary">Manha</span>
+}
+
+if(turno == "tarde"){
+    return <span className="badge rounded-pill text-bg-danger">Tarde</span>
+}
+
+if(turno == "noite" ){
+    return <span className="badge rounded-pill text-bg-warning">Noite</span>
+}
+
+
+
+
+}
+
 
     async function buscarPedidos() {
-        const { pedidos, error } = await supabase
+        const { data, error } = await supabase
             .from("pedidos")
-            .select()
-            console.log(data)
-            alteraPedidos(data)
+            .select('*, id_usuario(nome), id_equipamento(nome), id_setor(salas)' )
+
+            if(data){
+                alteraPedidos(data)
+            }
     }
+
     async function salvar() {
         const objeto = {
             id_usuario: id_usuario,
@@ -33,11 +198,12 @@ export default function Pedidos() {
             quantidade: quantidade,
             turno: turno
         }
-        const { error } = await supabase
-            .from('pedidos')
 
+        const {data, error } = await supabase
+            .from('pedidos')
             .insert(objeto)
-        console.log(error)
+            
+      console.log(error)
 
         if (error == null) {
             alert("Pedido cadastrado com sucesso!")
@@ -46,11 +212,12 @@ export default function Pedidos() {
             alteraIdequipamento("")
             alteraQuantidade("")
             alteraTurno("")
+           buscarPedidos() 
         } else {
-            alert("Dados invalidos, tente novamente")
+            alert("Dados incorretos, tente novamente...")
         }
 
-       
+
 
     }
     useEffect(() => {
@@ -60,10 +227,6 @@ export default function Pedidos() {
     return (
 
         <div >
-
-
-
-
             <h1 className="titulo ">Gerenciamento de pedidos🧾</h1>
             <br />
             <h2 className=" text-center">Cadastro de novo pedido💻</h2>
@@ -76,45 +239,48 @@ export default function Pedidos() {
 
                 <div className="mb-3">
                     <label for="exampleFormControlInput1" className="form-label">Digite nome do usuario</label>
-                    <input onChange={e => alteraIdusuario(e.target.value)}  className="form-control" />
+                    <input onChange={e => alteraIdusuario(e.target.value)} className="form-control" />
                 </div>
 
                 <label for="exampleFormControlInput1" className="form-label">Nome do setor</label>
-                <input onChange={e => alteraIdsetor(e.target.value)}  className="form-control" />
+                <input onChange={e => alteraIdsetor(e.target.value)} className="form-control" />
 
                 <label for="exampleFormControlInput1" className="form-label">Nome do equipamento</label>
-                <input onChange={e => alteraIdequipamento(e.target.value)}  className="form-control" />
+                <input onChange={e => alteraIdequipamento(e.target.value)} className="form-control" />
 
 
                 <label for="exampleFormControlInput1" className="form-label">Digite a quantidade</label>
-                <input onChange={e => alteraQuantidade(e.target.value)}  className="form-control" />
+                <input onChange={e => alteraQuantidade(e.target.value)} className="form-control" />
 
                 <label for="exampleFormControlInput1" className="form-label">Digite o turno</label>
-                <input onChange={e => alteraTurno(e.target.value)}  className="form-control" />
+                <input onChange={e => alteraTurno(e.target.value)} className="form-control" />
             </form></div>
-            <button onClick={salvar}>Salvar</button>
+            <br/>
+             <br/>
+            <button className="text-align-right bnt-bnt primary" onClick={salvar}>Salvar</button>
 
-
+ <br/>
+  <br/>
 
             <table className="table">
                 <thead>
                     <tr>
-                        <th scope="col"> nome  </th>
-                        <th scope="col"> setor </th>
-                        <th scope="col"> equipamento </th>
-                        <th scope="col"> quantidade  </th>
-                        <th scope="col"> turno  </th>
+                        <th > nome  </th>
+                        <th > setor </th>
+                        <th > equipamento </th>
+                        <th > quantidade  </th>
+                        <th > turno  </th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {pedidos.map(
                         item => <tr>
-                            <td>{item.id_usuario}</td>
-                            <td>{item.id_setor}</td>
-                            <td>{item.id_equipamento}</td>
+                            <td>{item.id_usuario.nome}</td>
+                            <td>{item.id_setor.salas}</td>
+                            <td>{item.id_equipamento.nome}</td>
                             <td>{item.quantidade}</td>
-                            <td>{item.turno}</td>
+                            <td>{formataTurno(item.turno)}</td>
                         </tr>
 
                     )
@@ -127,53 +293,8 @@ export default function Pedidos() {
 
 
 
-            <div className="col-0">
+       
 
-                <h2 className=" text-center">Pedidos em aberto🚨</h2>
-                <br />
-                <div className="row row-cols-1 row-cols-md-3 g-4">
-                    <div className="col">
-                        <div className="card h-100">
-
-                            <div className="card-body">
-                                <h5 className="card-title text-center">MANHÃ</h5>
-                                <p className="card-text">Total de pedidos em aberto: 65</p>
-                            </div>
-                            <div className="card-footer">
-                                <button select className="form-select form-select-lg mb-3" aria-label="Large select example"><small className="text-body-secondary">Ver pedidos</small></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="card h-100">
-
-                            <div className="card-body">
-                                <h5 className="card-title text-center">TARDE</h5>
-                                <p className="card-text">Total de pedidos em aberto: 25</p>
-                            </div>
-                            <div className="card-footer">
-                                <button select className="form-select form-select-lg mb-3" aria-label="Large select example"><small className="text-body-secondary">Ver pedidos</small></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="card h-100">
-
-                            <div className="card-body">
-                                <h5 className="card-title text-center">NOITE</h5>
-                                <p className="card-text">Total de pedidos em aberto: 9</p>
-                            </div>
-
-                            <div className="card-footer">
-                                <button select className="form-select form-select-lg mb-3" aria-label="Large select example" ><small className="text-body-secondary">Ver pedidos</small></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br />
-
-
-            </div>
         </div>
 
 

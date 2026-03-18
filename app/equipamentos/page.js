@@ -2,8 +2,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { useState, useEffect } from "react";
 import "./Equipamentos.css"
-
-const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ')
+import supabase from '../conexao/bancos';
 
 export default function EquipamentosEscola() {
 
@@ -78,7 +77,7 @@ export default function EquipamentosEscola() {
 
       <tbody>
         {equipamentos.map((item) => (
-          <tr key={item.id}>
+          <tr>
             <td>{item.id}</td>
             <td>{item.nome}</td>
             <td>{item.descricao}</td>

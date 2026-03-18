@@ -1,9 +1,8 @@
 'use client'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { useState } from 'react'
 import "./Gerenciador_usuarios.css";
-
-const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ')
+import supabase from '../conexao/bancos';
 
 function GerenciadorUsuarios() {
 
@@ -101,7 +100,7 @@ function GerenciadorUsuarios() {
                         </thead>
                         <tbody>
                             {usuarios.map(item => (
-                                <tr key={item.id}>
+                                <tr >
                                     <td>{item.id}</td>
                                     <td>{item.nome}</td>
                                     <td>{item.email}</td>
