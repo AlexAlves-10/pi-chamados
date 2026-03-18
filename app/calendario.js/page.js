@@ -1,11 +1,11 @@
-
-
-export default function Calendario() {
+function Calendario() {
   return (
-    <div>
+<h1>ola</h1>
 
-      <h1> Calendário </h1>
 
-    </div>
-  )
+
+
+    );
 }
+
+export default Calendario;

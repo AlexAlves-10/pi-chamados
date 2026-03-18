@@ -57,7 +57,9 @@ function GerenciadorUsuarios() {
                 <div className="card-header d-flex justify-content-between">
                     <h5>Lista de Usuários</h5>
                     <button className="btn btn-success btn-sm" onClick={() => alteraMostrarForm(!mostrarForm)}>
-                        {mostrarForm ? "Fechar" : "+ Adicionar"}
+                        {mostrarForm ? "Fechar" 
+                        :
+                         "+ Adicionar"}
                     </button>
                 </div>
 
