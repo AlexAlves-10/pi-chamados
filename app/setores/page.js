@@ -10,14 +10,13 @@ import Link from 'next/link';
 export default function Setores() {
 
     const [salas, alteraSalas] = useState("")
-    const [status, alteraStatus] = useState("true")
+    const [status, alteraStatus] = useState("")
 
     const [listaTabela, alteraListaTabela] = useState(
         [
             {
                 salas: "206",
-                status: "Ocupado",
-                status2: "Livre"
+                status: "Ocupado"
             }
         ]
 
@@ -44,16 +43,23 @@ export default function Setores() {
         return horas_formatada
     }
 
-    async function salvar() {
+    async function salvar(e) {
+        e.preventDefault()
 
         const objeto = {
             salas: salas,
-            status: status === "false"
+            status: status === "true"
         }
 
         const { error } = await supabase
             .from('setores')
             .insert(objeto)
+
+        if (error) {
+            console.log(error)
+        } else {
+            buscar()
+        }
     }
 
     useEffect(() => {
@@ -81,15 +87,6 @@ export default function Setores() {
                                 <input className="form-control" placeholder="Pesquisar" />
                                 <button className="btn btn-outline-secondary">🔎</button>
                             </div>
-                        </div>
-
-                        <div className="col-4">
-                            <select className="form-select">
-                                <option value="" disabled hidden>FIltros</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
                         </div>
                     </div>
 
@@ -120,7 +117,14 @@ export default function Setores() {
                                                     <tr>
 
                                                         <th scope="row"> {item.salas} </th>
-                                                        <td> {item.status} </td>
+                                                        <td>
+                                                            {
+                                                                item.status ?
+                                                                    <span className='badge text-bg-success' > Livre </span>
+                                                                    :
+                                                                    <span className="badge text-bg-danger">Ocupado</span>
+                                                            }
+                                                        </td>
                                                         <td> {formataData(item.criado_em)} às {formataHoras(item.criado_em)} </td>
                                                     </tr>
                                             )
@@ -160,8 +164,8 @@ export default function Setores() {
                                                 <select required onChange={e => alteraStatus(e.target.value)} className="form-select">
                                                     <option value="" disabled hidden>FIltros</option>
                                                     <option value="Status" disabled hidden>Status</option>
-                                                    <option value="Livre">Livre</option>
-                                                    <option value="Ocupado">Ocupado</option>
+                                                    <option value="true">Livre</option>
+                                                    <option value="false">Ocupado</option>
                                                 </select>
                                             </div>
                                         </label>
@@ -169,7 +173,7 @@ export default function Setores() {
 
                                 </div>
                                 <div className="modal-footer">
-                                    <button onChange={salvar} className="btn btn-primary">Salvar</button>
+                                    <button type='submit' className="btn btn-primary">Salvar</button>
                                     <button type='button' className="btn btn-secondary">Cancelar</button>
                                 </div>
                             </div>
