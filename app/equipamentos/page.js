@@ -11,7 +11,8 @@ export default function EquipamentosEscola() {
   const [equipamentos, alteraEquipamentos] = useState([]);
   const [nome, alteraNome] = useState("");
   const [descricao, alteraDescricao] = useState("");
-  const [estoque, alteraEstoque] = useState(false)
+  const [quantidade, alteraQuantidade] = useState()
+  const [estoque, alteraEstoque] = useState(true)
   
 
 
@@ -37,6 +38,7 @@ export default function EquipamentosEscola() {
         const objeto = {
             nome: nome,
             descricao: descricao,
+            quantidade: quantidade,
             estoque: estoque
         }
 
@@ -49,6 +51,7 @@ export default function EquipamentosEscola() {
               alert("Equipamento cadastrado com sucesso!")
               alteraNome("")
               alteraDescricao("")
+              alteraQuantidade("")
               alteraEstoque("")
             }else{
                alert("Dados inválidos, verifique os campos e tente novamente...")
@@ -71,6 +74,7 @@ export default function EquipamentosEscola() {
           <th>ID</th>
           <th>Equipamentos</th>
           <th>Descrição</th>
+          <th>Quantidade</th>
           <th>Estoque</th>
         </tr>
       </thead>
@@ -81,7 +85,8 @@ export default function EquipamentosEscola() {
             <td>{item.id}</td>
             <td>{item.nome}</td>
             <td>{item.descricao}</td>
-            <td>{item.disponivelEmEstoque}</td>
+            <td>{item.quantidade}</td>
+            <td>{item.estoque}</td>
           </tr>
         ))}
       </tbody>
@@ -95,7 +100,9 @@ export default function EquipamentosEscola() {
       >
         Cadastrar
       </button>
+      <button>Editar</button>
     </div>
+
 
     {verModal && (
       <>
@@ -130,6 +137,12 @@ export default function EquipamentosEscola() {
                   className="form-control"
                   value={descricao}
                   onChange={(e) => alteraDescricao(e.target.value)}
+                />
+                <p>Digite a quantidade do equipamento</p>
+                <input
+                  className="form-control"
+                  value={descricao}
+                  onChange={(e) => alteraQuantidade(e.target.value)}
                 />
 
               </div>
