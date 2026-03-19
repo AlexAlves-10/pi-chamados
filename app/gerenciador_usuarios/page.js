@@ -9,7 +9,7 @@ function GerenciadorUsuarios() {
     const [nome, alteraNome] = useState("")
     const [email, alteraEmail] = useState("")
     const [senha, alteraSenha] = useState("")
-    const [administrador, alteraAdministrador] = useState("false")
+    const [administrador, alteraAdministrador] = useState(false)
     const [usuarios, alteraUsuarios] = useState([])
     const [mostrarForm, alteraMostrarForm] = useState(false)
 
@@ -28,7 +28,7 @@ function GerenciadorUsuarios() {
             nome: nome,
             email: email,
             senha: senha,
-            administrador: administrador === "true"
+            administrador: administrador === true
         }
 
         const { error } = await supabase
@@ -42,7 +42,7 @@ function GerenciadorUsuarios() {
             alteraNome("")
             alteraEmail("")
             alteraSenha("")
-            alteraAdministrador("false")
+            alteraAdministrador(false)
             alteraMostrarForm(false)
             buscar()
         } else {
@@ -58,8 +58,7 @@ function GerenciadorUsuarios() {
                     <h5>Lista de Usuários</h5>
                     <button className="btn btn-success btn-sm" onClick={() => alteraMostrarForm(!mostrarForm)}>
                         {mostrarForm ? "Fechar" 
-                        :
-                         "+ Adicionar"}
+                        : "+ Adicionar"}
                     </button>
                 </div>
 
