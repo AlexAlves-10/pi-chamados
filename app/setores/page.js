@@ -8,7 +8,9 @@ import Link from 'next/link';
 
 
 export default function Setores() {
-
+    
+    const [pesquisa,alteraPesquisa] = useState("")
+    
     const [salas, alteraSalas] = useState("")
 
     const [listaTabela, alteraListaTabela] = useState(
@@ -47,6 +49,10 @@ export default function Setores() {
         buscar()
     }, [])
 
+    const listaFiltrada = listaTabela.filter(
+        (item) => item.salas.toLocaleLowerCase().includes(pesquisa.toLocaleLowerCase())
+    )
+
     return (
         <div className="min-vh-100">
 
@@ -65,7 +71,8 @@ export default function Setores() {
                     <div className="row">
                         <div className="col-8">
                             <div className="input-group mb-3">
-                                <input className="form-control" placeholder="Pesquisar" />
+                                <input className="form-control" placeholder="Pesquisar" value={pesquisa} 
+                                onChange={e => alteraPesquisa(e.target.value) } />
                                 <button className="btn btn-outline-secondary">🔎</button>
                             </div>
                         </div>
@@ -91,7 +98,7 @@ export default function Setores() {
                                     </thead>
                                     <tbody className="table-group-divider">
                                         {
-                                            listaTabela.map(
+                                            listaFiltrada.map(
                                                 (item) =>
                                                     <tr>
                                                         <th scope="row"> {item.salas} </th>

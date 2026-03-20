@@ -12,7 +12,7 @@ function GerenciadorUsuarios() {
     const [administrador, alteraAdministrador] = useState(false)
     const [usuarios, alteraUsuarios] = useState([])
     const [mostrarForm, alteraMostrarForm] = useState(false)
-    const [editandoId, alteraEditandoId] = useState(null);
+    const [editandoId, alteraEditandoId] = useState();
 
     async function buscar() {
         const { data, error } = await supabase
@@ -78,7 +78,7 @@ function GerenciadorUsuarios() {
 
         const confirmar = confirm("Deseja deletar?");
         if (confirmar == false) return;
- 
+
         const { error } = await supabase
             .from('usuarios')
             .delete()
@@ -153,11 +153,13 @@ function GerenciadorUsuarios() {
                                     <td>{item.nome}</td>
                                     <td>{item.email}</td>
                                     <td>{item.administrador ? "Sim" : "Não"}</td>
-                                    <td><button className='bnt bnt-warning bnt-sm me-2' onClick={() =>editar(item)}>  EDITAR </button>
-                                    <button  className='bnt bnt-danger bnt-sm' onClick={() => deletar(item.id)} > DELETAR </button>
+                                    <td><button className='btn btn-warning btn-sm me-2' onClick={() => editar(item)}>  EDITAR </button>
+                                        <button className='btn btn-danger btn-sm' onClick={() => deletar(item.id)} > DELETAR </button>
                                     </td>
                                 </tr>
-                            ))}
+                            )
+                            )
+                            }
                         </tbody>
                     </table>
 
