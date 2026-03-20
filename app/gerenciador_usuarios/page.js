@@ -12,6 +12,7 @@ function GerenciadorUsuarios() {
     const [administrador, alteraAdministrador] = useState(false)
     const [usuarios, alteraUsuarios] = useState([])
     const [mostrarForm, alteraMostrarForm] = useState(false)
+    const [editandoId, alteraEditandoId] = useState(null);
 
     async function buscar() {
         const { data, error } = await supabase
@@ -28,27 +29,72 @@ function GerenciadorUsuarios() {
             nome: nome,
             email: email,
             senha: senha,
-            administrador: administrador === true
+            administrador: administrador,
         }
+        if (editandoId) {
 
+            const { error } = await supabase
+                .from('usuarios')
+                .update(objeto)
+                .eq('id', editandoId)
+            if (error) {
+                console.log(error)
+                alert("erro ao atualizar")
+                return
+            }
+            alert("atualizado")
+        } else {
+            const { error } = await supabase
+                .from('usuarios')
+                .insert(objeto)
+
+            if (error) {
+                console.log(error)
+                alert("erro ao cadastrar")
+                return
+            }
+            alert("cadastrado!")
+        }
+        alteraNome("")
+        alteraEmail("")
+        alteraSenha("")
+        alteraAdministrador(false)
+        alteraEditandoId(null)
+        alteraMostrarForm(false)
+
+        buscar()
+    }
+
+    async function editar(usuario) {
+        alteraNome(usuario.nome);
+        alteraEmail(usuario.email);
+        alteraSenha(usuario.senha);
+        alteraAdministrador(usuario.administrador);
+        alteraEditandoId(usuario.id)
+        alteraMostrarForm(true)
+    }
+
+    async function deletar(id) {
+
+        const confirmar = confirm("Deseja deletar?");
+        if (confirmar == false) return;
+ 
         const { error } = await supabase
             .from('usuarios')
-            .insert(objeto)
+            .delete()
+            .eq('id', id);
 
-        console.log(error)
-
-        if (error == null) {
-            alert("Usuário cadastrado com sucesso!")
-            alteraNome("")
-            alteraEmail("")
-            alteraSenha("")
-            alteraAdministrador(false)
-            alteraMostrarForm(false)
-            buscar()
-        } else {
-            alert("Dados invalidos, verifique os campos e tente novamente...")
+        if (error) {
+            console.log(error)
+            alert("Erro ao deletar")
+            return
         }
+
+        alert("Deletado!")
+        buscar()
     }
+
+
 
     return (
         <div className="col-9 p-4 bg-light">
@@ -57,8 +103,8 @@ function GerenciadorUsuarios() {
                 <div className="card-header d-flex justify-content-between">
                     <h5>Lista de Usuários</h5>
                     <button className="btn btn-success btn-sm" onClick={() => alteraMostrarForm(!mostrarForm)}>
-                        {mostrarForm ? "Fechar" 
-                        : "+ Adicionar"}
+                        {mostrarForm ? "Fechar"
+                            : "+ Adicionar"}
                     </button>
                 </div>
 
@@ -97,6 +143,7 @@ function GerenciadorUsuarios() {
                                 <th>NOME</th>
                                 <th>EMAIL</th>
                                 <th>ADMIN</th>
+                                <th>AÇOES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,6 +153,9 @@ function GerenciadorUsuarios() {
                                     <td>{item.nome}</td>
                                     <td>{item.email}</td>
                                     <td>{item.administrador ? "Sim" : "Não"}</td>
+                                    <td><button className='bnt bnt-warning bnt-sm me-2' onClick={() =>editar(item)}>  EDITAR </button>
+                                    <button  className='bnt bnt-danger bnt-sm' onClick={() => deletar(item.id)} > DELETAR </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

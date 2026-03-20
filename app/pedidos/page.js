@@ -82,6 +82,14 @@ async function buscarQuantidade(){
 
 }
 
+async function excluir(id) {
+        const opcao = confirm("Tem certeza que deseja excluir?")
+        if (opcao == false) {
+            return
+        }
+
+        const response = await supabase.from('pedidos').delete().eq('id', id)}
+
     async function salvar(e) {
         e.preventDefault()
         const objeto = {
@@ -131,21 +139,23 @@ async function buscarQuantidade(){
             <div> <form onSubmit={salvar} >
 
                     <p>Selecione o usuario</p>
-                    <select onChange={e => alteraListaUsuarios(e.target.value)}>    
-                    <option>Selecione...</option>
-                    {
+                    <input list="datalistOptions"/>     
+                    <datalist id="datalistOptions"> 
+                        {
                         listaUsuarios.map(
 
                             item => <option value={item.id}> {item.nome} </option>
 
                         )
                     }
-                    </select>
+
+                    </datalist>
+                    
 
 <br/>
                 
                 <p>Selecione o Setor</p>
-                    <select onChange={e => alteraListaSetores(e.target.value)}>    
+                    <select onChange={e => alteraListasetores(e.target.value)}>    
                     <option>Selecione...</option>
                     {
                         listasetores.map(
@@ -210,6 +220,7 @@ async function buscarQuantidade(){
                         <th > equipamento </th>
                         <th > quantidade  </th>
                         <th > turno  </th>
+                        <th> Ações </th>
                     </tr>
                 </thead>
 
@@ -221,6 +232,8 @@ async function buscarQuantidade(){
                             <td>{item.id_equipamento.descricao}</td>
                             <td>{item.quantidade}</td>
                             <td>{formataTurno(item.turno)}</td>
+                            <td> <button onClick={() => location.href = "/pedidos/" + item.id} >Ver</button>
+                                    <button onClick={() => excluir(item.id)}>Excluir</button> </td>
                         </tr>
 
                     )
