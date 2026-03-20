@@ -1,3 +1,310 @@
+'use client'
+
+import { useEffect, useState } from "react";
+
+import { createClient } from '@supabase/supabase-js'
+const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
+
+
+export default function Pedidos() {
+    const [id_usuario, alteraIdusuario] = useState("")
+    const [id_setor, alteraIdsetor] = useState("")
+    const [id_equipamento, alteraIdequipamento] = useState("")
+    const [quantidade, alteraQuantidade] = useState("")
+    const [turno, alteraTurno] = useState("")
+    const [pedidos, alteraPedidos] = useState([])
+
+
+    const [listaUsuarios, alteraListaUsuarios] = useState([])
+    const [listasetores, alteraListasetores] = useState([])
+    const [listaEquipamentos, alteraListaEquipamentos] = useState([])
+    const [listaQuantidade, alteraListaQuantidade] = useState([])
+
+
+function formataTurno (turno){
+
+if(turno == "manhã"){
+    return <span className="badge rounded-pill text-bg-primary">Manha</span>
+}
+
+if(turno == "tarde"){
+    return <span className="badge rounded-pill text-bg-danger">Tarde</span>
+}
+
+if(turno == "noite" ){
+    return <span className="badge rounded-pill text-bg-warning">Noite</span>
+}
+
+}
+    async function buscarPedidos() {
+        const { data, error } = await supabase
+            .from("pedidos")
+            .select('*, id_usuario(nome), id_equipamento(nome), id_setor(salas)' )
+
+            if(data){
+                alteraPedidos(data)
+            }
+    }
+
+async function buscarUsuarios(){
+    const { data, error } = await supabase
+            .from('usuarios')
+            .select('nome')
+            console.log(error)
+        alteraListaUsuarios(data)
+
+}
+
+async function buscarsetores(){
+    const { data, error } = await supabase
+            .from('setores')
+            .select('salas')
+            console.log(error)
+        alteraListasetores(data)
+
+}
+
+async function buscarEquipamentos(){
+    const { data, error } = await supabase
+            .from('equipamentos')
+            .select('nome')
+            console.log(error)
+        alteraListaEquipamentos(data)
+
+}
+
+async function buscarQuantidade(){
+    const { data, error } = await supabase
+            .from('equipamentos')
+            .select('estoque')
+            console.log(error)
+        alteraListaQuantidade(data)
+
+}
+
+    async function salvar(e) {
+        e.preventDefault()
+        const objeto = {
+            id_usuario: id_usuario,
+            id_setor: id_setor,
+            id_equipamento: id_equipamento,
+            quantidade: quantidade,
+            turno: turno
+        }
+
+        const {data, error } = await supabase
+            .from('pedidos')
+            .insert(objeto)
+            
+      console.log(error)
+
+        if (error == null) {
+            alert("Pedido cadastrado com sucesso!")
+            alteraIdusuario("")
+            alteraIdsetor("")
+            alteraIdequipamento("")
+            alteraQuantidade("")
+            alteraTurno("")
+           buscarPedidos() 
+        } else {
+            alert("Dados incorretos, tente novamente...")
+        }
+
+            
+    }
+    useEffect(() => {
+        buscarPedidos()
+        buscarUsuarios()
+        buscarsetores()
+        buscarEquipamentos()
+        buscarQuantidade()
+    }, [])
+
+    return (
+
+        <div >
+            <h1 className="titulo ">Gerenciamento de pedidos🧾</h1>
+            <br />
+            <h2 className=" text-center">Cadastro de novo pedido💻</h2>
+            <br />
+
+            <div> <form onSubmit={salvar} >
+
+                    <p>Selecione o usuario</p>
+                    <select onChange={e => alteraListaUsuarios(e.target.value)}>    
+                    <option>Selecione...</option>
+                    {
+                        listaUsuarios.map(
+
+                            item => <option value={item.id}> {item.nome} </option>
+
+                        )
+                    }
+                    </select>
+
+<br/>
+                
+                <p>Selecione o Setor</p>
+                    <select onChange={e => alteraListaSetores(e.target.value)}>    
+                    <option>Selecione...</option>
+                    {
+                        listasetores.map(
+
+                            item => <option value={item.id}> {item.salas} </option>
+
+                        )
+                    }
+                    </select>
+<br/>
+                    <p>Selecione o Equipamento</p>
+                    <select onChange={e => alteraListaEquipamentos(e.target.value)}>    
+                        <option>Selecione...</option>
+                    {
+                        listaEquipamentos.map(
+
+                            item => <option value={item.id}> {item.nome} </option>
+
+                        )
+                    }
+                    
+                    </select>
+
+<br/>
+                    <p>Selecione a quantidade</p>
+                    <select onChange={e => alteraListaQuantidade(e.target.value)}>    
+                        <option>Selecione...</option>
+                    {
+                        listaQuantidade.map(
+
+                            item => <option value={item.id}> {item.estoque} </option>
+
+                        )
+                    }
+                    
+                    </select>
+<br/>
+<br/>
+
+                    <p>Selecione o Turno</p>
+                    <select >    
+                        <option>Selecione...</option>
+                        <option>Manhã</option>
+                        <option>Tarde</option>
+                        <option>Noite</option>
+                
+                    </select>
+
+            </form></div>
+            <br/>
+             <br/>
+            <button className="text-align-right bnt-bnt primary" onClick={salvar}>Salvar</button>
+
+ <br/>
+  <br/>
+
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th > nome  </th>
+                        <th > setor </th>
+                        <th > equipamento </th>
+                        <th > quantidade  </th>
+                        <th > turno  </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {pedidos.map(
+                        item => <tr>
+                            <td>{item.id_usuario.nome}</td>
+                            <td>{item.id_setor.salas}</td>
+                            <td>{item.id_equipamento.descricao}</td>
+                            <td>{item.quantidade}</td>
+                            <td>{formataTurno(item.turno)}</td>
+                        </tr>
+
+                    )
+
+                    }
+                </tbody>
+
+            </table>
+
+
+
+
+       
+
+        </div>
+
+
+
+    )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 'use client'
 
 // import { useEffect, useState } from "react";
@@ -143,161 +450,3 @@
 
 
 
-
-'use client'
-
-import { useEffect, useState } from "react";
-
-import { createClient } from '@supabase/supabase-js'
-const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
-
-
-export default function Pedidos() {
-    const [id_usuario, alteraIdusuario] = useState("")
-    const [id_setor, alteraIdsetor] = useState("")
-    const [id_equipamento, alteraIdequipamento] = useState("")
-    const [quantidade, alteraQuantidade] = useState("")
-    const [turno, alteraTurno] = useState("")
-    const [pedidos, alteraPedidos] = useState([])
-
-function formataTurno (turno){
-
-if(turno == "manhã"){
-    return <span className="badge rounded-pill text-bg-primary">Manha</span>
-}
-
-if(turno == "tarde"){
-    return <span className="badge rounded-pill text-bg-danger">Tarde</span>
-}
-
-if(turno == "noite" ){
-    return <span className="badge rounded-pill text-bg-warning">Noite</span>
-}
-
-
-
-
-}
-
-
-    async function buscarPedidos() {
-        const { data, error } = await supabase
-            .from("pedidos")
-            .select('*, id_usuario(nome), id_equipamento(nome), id_setor(salas)' )
-
-            if(data){
-                alteraPedidos(data)
-            }
-    }
-
-    async function salvar() {
-        const objeto = {
-            id_usuario: id_usuario,
-            id_setor: id_setor,
-            id_equipamento: id_equipamento,
-            quantidade: quantidade,
-            turno: turno
-        }
-
-        const {data, error } = await supabase
-            .from('pedidos')
-            .insert(objeto)
-            
-      console.log(error)
-
-        if (error == null) {
-            alert("Pedido cadastrado com sucesso!")
-            alteraIdusuario("")
-            alteraIdsetor("")
-            alteraIdequipamento("")
-            alteraQuantidade("")
-            alteraTurno("")
-           buscarPedidos() 
-        } else {
-            alert("Dados incorretos, tente novamente...")
-        }
-
-
-
-    }
-    useEffect(() => {
-        buscarPedidos()
-    }, [])
-
-    return (
-
-        <div >
-            <h1 className="titulo ">Gerenciamento de pedidos🧾</h1>
-            <br />
-            <h2 className=" text-center">Cadastro de novo pedido💻</h2>
-            <br />
-
-
-
-
-            <div> <form >
-
-                <div className="mb-3">
-                    <label for="exampleFormControlInput1" className="form-label">Digite nome do usuario</label>
-                    <input onChange={e => alteraIdusuario(e.target.value)} className="form-control" />
-                </div>
-
-                <label for="exampleFormControlInput1" className="form-label">Nome do setor</label>
-                <input onChange={e => alteraIdsetor(e.target.value)} className="form-control" />
-
-                <label for="exampleFormControlInput1" className="form-label">Nome do equipamento</label>
-                <input onChange={e => alteraIdequipamento(e.target.value)} className="form-control" />
-
-
-                <label for="exampleFormControlInput1" className="form-label">Digite a quantidade</label>
-                <input onChange={e => alteraQuantidade(e.target.value)} className="form-control" />
-
-                <label for="exampleFormControlInput1" className="form-label">Digite o turno</label>
-                <input onChange={e => alteraTurno(e.target.value)} className="form-control" />
-            </form></div>
-            <br/>
-             <br/>
-            <button className="text-align-right bnt-bnt primary" onClick={salvar}>Salvar</button>
-
- <br/>
-  <br/>
-
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th > nome  </th>
-                        <th > setor </th>
-                        <th > equipamento </th>
-                        <th > quantidade  </th>
-                        <th > turno  </th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {pedidos.map(
-                        item => <tr>
-                            <td>{item.id_usuario.nome}</td>
-                            <td>{item.id_setor.salas}</td>
-                            <td>{item.id_equipamento.nome}</td>
-                            <td>{item.quantidade}</td>
-                            <td>{formataTurno(item.turno)}</td>
-                        </tr>
-
-                    )
-
-                    }
-                </tbody>
-
-            </table>
-
-
-
-
-       
-
-        </div>
-
-
-
-    )
-}

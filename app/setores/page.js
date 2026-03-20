@@ -10,13 +10,11 @@ import Link from 'next/link';
 export default function Setores() {
 
     const [salas, alteraSalas] = useState("")
-    const [status, alteraStatus] = useState("")
 
     const [listaTabela, alteraListaTabela] = useState(
         [
             {
-                salas: "206",
-                status: "Ocupado"
+                salas: "206"
             }
         ]
 
@@ -31,35 +29,18 @@ export default function Setores() {
         alteraListaTabela(data)
     }
 
-    function formataData(data) {
-        let data_formatada = new Date(data)
-        data_formatada = data_formatada.toLocaleDateString()
-        return data_formatada
-    }
-
-    function formataHoras(horas) {
-        let horas_formatada = new Date(horas)
-        horas_formatada = horas_formatada.toLocaleTimeString()
-        return horas_formatada
-    }
-
     async function salvar(e) {
         e.preventDefault()
 
         const objeto = {
-            salas: salas,
-            status: status === "true"
+            salas: salas
         }
 
         const { error } = await supabase
             .from('setores')
             .insert(objeto)
+        console.log(error)
 
-        if (error) {
-            console.log(error)
-        } else {
-            buscar()
-        }
     }
 
     useEffect(() => {
@@ -67,7 +48,7 @@ export default function Setores() {
     }, [])
 
     return (
-        <div className="bg-dark text-light min-vh-100" data-bs-theme="dark">
+        <div className="min-vh-100">
 
             <div className="row m-0">
 
@@ -76,7 +57,7 @@ export default function Setores() {
 
                     {/* <!-- Introdução --> */}
                     <div>
-                        <h2>Setores</h2>
+                        <h2> <strong> Setores </strong> </h2>
                         <hr />
                     </div>
 
@@ -101,13 +82,11 @@ export default function Setores() {
                         {/* <!-- ID,foto,nome --> */}
                         <span>
 
-                            <div className="my-3">
-                                <table className="table table-dark table-hover table-bordered">
-                                    <thead>
+                            <div className="my-3 rounded-4 overflow-hidden shadow">
+                                <table className="table table-hover table-bordered border-dark" >
+                                    <thead class="table-primary" >
                                         <tr>
                                             <th scope="col">Sala</th>
-                                            <th scope="col">Status</th>
-                                            <th scope="col">Data</th>
                                         </tr>
                                     </thead>
                                     <tbody className="table-group-divider">
@@ -115,17 +94,7 @@ export default function Setores() {
                                             listaTabela.map(
                                                 (item) =>
                                                     <tr>
-
                                                         <th scope="row"> {item.salas} </th>
-                                                        <td>
-                                                            {
-                                                                item.status ?
-                                                                    <span className='badge text-bg-success' > Livre </span>
-                                                                    :
-                                                                    <span className="badge text-bg-danger">Ocupado</span>
-                                                            }
-                                                        </td>
-                                                        <td> {formataData(item.criado_em)} às {formataHoras(item.criado_em)} </td>
                                                     </tr>
                                             )
                                         }
@@ -156,25 +125,10 @@ export default function Setores() {
                                             <input onChange={e => alteraSalas(e.target.value)} className="form-control" />
                                         </label>
                                     </div>
-
-                                    <div>
-
-                                        <label className="form-label w-100">
-                                            <div className="col-4">
-                                                <select required onChange={e => alteraStatus(e.target.value)} className="form-select">
-                                                    <option value="" disabled hidden>FIltros</option>
-                                                    <option value="Status" disabled hidden>Status</option>
-                                                    <option value="true">Livre</option>
-                                                    <option value="false">Ocupado</option>
-                                                </select>
-                                            </div>
-                                        </label>
-                                    </div>
-
                                 </div>
                                 <div className="modal-footer">
-                                    <button type='submit' className="btn btn-primary">Salvar</button>
-                                    <button type='button' className="btn btn-secondary">Cancelar</button>
+                                    <button onChange={salvar} className="btn btn-primary">Salvar</button>
+                                    <button type='button' className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                 </div>
                             </div>
                         </div>
