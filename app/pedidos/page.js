@@ -18,7 +18,7 @@ export default function Pedidos() {
     const [listaUsuarios, alteraListaUsuarios] = useState([])
     const [listasetores, alteraListasetores] = useState([])
     const [listaEquipamentos, alteraListaEquipamentos] = useState([])
-    const [listaQuantidade, alteraListaQuantidade] = useState([])
+    
 
 // somente turno
 function formataTurno (turno){
@@ -50,7 +50,7 @@ if(turno == "noite" ){
 async function buscarUsuarios(){
     const { data, error } = await supabase
             .from('usuarios')
-            .select('nome')
+            .select('*')
             console.log(error)
         alteraListaUsuarios(data)
 
@@ -59,7 +59,7 @@ async function buscarUsuarios(){
 async function buscarsetores(){
     const { data, error } = await supabase
             .from('setores')
-            .select('salas')
+            .select('*')
             console.log(error)
         alteraListasetores(data)
 
@@ -68,27 +68,19 @@ async function buscarsetores(){
 async function buscarEquipamentos(){
     const { data, error } = await supabase
             .from('equipamentos')
-            .select('nome')
+            .select('*')
             console.log(error)
         alteraListaEquipamentos(data)
 
 }
 
-async function buscarQuantidade(){
-    const { data, error } = await supabase
-            .from('equipamentos')
-            .select('estoque')
-            console.log(error)
-        alteraListaQuantidade(data)
 
-}
 // function excluir
 async function excluir(id) {
         const opcao = confirm("Tem certeza que deseja excluir?")
         if (opcao == false) {
             return
         }
-
         const response = await supabase.from('pedidos').delete().eq('id', id)}
 // condigo inicial
     async function salvar(e) {
@@ -105,6 +97,8 @@ async function excluir(id) {
             .from('pedidos')
             .insert(objeto)
             
+      console.log(objeto)
+      console.log(data)
       console.log(error)
 
         if (error == null) {
@@ -126,7 +120,7 @@ async function excluir(id) {
         buscarUsuarios()
         buscarsetores()
         buscarEquipamentos()
-        buscarQuantidade()
+        
     }, [])
 //* tabelas, formularios
     return (
@@ -138,25 +132,24 @@ async function excluir(id) {
             <br />
             {/* selecione o usuario */}
             <div> <form onSubmit={salvar} >
-                    <p>Selecione o usuario</p>
-                    <input list="datalistOptions"/>     
-                    <datalist id="datalistOptions"> 
-                        {
+                    <p>Selecione o Usuario</p>
+                    <select onChange={e => alteraIdusuario(e.target.value)}>    
+                    <option>Selecione...</option>
+                    {
                         listaUsuarios.map(
 
                             item => <option value={item.id}> {item.nome} </option>
 
                         )
                     }
-
-                    </datalist>
+                    </select>
                     
 
 <br/>
 <br/>
                 {/* selecione o setor */}
                 <p>Selecione o Setor</p>
-                    <select onChange={e => alteraListasetores(e.target.value)}>    
+                    <select onChange={e => alteraIdsetor(e.target.value)}>    
                     <option>Selecione...</option>
                     {
                         listasetores.map(
@@ -170,7 +163,7 @@ async function excluir(id) {
 <br/>
 {/* selecione o equipamento */}
                     <p>Selecione o Equipamento</p>
-                    <select onChange={e => alteraListaEquipamentos(e.target.value)}>    
+                    <select onChange={e => alteraIdequipamento(e.target.value)}>    
                         <option>Selecione...</option>
                     {
                         listaEquipamentos.map(
@@ -179,29 +172,19 @@ async function excluir(id) {
 
                         )
                     }
-                    
                     </select>
+                    
 
 <br/>
 <br/>
 {/* selecione a quantidade */}
-                    <p>Selecione a quantidade</p>
-                    <select onChange={e => alteraListaQuantidade(e.target.value)}>    
-                        <option>Selecione...</option>
-                    {
-                        listaQuantidade.map(
-
-                            item => <option value={item.id}> {item.estoque} </option>
-
-                        )
-                    }
-                    
-                    </select>
+                    <p>Insira a quantidade</p>
+                    <input onChange={e => alteraQuantidade(e.target.value)}/>
 <br/>
 <br/>
 {/* selecione o turno */}
                     <p>Selecione o Turno</p>
-                    <select >    
+                    <select onChange={e => alteraTurno(e.target.value)} >    
                         <option>Selecione...</option>
                         <option>Manhã</option>
                         <option>Tarde</option>
@@ -234,7 +217,7 @@ async function excluir(id) {
                         item => <tr>
                             <td>{item.id_usuario.nome}</td>
                             <td>{item.id_setor.salas}</td>
-                            <td>{item.id_equipamento.descricao}</td>
+                            <td>{item.id_equipamento.nome}</td>
                             <td>{item.quantidade}</td>
                             <td>{formataTurno(item.turno)}</td>
                             <td> <button onClick={() => location.href = "/pedidos/" + item.id} >Ver</button>
