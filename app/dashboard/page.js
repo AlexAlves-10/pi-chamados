@@ -49,7 +49,7 @@ export default function Pedidos() {
                   <tr>
                     <th>Setor</th>
                     <th>Equipamento</th>
-                    <th>Qtd</th>
+                    <th>QTD</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -78,7 +78,7 @@ export default function Pedidos() {
                   <tr>
                     <th>Setor</th>
                     <th>Equipamento</th>
-                    <th>Qtd</th>
+                    <th>QTD</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -107,7 +107,7 @@ export default function Pedidos() {
                   <tr>
                     <th>Setor</th>
                     <th>Equipamento</th>
-                    <th>Qtd</th>
+                    <th>QTD</th>
                   </tr>
                 </thead>
                 <tbody>
