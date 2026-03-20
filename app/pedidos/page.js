@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js'
 const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
 
-
+//*functions
 export default function Pedidos() {
     const [id_usuario, alteraIdusuario] = useState("")
     const [id_setor, alteraIdsetor] = useState("")
@@ -14,13 +14,13 @@ export default function Pedidos() {
     const [turno, alteraTurno] = useState("")
     const [pedidos, alteraPedidos] = useState([])
 
-
+// criadas para realizar a seleção de chaves
     const [listaUsuarios, alteraListaUsuarios] = useState([])
     const [listasetores, alteraListasetores] = useState([])
     const [listaEquipamentos, alteraListaEquipamentos] = useState([])
     const [listaQuantidade, alteraListaQuantidade] = useState([])
 
-
+// somente turno
 function formataTurno (turno){
 
 if(turno == "manhã"){
@@ -36,6 +36,7 @@ if(turno == "noite" ){
 }
 
 }
+//*async function
     async function buscarPedidos() {
         const { data, error } = await supabase
             .from("pedidos")
@@ -81,7 +82,7 @@ async function buscarQuantidade(){
         alteraListaQuantidade(data)
 
 }
-
+// function excluir
 async function excluir(id) {
         const opcao = confirm("Tem certeza que deseja excluir?")
         if (opcao == false) {
@@ -89,7 +90,7 @@ async function excluir(id) {
         }
 
         const response = await supabase.from('pedidos').delete().eq('id', id)}
-
+// condigo inicial
     async function salvar(e) {
         e.preventDefault()
         const objeto = {
@@ -118,7 +119,7 @@ async function excluir(id) {
             alert("Dados incorretos, tente novamente...")
         }
 
-            
+            // adicionei buscas
     }
     useEffect(() => {
         buscarPedidos()
@@ -127,7 +128,7 @@ async function excluir(id) {
         buscarEquipamentos()
         buscarQuantidade()
     }, [])
-
+//* tabelas, formularios
     return (
 
         <div >
@@ -135,9 +136,8 @@ async function excluir(id) {
             <br />
             <h2 className=" text-center">Cadastro de novo pedido💻</h2>
             <br />
-
+            {/* selecione o usuario */}
             <div> <form onSubmit={salvar} >
-
                     <p>Selecione o usuario</p>
                     <input list="datalistOptions"/>     
                     <datalist id="datalistOptions"> 
@@ -153,7 +153,8 @@ async function excluir(id) {
                     
 
 <br/>
-                
+<br/>
+                {/* selecione o setor */}
                 <p>Selecione o Setor</p>
                     <select onChange={e => alteraListasetores(e.target.value)}>    
                     <option>Selecione...</option>
@@ -166,6 +167,8 @@ async function excluir(id) {
                     }
                     </select>
 <br/>
+<br/>
+{/* selecione o equipamento */}
                     <p>Selecione o Equipamento</p>
                     <select onChange={e => alteraListaEquipamentos(e.target.value)}>    
                         <option>Selecione...</option>
@@ -180,6 +183,8 @@ async function excluir(id) {
                     </select>
 
 <br/>
+<br/>
+{/* selecione a quantidade */}
                     <p>Selecione a quantidade</p>
                     <select onChange={e => alteraListaQuantidade(e.target.value)}>    
                         <option>Selecione...</option>
@@ -194,7 +199,7 @@ async function excluir(id) {
                     </select>
 <br/>
 <br/>
-
+{/* selecione o turno */}
                     <p>Selecione o Turno</p>
                     <select >    
                         <option>Selecione...</option>
@@ -211,7 +216,7 @@ async function excluir(id) {
 
  <br/>
   <br/>
-
+{/* tabela */}
             <table className="table">
                 <thead>
                     <tr>
@@ -318,7 +323,8 @@ async function excluir(id) {
 
 
 
-// 'use client'
+// codigo do chat 
+//'use client'
 
 // import { useEffect, useState } from "react";
 // import { createClient } from '@supabase/supabase-js'
