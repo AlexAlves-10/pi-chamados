@@ -18,12 +18,19 @@ function GerenciadorUsuarios() {
         const { data, error } = await supabase
             .from('usuarios')
             .select()
+            .order('id', { ascending: true })
 
         console.log(data)
         alteraUsuarios(data)
     }
 
+    // O salvar inteiro, ele faz a validação do EDITAR e a validação se o campo esta preenchido,
+    // primeiro CONST: const [editandoId, alteraEditandoId] = useState(); SEGUNDO: mudar os campos necessario do salvar (tem bsatante.)
     async function salvar() {
+        if (!nome || !email || !senha) {
+            alert("Preencha todos os campos!")
+            return;
+        }
 
         const objeto = {
             nome: nome,
@@ -64,7 +71,7 @@ function GerenciadorUsuarios() {
 
         buscar()
     }
-
+// para o editar tambem é necessario pegar isso, porem voce muda os campos que necessario
     async function editar(usuario) {
         alteraNome(usuario.nome);
         alteraEmail(usuario.email);
@@ -122,7 +129,7 @@ function GerenciadorUsuarios() {
                             <input className="form-control" type="password" value={senha} onChange={e => alteraSenha(e.target.value)} />
 
                             <p> O usuário é administrador? </p>
-                            <select className="form-control" value={administrador} onChange={e => alteraAdministrador(e.target.value)}>
+                            <select className="form-control" value={administrador} onChange={e => alteraAdministrador(e.target.value === "true")}>
                                 <option value="false">Não (Usuário Comum)</option>
                                 <option value="true">Sim (Admin)</option>
                             </select>
