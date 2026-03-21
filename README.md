@@ -18,3 +18,11 @@ Manuela
 > Adicionar o botão de concluir o pedido
 
 SE PRECISAR: BOTAO EDITAR
+
+FALTA:
+aparecer as info da chave estrangeira em cada tela que precisa
+fazer parte de equipamentos (add fotos)
+dashboard 
+fazer tambem parte de design (paleta de cor,padrao de fabrica e facilidadores )
+fazer verificação de fatores,editar e excluir
+landingpage 
