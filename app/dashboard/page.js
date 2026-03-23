@@ -9,11 +9,7 @@ export default function Pedidos() {
   async function buscaPedidos() {
     const { data, error } = await supabase
       .from('pedidos')
-      .select(`
-        *,
-        setores(nome),
-        equipamentos(nome)
-      `)
+      .select(`*`)
 
     if (error) {
       console.error(error)
@@ -27,13 +23,13 @@ export default function Pedidos() {
   }, [])
 
   // Separação por turno
-  const pedidosManha = listaPedidos.filter(p => p.turno === 'manhã')
-  const pedidosTarde = listaPedidos.filter(p => p.turno === 'tarde')
-  const pedidosNoite = listaPedidos.filter(p => p.turno === 'noite')
+  const pedidosManha = listaPedidos.filter(p => p.turno === 'Manhã')
+  const pedidosTarde = listaPedidos.filter(p => p.turno === 'Tarde')
+  const pedidosNoite = listaPedidos.filter(p => p.turno === 'Noite')
 
   return (
     <div className="container">
-      <h2 className="text-center mb-4">Pedidos em aberto 🚨</h2>
+      <h2 className="text-center mb-4">Pedidos em aberto </h2>
 
       <div className="row">
 
@@ -41,7 +37,7 @@ export default function Pedidos() {
         <div className="col-md-4">
           <div className="card">
             <div className="card-header bg-warning text-dark">
-              🌅 Manhã
+              Manhã
             </div>
             <div className="card-body">
               <table className="table">
@@ -55,8 +51,8 @@ export default function Pedidos() {
                 <tbody>
                   {pedidosManha.map((pedido) => (
                     <tr key={pedido.id}>
-                      <td>{pedido.setores?.nome}</td>
-                      <td>{pedido.equipamentos?.nome}</td>
+                      <td>{pedido.id_setor}</td>
+                      <td>{pedido.id_equipamentos}</td>
                       <td>{pedido.quantidade}</td>
                     </tr>
                   ))}
@@ -70,7 +66,7 @@ export default function Pedidos() {
         <div className="col-md-4">
           <div className="card">
             <div className="card-header bg-info text-white">
-              ☀️ Tarde
+              Tarde
             </div>
             <div className="card-body">
               <table className="table">
@@ -84,8 +80,8 @@ export default function Pedidos() {
                 <tbody>
                   {pedidosTarde.map((pedido) => (
                     <tr key={pedido.id}>
-                      <td>{pedido.setores?.nome}</td>
-                      <td>{pedido.equipamentos?.nome}</td>
+                      <td>{pedido.id_setor}</td>
+                      <td>{pedido.id_equipamento}</td>
                       <td>{pedido.quantidade}</td>
                     </tr>
                   ))}
@@ -99,7 +95,7 @@ export default function Pedidos() {
         <div className="col-md-4">
           <div className="card">
             <div className="card-header bg-dark text-white">
-              🌙 Noite
+              Noite
             </div>
             <div className="card-body">
               <table className="table">
@@ -113,8 +109,8 @@ export default function Pedidos() {
                 <tbody>
                   {pedidosNoite.map((pedido) => (
                     <tr key={pedido.id}>
-                      <td>{pedido.setores?.nome}</td>
-                      <td>{pedido.equipamentos?.nome}</td>
+                      <td>{pedido.id_setor}</td>
+                      <td>{pedido.id_equipamento}</td>
                       <td>{pedido.quantidade}</td>
                     </tr>
                   ))}

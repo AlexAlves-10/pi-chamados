@@ -1,5 +1,5 @@
 'use client'
-import { createClient } from '@supabase/supabase-js'
+import { createClient} from '@supabase/supabase-js'
 import { useState, useEffect } from "react";
 import "./Equipamentos.css"
 import supabase from '../conexao/bancos';
