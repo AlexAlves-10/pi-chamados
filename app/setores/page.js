@@ -45,6 +45,15 @@ export default function Setores() {
 
     }
 
+        async function excluir(id) {
+        const opcao = confirm("Tem certe que deseja exluir?")
+        if(opcao == false){
+            return
+        }
+
+        const response = await supabase.from('setores').delete().eq('id',id)
+    }
+
     useEffect(() => {
         buscar()
     }, [])
@@ -94,6 +103,7 @@ export default function Setores() {
                                     <thead class="table-primary" >
                                         <tr>
                                             <th scope="col">Sala</th>
+                                            <th> Ações </th>
                                         </tr>
                                     </thead>
                                     <tbody className="table-group-divider">
@@ -102,6 +112,7 @@ export default function Setores() {
                                                 (item) =>
                                                     <tr>
                                                         <th scope="row"> {item.salas} </th>
+                                                        <th>  <button  onClick={ ()=> location.href = "/setores/"+item.id } > 👁 </button> <button onClick={ ()=> excluir(item.id) } > 🗑 </button> </th>
                                                     </tr>
                                             )
                                         }
@@ -144,12 +155,6 @@ export default function Setores() {
             </form>
         </div>
     )
-
-    function Login() {
-
-
-
-    }
 
 }
 
