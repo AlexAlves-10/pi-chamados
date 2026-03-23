@@ -145,11 +145,5 @@ export default function Setores() {
         </div>
     )
 
-    function Login() {
-
-
-
-    }
-
 }
 
