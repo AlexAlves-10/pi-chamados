@@ -50,7 +50,7 @@ export default function Pedidos() {
                 </thead>
                 <tbody>
                   {pedidosManha.map((pedido) => (
-                    <tr key={pedido.id}>
+                    <tr>
                       <td>{pedido.id_setor}</td>
                       <td>{pedido.id_equipamentos}</td>
                       <td>{pedido.quantidade}</td>
@@ -79,7 +79,7 @@ export default function Pedidos() {
                 </thead>
                 <tbody>
                   {pedidosTarde.map((pedido) => (
-                    <tr key={pedido.id}>
+                    <tr>
                       <td>{pedido.id_setor}</td>
                       <td>{pedido.id_equipamento}</td>
                       <td>{pedido.quantidade}</td>
@@ -108,7 +108,7 @@ export default function Pedidos() {
                 </thead>
                 <tbody>
                   {pedidosNoite.map((pedido) => (
-                    <tr key={pedido.id}>
+                    <tr>
                       <td>{pedido.id_setor}</td>
                       <td>{pedido.id_equipamento}</td>
                       <td>{pedido.quantidade}</td>
