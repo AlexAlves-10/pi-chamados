@@ -15,21 +15,31 @@ export default function Pedidos() {
       console.error(error)
     } else {
       alteraListaPedidos(data)
+      console.log(data)
     }
   }
 
   useEffect(() => {
     buscaPedidos()
   }, [])
+// Separação por turno
+const pedidosManha = listaPedidos.filter(
+  p => p.turno?.toLowerCase() === 'manhã' 
+  // ✅ toLowerCase + comparação em minúsculo
+  // ✅ ?. evita quebrar se vier null
+)
 
-  // Separação por turno
-  const pedidosManha = listaPedidos.filter(p => p.turno === 'Manhã')
-  const pedidosTarde = listaPedidos.filter(p => p.turno === 'Tarde')
-  const pedidosNoite = listaPedidos.filter(p => p.turno === 'Noite')
+const pedidosTarde = listaPedidos.filter(
+  p => p.turno?.toLowerCase() === 'tarde'
+)
+
+const pedidosNoite = listaPedidos.filter(
+  p => p.turno?.toLowerCase() === 'noite'
+)
 
   return (
     <div className="container">
-      <h2 className="text-center mb-4">Pedidos em aberto </h2>
+      <h2 className="text-center  mb-4">Pedidos em aberto </h2>
 
       <div className="row">
 
@@ -52,7 +62,7 @@ export default function Pedidos() {
                   {pedidosManha.map((pedido) => (
                     <tr>
                       <td>{pedido.id_setor}</td>
-                      <td>{pedido.id_equipamentos}</td>
+                      <td>{pedido.id_equipamento}</td>
                       <td>{pedido.quantidade}</td>
                     </tr>
                   ))}

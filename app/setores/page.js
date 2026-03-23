@@ -1,19 +1,18 @@
 "use client";
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
-const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ')
+const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ');
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Link from 'next/link';
+
 
 
 
 export default function Setores() {
-    
-    const [pesquisa,alteraPesquisa] = useState("")
-    
-    const [salas, alteraSalas] = useState("")
 
+    const [pesquisa, alteraPesquisa] = useState("")
+    const [salas, alteraSalas] = useState("")
     const [listaTabela, alteraListaTabela] = useState(
+
         [
             {
                 salas: "206"
@@ -45,13 +44,13 @@ export default function Setores() {
 
     }
 
-        async function excluir(id) {
+    async function excluir(id) {
         const opcao = confirm("Tem certe que deseja exluir?")
-        if(opcao == false){
+        if (opcao == false) {
             return
         }
 
-        const response = await supabase.from('setores').delete().eq('id',id)
+        const response = await supabase.from('setores').delete().eq('id', id)
     }
 
     useEffect(() => {
@@ -80,8 +79,8 @@ export default function Setores() {
                     <div className="row">
                         <div className="col-8">
                             <div className="input-group mb-3">
-                                <input className="form-control" placeholder="Pesquisar" value={pesquisa} 
-                                onChange={e => alteraPesquisa(e.target.value) } />
+                                <input className="form-control" placeholder="Pesquisar" value={pesquisa}
+                                    onChange={e => alteraPesquisa(e.target.value)} />
                                 <button className="btn btn-outline-secondary">🔎</button>
                             </div>
                         </div>
@@ -112,7 +111,7 @@ export default function Setores() {
                                                 (item) =>
                                                     <tr>
                                                         <th scope="row"> {item.salas} </th>
-                                                        <th>  <button  onClick={ ()=> location.href = "/setores/"+item.id } > 👁 </button> <button onClick={ ()=> excluir(item.id) } > 🗑 </button> </th>
+                                                        <th>  <button className='btn btn-primary' onClick={() => location.href = "/setores/" + item.id} > 👁 </button> <button  className='btn btn-primary' onClick={() => excluir(item.id)} > 🗑 </button> </th>
                                                     </tr>
                                             )
                                         }

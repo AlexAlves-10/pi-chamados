@@ -12,7 +12,7 @@ function GerenciadorUsuarios() {
     const [administrador, alteraAdministrador] = useState(false)
     const [usuarios, alteraUsuarios] = useState([])
     const [mostrarForm, alteraMostrarForm] = useState(false)
-    const [editandoId, alteraEditandoId] = useState();
+    const [editandoId, alteraEditandoId] = useState(null);
 
     async function buscar() {
         const { data, error } = await supabase
