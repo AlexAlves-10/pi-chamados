@@ -25,8 +25,6 @@ export default function Pedidos() {
 // Separação por turno
 const pedidosManha = listaPedidos.filter(
   p => p.turno?.toLowerCase() === 'manhã' 
-  // ✅ toLowerCase + comparação em minúsculo
-  // ✅ ?. evita quebrar se vier null
 )
 
 const pedidosTarde = listaPedidos.filter(
