@@ -7,19 +7,21 @@ import supabase from '../conexao/bancos';
 export default function EquipamentosEscola() {
 
   const [verModal, alteraVerModal] = useState(false);
+  
 
   const [equipamentos, alteraEquipamentos] = useState([]);
   const [nome, alteraNome] = useState("");
   const [descricao, alteraDescricao] = useState("");
-  const [quantidade, alteraQuantidade] = useState()
+  const [quantidade, alteraQuantidade] = useState("")
   const [estoque, alteraEstoque] = useState(true)
-
+  const [editandoId, alteraEditandoId] = useState(null);
 
   async function buscar() {
 
     const { data, error } = await supabase
       .from('equipamentos')
       .select()
+      .order('id', {ascending: true})
 
     console.log(data)
     alteraEquipamentos(data)
@@ -30,32 +32,63 @@ export default function EquipamentosEscola() {
     buscar();
   }, []);
 
-  async function salvar() {
+    async function salvar() {
+        if (!nome || !quantidade || !descricao) {
+            alert("Preencha todos os campos!")
+            return;
+        }
 
-    const objeto = {
-      nome: nome,
-      descricao: descricao,
-      quantidade: quantidade,
-      estoque: estoque
+        const objeto = {
+            nome: nome,
+            descricao: descricao,
+            quantidade: quantidade,
+            estoque: estoque
+        }
+        if (editandoId) {
+
+            const { error } = await supabase
+                .from('equipamentos')
+                .update(objeto)
+                .eq('id', editandoId)
+            if (error) {
+                console.log(error)
+                alert("erro ao atualizar")
+                return
+            }
+            alert("atualizado")
+        } else {
+            const { error } = await supabase
+                .from('equipamentos')
+                .insert(objeto)
+
+            if (error) {
+                console.log(error)
+                alert("erro ao cadastrar")
+                return
+            }
+            alert("cadastrado!")
+        }
+        
+        alteraNome("")
+        alteraDescricao("")
+        alteraQuantidade("")
+        alteraEditandoId(null)
+        alteraVerModal(false)
+
+        buscar()
     }
 
-    const { error } = await supabase
-      .from('equipamentos')
-      .insert(objeto)
 
-    if (error == null) {
-      alert("Equipamento cadastrado com sucesso!")
-      alteraNome("")
-      alteraDescricao("")
-      alteraQuantidade("")
-      alteraEstoque(true)
-    } else {
-      alert("Dados inválidos, verifique os campos e tente novamente...")
+    async function editar(equipamento) {
+        alteraNome(equipamento.nome);
+        alteraQuantidade(equipamento.quantidade);
+        alteraDescricao(equipamento.descricao);
+        alteraEditandoId(equipamento.id)
+        alteraVerModal(true)
     }
 
-    alteraVerModal(false);
 
-  };
+
 
   return (
 
@@ -81,6 +114,7 @@ export default function EquipamentosEscola() {
               <td>{item.descricao}</td>
               <td>{item.quantidade}</td>
               <td>{item.estoque ? "Sim" : "Não"}</td>
+              <td> <button className='btn btn-warning btn-sm me-2' onClick={() =>  editar(item)}>  EDITAR </button> </td>
             </tr>
           ))}
         </tbody>
@@ -88,17 +122,9 @@ export default function EquipamentosEscola() {
       </table>
 
       <div className="text-end mt-3">
-        <button
-          className="btn btn-success me-2"     
-          onClick={() => alteraVerModal(true)}
-        >
-          Cadastrar
-        </button>
-        <button
-          className="btn btn-warning"
-        >
-          Editar
-        </button>
+
+        <button className="btn btn-success me-2" onClick={() => {alteraVerModal(true); alteraEditandoId(false)} }> Cadastrar </button>
+
       </div>
 
       {verModal && (

@@ -9,7 +9,13 @@ export default function Pedidos() {
   async function buscaPedidos() {
     const { data, error } = await supabase
       .from('pedidos')
-      .select(`*`)
+      .select(`
+            *,
+            setores!pedidos_id_setor_fkey (salas),
+            equipamentos!pedidos_id_equipamento_fkey (nome)
+            `)
+
+    console.log(data)
 
     if (error) {
       console.error(error)
@@ -22,18 +28,20 @@ export default function Pedidos() {
   useEffect(() => {
     buscaPedidos()
   }, [])
-// Separação por turno
-const pedidosManha = listaPedidos.filter(
-  p => p.turno?.toLowerCase() === 'manhã' 
-)
+  // Separação por turno
+  const pedidosManha = listaPedidos.filter(
+    p => p.turno?.toLowerCase() === 'manhã'
+    // ✅ toLowerCase + comparação em minúsculo
+    // ✅ ?. evita quebrar se vier null
+  )
 
-const pedidosTarde = listaPedidos.filter(
-  p => p.turno?.toLowerCase() === 'tarde'
-)
+  const pedidosTarde = listaPedidos.filter(
+    p => p.turno?.toLowerCase() === 'tarde'
+  )
 
-const pedidosNoite = listaPedidos.filter(
-  p => p.turno?.toLowerCase() === 'noite'
-)
+  const pedidosNoite = listaPedidos.filter(
+    p => p.turno?.toLowerCase() === 'noite'
+  )
 
   return (
     <div className="container">
@@ -59,8 +67,8 @@ const pedidosNoite = listaPedidos.filter(
                 <tbody>
                   {pedidosManha.map((pedido) => (
                     <tr>
-                      <td>{pedido.id_setor}</td>
-                      <td>{pedido.id_equipamento}</td>
+                      <td>{pedido.setores?.salas}</td>
+                      <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
                     </tr>
                   ))}
@@ -88,8 +96,8 @@ const pedidosNoite = listaPedidos.filter(
                 <tbody>
                   {pedidosTarde.map((pedido) => (
                     <tr>
-                      <td>{pedido.id_setor}</td>
-                      <td>{pedido.id_equipamento}</td>
+                      <td>{pedido.setores?.salas}</td>
+                      <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
                     </tr>
                   ))}
@@ -117,8 +125,8 @@ const pedidosNoite = listaPedidos.filter(
                 <tbody>
                   {pedidosNoite.map((pedido) => (
                     <tr>
-                      <td>{pedido.id_setor}</td>
-                      <td>{pedido.id_equipamento}</td>
+                      <td>{pedido.setores?.salas}</td>
+                      <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
                     </tr>
                   ))}
