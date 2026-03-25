@@ -3,11 +3,14 @@ import { createClient } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ');
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 
 
 export default function Setores() {
+
+    const [editando, alteraEditando] = useState(false)
 
     const [pesquisa, alteraPesquisa] = useState("")
     const [salas, alteraSalas] = useState("")
@@ -40,7 +43,14 @@ export default function Setores() {
         const { error } = await supabase
             .from('setores')
             .insert(objeto)
+            .order('setores', { ascending: false })
         console.log(error)
+
+        const modal = document.getElementById('novoModal')
+        const modalBootstrap = bootstrap.Modal.getInstance(modal)
+        modalBootstrap.hide()
+
+        buscar()
 
     }
 
@@ -49,8 +59,49 @@ export default function Setores() {
         if (opcao == false) {
             return
         }
-
         const response = await supabase.from('setores').delete().eq('id', id)
+
+        buscar()
+    }
+
+
+    function editar(objeto) {
+
+        alteraSalas(objeto.salas)
+        alteraEditando(objeto.id)
+
+    }
+
+    function cancelaEdicao() {
+
+        alteraSalas("")
+        alteraEditando(null)
+
+    }
+
+    async function atualizar() {
+
+        const objeto = {
+            salas: salas
+        }
+
+        const { error } = await supabase
+            .from('setores')
+            .update(objeto)
+            .eq('id', editando)
+
+        if (error == null) {
+            alert("Atulalizado com sucesso!")
+            cancelaEdicao()
+        } else {
+            alert("Dados inválidos! Verifique os campos e tente novamento...")
+        }
+
+        const modal = document.getElementById('editarModal')
+        const modalBootstrap = bootstrap.Modal.getInstance(modal)
+        modalBootstrap.hide()
+
+        buscar()
     }
 
     useEffect(() => {
@@ -88,7 +139,7 @@ export default function Setores() {
 
                     {/* <!-- Cadastro --> */}
                     <div className="text-end my-3">
-                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Novo</button>
+                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoModal">Novo</button>
                     </div>
 
                     {/* <!-- Tabela de Listagem --> */}
@@ -111,7 +162,7 @@ export default function Setores() {
                                                 (item) =>
                                                     <tr>
                                                         <th scope="row"> {item.salas} </th>
-                                                        <th>  <button className='btn btn-primary' onClick={() => location.href = "/setores/" + item.id} > 👁 </button> <button  className='btn btn-primary' onClick={() => excluir(item.id)} > 🗑 </button> </th>
+                                                        <th> <button data-bs-toggle="modal" data-bs-target="#editarModal" className='btn btn-primary' onClick={() => editar(item)} > <i class="bi bi-pencil-fill"></i> </button> <button className='btn btn-danger' onClick={() => excluir(item.id)} > 🗑 </button> </th>
                                                     </tr>
                                             )
                                         }
@@ -127,19 +178,20 @@ export default function Setores() {
 
             {/* <!-- Modals --> */}
             <form onSubmit={salvar}>
+
                 <div>
-                    <div className="modal fade" id="exampleModal" tabindex="-1">
+                    <div className="modal fade" id="novoModal" tabindex="-1">
                         <div className="modal-dialog">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h3 className="modal-title fs-5">Cadastro de novo usúario</h3>
+                                    <h3 className="modal-title fs-5">Cadastro de novo Usuário</h3>
                                     <button className="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div className="modal-body">
                                     <div className="mb-3">
                                         <label className="form-label w-100">
                                             Digite a Sala:
-                                            <input onChange={e => alteraSalas(e.target.value)} className="form-control" />
+                                            <input value={salas} onChange={e => alteraSalas(e.target.value)} className="form-control" />
                                         </label>
                                     </div>
                                 </div>
@@ -151,7 +203,37 @@ export default function Setores() {
                         </div>
                     </div>
                 </div>
+
+
             </form>
+
+
+            <div>
+                <div className="modal fade" id="editarModal" tabindex="-1">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h3 className="modal-title fs-5"> Editando Usuário</h3>
+                                <button className="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div className="modal-body">
+                                <div className="mb-3">
+                                    <label className="form-label w-100">
+                                        Digite a Sala:
+                                        <input value={salas} onChange={e => alteraSalas(e.target.value)} className="form-control" />
+                                    </label>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={() => atualizar()} type='button' className="btn btn-primary">Atualizar</button>
+                                <button onClick={() => cancelaEdicao()} type='button' className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     )
 
