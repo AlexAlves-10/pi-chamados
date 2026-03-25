@@ -17,6 +17,7 @@ export default function Pedidos() {
     const [listaUsuarios, alteraListaUsuarios] = useState([])
     const [listasetores, alteraListasetores] = useState([])
     const [listaEquipamentos, alteraListaEquipamentos] = useState([])
+    const [listaQuantidade, alteraListaQuantidade] = useState([])
 
     const [editando, alteraEditando] = useState(null)
 
@@ -64,6 +65,14 @@ export default function Pedidos() {
             .from('equipamentos')
             .select('*')
         alteraListaEquipamentos(data)
+    }
+    
+
+    async function buscarQuantidade(){
+        const {data, error} = await supabase
+        .from('equipamentos')
+        .select ('quantidade')
+        alteraListaQuantidade(data)
     }
 
     // function editar 
@@ -150,6 +159,7 @@ export default function Pedidos() {
         buscarUsuarios()
         buscarsetores()
         buscarEquipamentos()
+        buscarQuantidade()
     }, [])
 
     //* tabelas, formularios
@@ -199,7 +209,15 @@ export default function Pedidos() {
                         <br/>
                         {/* selecione a quantidade */}
                         <p>Insira a quantidade</p>
-                        <input value={quantidade} onChange={e => alteraQuantidade(e.target.value)}/>
+                        <select value={quantidade} onChange={e => alteraQuantidade(e.target.value)}  >   
+                            
+                            <option value="">Selecione...</option>
+                            {listaQuantidade ?.map(
+                                item => <option value={item.id}> {item.quantidade} </option>
+                            )}
+                            </select> 
+
+
                         <br/>
                         <br/>
                         {/* selecione o turno */}
