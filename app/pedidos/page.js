@@ -1,11 +1,10 @@
 'use client'
 
 import { useEffect, useState } from "react";
-
 import { createClient } from '@supabase/supabase-js'
+
 const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
 
-//*functions
 export default function Pedidos() {
     const [id_usuario, alteraIdusuario] = useState("")
     const [id_setor, alteraIdsetor] = useState("")
@@ -14,77 +13,93 @@ export default function Pedidos() {
     const [turno, alteraTurno] = useState("")
     const [pedidos, alteraPedidos] = useState([])
 
-// criadas para realizar a seleção de chaves
+    // criadas para realizar a seleção de chaves
     const [listaUsuarios, alteraListaUsuarios] = useState([])
     const [listasetores, alteraListasetores] = useState([])
     const [listaEquipamentos, alteraListaEquipamentos] = useState([])
-    
 
-// somente turno
-function formataTurno (turno){
+    const [editando, alteraEditando] = useState(null)
 
-if(turno == "manhã"){
-    return <span className="badge rounded-pill text-bg-primary">Manha</span>
-}
-
-if(turno == "tarde"){
-    return <span className="badge rounded-pill text-bg-danger">Tarde</span>
-}
-
-if(turno == "noite" ){
-    return <span className="badge rounded-pill text-bg-warning">Noite</span>
-}
-
-}
-//*async function
-    async function buscarPedidos() {
-        const { data, error } = await supabase
-            .from("pedidos")
-            .select('*, id_usuario(nome), id_equipamento(nome), id_setor(salas)' )
-
-            if(data){
-                alteraPedidos(data)
-            }
+    // somente turno
+    function formataTurno (turno){
+        if(turno == "manhã"){
+            return <span className="badge rounded-pill text-bg-primary">Manha</span>
+        }
+        if(turno == "tarde"){
+            return <span className="badge rounded-pill text-bg-danger">Tarde</span>
+        }
+        if(turno == "noite" ){
+            return <span className="badge rounded-pill text-bg-warning">Noite</span>
+        }
     }
 
-async function buscarUsuarios(){
-    const { data, error } = await supabase
+    //*async function
+    async function buscarPedidos() {
+        // CORREÇÃO: Buscando o 'id' original junto com as colunas conectadas
+        const { data, error } = await supabase
+            .from("pedidos")
+            .select('*, id_usuario(id, nome), id_equipamento(id, nome), id_setor(id, salas)' )
+
+        if(data){
+            alteraPedidos(data)
+        }
+    }
+
+    async function buscarUsuarios(){
+        const { data, error } = await supabase
             .from('usuarios')
             .select('*')
-            console.log(error)
         alteraListaUsuarios(data)
+    }
 
-}
-
-async function buscarsetores(){
-    const { data, error } = await supabase
+    async function buscarsetores(){
+        const { data, error } = await supabase
             .from('setores')
             .select('*')
-            console.log(error)
         alteraListasetores(data)
+    }
 
-}
-
-async function buscarEquipamentos(){
-    const { data, error } = await supabase
+    async function buscarEquipamentos(){
+        const { data, error } = await supabase
             .from('equipamentos')
             .select('*')
-            console.log(error)
         alteraListaEquipamentos(data)
+    }
 
-}
+    // function editar 
+    function edita (objeto) {
+        alteraEditando(objeto.id)
+        alteraQuantidade(objeto.quantidade)
+        alteraTurno(objeto.turno)
+        
+        // CORREÇÃO: Pegando o '.id' de dentro do objeto devolvido pelo Supabase
+        alteraIdusuario(objeto.id_usuario?.id || "")
+        alteraIdsetor(objeto.id_setor?.id || "")
+        alteraIdequipamento(objeto.id_equipamento?.id || "")
+    }
+    
+    function cancelaEdicao() {
+        alteraEditando(null)
+        alteraIdusuario("")
+        alteraQuantidade("")
+        alteraIdsetor("")
+        alteraIdequipamento("")
+        alteraTurno("")
+    }
 
-
-// function excluir
-async function excluir(id) {
+    // function excluir
+    async function excluir(id) {
         const opcao = confirm("Tem certeza que deseja excluir?")
         if (opcao == false) {
             return
         }
-        const response = await supabase.from('pedidos').delete().eq('id', id)}
-// condigo inicial
+        const response = await supabase.from('pedidos').delete().eq('id', id)
+        buscarPedidos()
+    }
+
+    // condigo inicial
     async function salvar(e) {
-        e.preventDefault()
+        if (e) e.preventDefault()
         const objeto = {
             id_usuario: id_usuario,
             id_setor: id_setor,
@@ -96,159 +111,152 @@ async function excluir(id) {
         const {data, error } = await supabase
             .from('pedidos')
             .insert(objeto)
-            
-      console.log(objeto)
-      console.log(data)
-      console.log(error)
 
         if (error == null) {
             alert("Pedido cadastrado com sucesso!")
-            alteraIdusuario("")
-            alteraIdsetor("")
-            alteraIdequipamento("")
-            alteraQuantidade("")
-            alteraTurno("")
-           buscarPedidos() 
+            cancelaEdicao() // Limpa os campos da tela
+            buscarPedidos() 
         } else {
             alert("Dados incorretos, tente novamente...")
         }
-
-            // adicionei buscas
     }
+
+    //atualizar 
+    async function atualizarAgora() {
+        const objeto = {
+            id_usuario: id_usuario, // Incluído para não perder o usuário ao atualizar
+            quantidade: quantidade,
+            id_equipamento: id_equipamento,
+            id_setor: id_setor,
+            turno : turno
+        }
+
+        const { error } = await supabase
+            .from('pedidos')
+            .update(objeto)
+            .eq('id', editando)
+
+        if(error == null){
+            alert("Atualização realizada com sucesso!")
+            cancelaEdicao()
+            buscarPedidos()
+        }else{
+            alert("DADOS INVALIDOS, TENTE NOVAMENTE")
+        }
+    }
+
     useEffect(() => {
         buscarPedidos()
         buscarUsuarios()
         buscarsetores()
         buscarEquipamentos()
-        
     }, [])
-//* tabelas, formularios
-    return (
 
+    //* tabelas, formularios
+    return (
         <div >
             <h1 className="titulo ">Gerenciamento de pedidos🧾</h1>
             <br />
             <h2 className=" text-center">Cadastro de novo pedido💻</h2>
             <br />
             {/* selecione o usuario */}
-            <div> <form onSubmit={salvar} >
+            <div> 
+
+
+
+                <form onSubmit={salvar} >
                     <p>Selecione o Usuario</p>
-                    <select onChange={e => alteraIdusuario(e.target.value)}>    
-                    <option>Selecione...</option>
-                    {
-                        listaUsuarios.map(
-
+                    <select value={id_usuario} disabled={editando != null} onChange={e => alteraIdusuario(e.target.value)}>    
+                        <option value="">Selecione...</option>
+                        {listaUsuarios?.map(
                             item => <option value={item.id}> {item.nome} </option>
-
-                        )
-                    }
+                        )}
                     </select>
                     
-
-<br/>
-<br/>
-                {/* selecione o setor */}
-                <p>Selecione o Setor</p>
-                    <select onChange={e => alteraIdsetor(e.target.value)}>    
-                    <option>Selecione...</option>
-                    {
-                        listasetores.map(
-
-                            item => <option value={item.id}> {item.salas} </option>
-
-                        )
-                    }
-                    </select>
-<br/>
-<br/>
-{/* selecione o equipamento */}
-                    <p>Selecione o Equipamento</p>
-                    <select onChange={e => alteraIdequipamento(e.target.value)}>    
-                        <option>Selecione...</option>
-                    {
-                        listaEquipamentos.map(
-
-                            item => <option value={item.id}> {item.nome} </option>
-
-                        )
-                    }
-                    </select>
+                    <br/>
+                    <br/>
+                    {/* selecione o setor */}
                     
+                        <p>Selecione o Setor</p>
+                        <select value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>    
+                            <option value="">Selecione...</option>
+                            {listasetores?.map(
+                                item => <option value={item.id}> {item.salas} </option>
+                            )}
+                        </select>
+                        <br/>
+                        <br/>
+                        {/* selecione o equipamento */}
+                        <p>Selecione o Equipamento</p>
+                        <select value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>    
+                            <option value="">Selecione...</option>
+                            {listaEquipamentos?.map(
+                                item => <option value={item.id}> {item.nome} </option>
+                            )}
+                        </select>
+                        
+                        <br/>
+                        <br/>
+                        {/* selecione a quantidade */}
+                        <p>Insira a quantidade</p>
+                        <input value={quantidade} onChange={e => alteraQuantidade(e.target.value)}/>
+                        <br/>
+                        <br/>
+                        {/* selecione o turno */}
+                        <p>Selecione o Turno</p>
+                        <select value={turno} onChange={e => alteraTurno(e.target.value)} >    
+                            <option value="">Selecione...</option>
+                            <option value="Manhã">Manhã</option>
+                            <option value="Tarde">Tarde</option>
+                            <option value="Noite">Noite</option>
+                        </select>
+                    </form>
+                </div>
+                       
+                <br/>
+                <br/>
+                {editando != null ?
+                    <div>
+                        <button onClick={cancelaEdicao}>Cancelar</button>
+                        <button onClick={atualizarAgora}>Atualizar</button>
+                    </div>
+                    :
+                    <button onClick={salvar}>Salvar</button>
+                }
 
-<br/>
-<br/>
-{/* selecione a quantidade */}
-                    <p>Insira a quantidade</p>
-                    <input onChange={e => alteraQuantidade(e.target.value)}/>
-<br/>
-<br/>
-{/* selecione o turno */}
-                    <p>Selecione o Turno</p>
-                    <select onChange={e => alteraTurno(e.target.value)} >    
-                        <option>Selecione...</option>
-                        <option>Manhã</option>
-                        <option>Tarde</option>
-                        <option>Noite</option>
-                
-                    </select>
-
-            </form></div>
             <br/>
-             <br/>
-            <button className="text-align-right bnt-bnt primary" onClick={salvar}>Salvar</button>
-
- <br/>
-  <br/>
-{/* tabela */}
+            <br/>
+            {/* tabela */}
             <table className="table">
                 <thead>
                     <tr>
-                        <th > nome  </th>
-                        <th > setor </th>
-                        <th > equipamento </th>
-                        <th > quantidade  </th>
-                        <th > turno  </th>
-                        <th> Ações </th>
+                        <th > NOME  </th>
+                        <th > SETOR </th>
+                        <th > EQUIPAMENTO </th>
+                        <th > QUANTIDADE  </th>
+                        <th > TURNO  </th>
+                        <th> AÇÕES </th>
                     </tr>
                 </thead>
-
                 <tbody>
-                    {pedidos.map(
+                    {pedidos?.map(
                         item => <tr>
-                            <td>{item.id_usuario.nome}</td>
-                            <td>{item.id_setor.salas}</td>
-                            <td>{item.id_equipamento.nome}</td>
+                            <td>{item.id_usuario?.nome}</td>
+                            <td>{item.id_setor?.salas}</td>
+                            <td>{item.id_equipamento?.nome}</td>
                             <td>{item.quantidade}</td>
-                            <td>{formataTurno(item.turno)}</td>
-                            <td> <button onClick={() => location.href = "/pedidos/" + item.id} >Ver</button>
-                                    <button onClick={() => excluir(item.id)}>Excluir</button> </td>
+                            <td>{item.turno}</td>
+                            <td> 
+                                <button onClick={() => excluir(item.id)}>Excluir</button> 
+                                <button onClick={() => edita(item)}>Editar</button>
+                            </td>
                         </tr>
-
-                    )
-
-                    }
+                    )}
                 </tbody>
-
             </table>
-
-
-
-
-       
-
         </div>
-
-
-
     )
 }
-
-
-
-
-
-
-
 
 
 
