@@ -62,21 +62,7 @@ export default function Pedidos() {
         alteraListaEquipamentos(data)
     }
 
-<<<<<<< HEAD
     function edita(objeto) {
-=======
-    async function buscarQuantidade(){
-        const {data, error} = await supabase
-        .from('equipamentos')
-        .select ('quantidade')
-        alteraListaQuantidade(data)
-
-        
-    }
-
-    // function editar 
-    function edita (objeto) {
->>>>>>> 163ca920092b8b5f625d838b611812d062fe4586
         alteraEditando(objeto.id)
         alteraQuantidade(objeto.quantidade)
         alteraTurno(objeto.turno)
@@ -145,7 +131,7 @@ export default function Pedidos() {
             id_setor,
             id_equipamento,
             quantidade: qtd,
-            turno
+            turno,
         }
 
         const { error } = await supabase.from('pedidos')
@@ -212,7 +198,6 @@ export default function Pedidos() {
                     )}
                 </select>
 
-<<<<<<< HEAD
                 <p>Equipamento</p>
                 <select value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>
                     <option value="">Selecione...</option>
@@ -225,51 +210,6 @@ export default function Pedidos() {
                 <p>
                     Disponível: {equipamentoSelecionado ? equipamentoSelecionado.quantidade : 1}
                 </p>
-=======
-                <form onSubmit={salvar} >
-                    <p>Selecione o Usuario</p>
-                    <select value={id_usuario} disabled={editando != null} onChange={e => alteraIdusuario(e.target.value)}>    
-                        <option value="">Selecione...</option>
-                        {listaUsuarios?.map(
-                            item => <option value={item.id}> {item.nome} </option>
-                        )}
-                    </select>
-                    
-                    <br/>
-                    <br/>
-                    {/* selecione o setor */}
-                    
-                        <p>Selecione o Setor</p>
-                        <select value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>    
-                            <option value="">Selecione...</option>
-                            {listasetores?.map(
-                                item => <option value={item.id}> {item.salas} </option>
-                            )}
-                        </select>
-                        <br/>
-                        <br/>
-                        
-                        <p>Selecione o Equipamento</p>
-                        <select value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>    
-                            <option value="">Selecione...</option>
-                            {listaEquipamentos?.map(
-                                item => <option value={item.id}> {item.nome} 
-                                
-                                    </option>
-                            )}
-                        </select>
-                        
-                        <br/>
-                        <br/>
-                        {/* selecione a quantidade */}
-                        <p>Insira a quantidade</p>
-                        <input value={quantidade} onChange={e => alteraQuantidade(e.target.value)} />       
-                            
-                            
-                           
-                            
-                            
->>>>>>> 163ca920092b8b5f625d838b611812d062fe4586
 
                 {/*  */}
                 <p>Quantidade</p>
