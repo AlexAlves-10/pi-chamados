@@ -13,6 +13,13 @@ function GerenciadorUsuarios() {
     const [usuarios, alteraUsuarios] = useState([])
     const [mostrarForm, alteraMostrarForm] = useState(false)
     const [editandoId, alteraEditandoId] = useState(null);
+    const [pesquisa, alteraPesquisa] = useState("")
+
+    const listaFiltrada = usuarios.filter(
+        (item) => item.nome.toLocaleLowerCase().includes(pesquisa.toLocaleLowerCase()) ||
+            item.email.toLocaleLowerCase().includes(pesquisa.toLocaleLowerCase())
+
+    )
 
     async function buscar() {
         const { data, error } = await supabase
@@ -71,7 +78,7 @@ function GerenciadorUsuarios() {
 
         buscar()
     }
-// para o editar tambem é necessario pegar isso, porem voce muda os campos que necessario
+    // para o editar tambem é necessario pegar isso, porem voce muda os campos que necessario
     async function editar(usuario) {
         alteraNome(usuario.nome);
         alteraEmail(usuario.email);
@@ -140,7 +147,19 @@ function GerenciadorUsuarios() {
                         </div>
                     )}
 
-                    <button onClick={buscar} type='button' className='btn btn-primary' > Carregar Usuários </button>
+                    <div className='d-flex aling-items-center gap-3 mb-3'>
+
+                        <button onClick={buscar} type='button' className='btn btn-primary' > Carregar Usuários </button>
+
+
+                        <div className="input-group ms-auto" style={{width:"500px"}}>
+                            <input className="form-control" placeholder="Pesquisar" value={pesquisa}
+                                onChange={e => alteraPesquisa(e.target.value)} />
+                            <button className="btn btn-outline-secondary">🔎</button>
+                        </div>
+
+                    </div>
+
                     <br /><br />
 
                     <table className="table">
@@ -154,7 +173,7 @@ function GerenciadorUsuarios() {
                             </tr>
                         </thead>
                         <tbody>
-                            {usuarios.map(item => (
+                            {listaFiltrada.map(item => (
                                 <tr >
                                     <td>{item.id}</td>
                                     <td>{item.nome}</td>
