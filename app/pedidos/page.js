@@ -73,6 +73,8 @@ export default function Pedidos() {
         .from('equipamentos')
         .select ('quantidade')
         alteraListaQuantidade(data)
+
+        
     }
 
     // function editar 
@@ -196,12 +198,14 @@ export default function Pedidos() {
                         </select>
                         <br/>
                         <br/>
-                        {/* selecione o equipamento */}
+                        
                         <p>Selecione o Equipamento</p>
                         <select value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>    
                             <option value="">Selecione...</option>
                             {listaEquipamentos?.map(
-                                item => <option value={item.id}> {item.nome} </option>
+                                item => <option value={item.id}> {item.nome} 
+                                
+                                    </option>
                             )}
                         </select>
                         
@@ -209,14 +213,12 @@ export default function Pedidos() {
                         <br/>
                         {/* selecione a quantidade */}
                         <p>Insira a quantidade</p>
-                        <select value={quantidade} onChange={e => alteraQuantidade(e.target.value)}  >   
+                        <input value={quantidade} onChange={e => alteraQuantidade(e.target.value)} />       
                             
-                            <option value="">Selecione...</option>
-                            {listaQuantidade ?.map(
-                                item => <option value={item.id}> {item.quantidade} </option>
-                            )}
-                            </select> 
-
+                            
+                           
+                            
+                            
 
                         <br/>
                         <br/>
