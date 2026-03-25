@@ -28,19 +28,12 @@ export default function Pedidos() {
   useEffect(() => {
     buscaPedidos()
   }, [])
-<<<<<<< HEAD
   // Separação por turno
   const pedidosManha = listaPedidos.filter(
     p => p.turno?.toLowerCase() === 'manhã'
     // ✅ toLowerCase + comparação em minúsculo
     // ✅ ?. evita quebrar se vier null
   )
-=======
-// Separação por turno
-const pedidosManha = listaPedidos.filter(
-  p => p.turno?.toLowerCase() === 'manhã' 
-)
->>>>>>> ceac74137926c2efdddb9c57daf75395ad8953af
 
   const pedidosTarde = listaPedidos.filter(
     p => p.turno?.toLowerCase() === 'tarde'
