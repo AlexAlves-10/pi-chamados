@@ -26,3 +26,11 @@ dashboard
 fazer tambem parte de design (paleta de cor,padrao de fabrica e facilidadores )
 fazer verificação de fatores,editar e excluir
 landingpage 
+
+
+
+
+
+MELHORIAS URGENTES:
+DESING: seguir padrao de 70/20/10
+melhorar os codigos: reduzir,deixar ele fazendo tudo oque imaginamos para ele fazer
