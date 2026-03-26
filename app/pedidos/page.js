@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js'
-
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
 
@@ -37,7 +37,7 @@ export default function Pedidos() {
         }
     }
 
-    
+
     async function buscarPedidos() {
         const { data, error } = await supabase
             .from("pedidos")
@@ -136,7 +136,7 @@ export default function Pedidos() {
         }
 
         const { error } = await supabase.from('pedidos')
-        .insert(objeto)
+            .insert(objeto)
 
         if (!error) {
             alert("Pedido cadastrado com sucesso!")
@@ -182,93 +182,98 @@ export default function Pedidos() {
         <div href="./formulario.css" >
             <h1>Gerenciamento de pedidos</h1>
 
-            <form className="formulario" onSubmit={salvar}>
-                <p>Usuario</p>
-                <select  disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
-                    <option value="">Selecione...</option>
-                    {listaUsuarios.map(item =>
-                        <option value={item.id}>{item.nome}</option>
+            <div className="col-4">
+                <form className="formulario" onSubmit={salvar}>
+                    <p>Usuario</p>
+                    <select className="form-select w-25" disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
+                        <option value="">Selecione...</option>
+                        {listaUsuarios.map(item =>
+                            <option value={item.id}>{item.nome}</option>
+                        )}
+                    </select>
+
+                    <p>Setor</p>
+                    <select className="form-select w-25" value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>
+                        <option value="">Selecione...</option>
+                        {listasetores.map(item =>
+                            <option value={item.id}>{item.salas}</option>
+                        )}
+                    </select>
+
+                    <p>Equipamento</p>
+                    <select className="form-select w-25" value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>
+                        <option value="">Selecione...</option>
+                        {listaEquipamentos.map(item =>
+                            <option value={item.id}>{item.nome}</option>
+                        )}
+                    </select>
+
+                    {/*  pega a quantidade do equipamentos */}
+                    <p>
+                        Disponível: {equipamentoSelecionado ? equipamentoSelecionado.quantidade : 1}
+                    </p>
+
+                    {/*  */}
+                    <p>Quantidade</p>
+                    <input
+                        type="number"
+                        value={quantidade}
+                        max={equipamentoSelecionado?.quantidade || 0}
+                        onChange={e => alteraQuantidade(e.target.value)}
+                    />
+
+                    <p>Turno</p>
+                    <select className="form-select w-25" value={turno} onChange={e => alteraTurno(e.target.value)}>
+                        <option value="">Selecione...</option>
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Noite">Noite</option>
+                    </select>
+
+
+                    <br /><br />
+
+                    {editando != null ? (
+                        <>
+                            <button onClick={cancelaEdicao}>Cancelar</button>
+                            <button onClick={atualizarAgora}>Atualizar</button>
+                        </>
+                    ) : (
+                        <button className="btn btn-primary" type="submit">Salvar</button>
                     )}
-                </select>
-
-                <p>Setor</p>
-                <select value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>
-                    <option value="">Selecione...</option>
-                    {listasetores.map(item =>
-                        <option value={item.id}>{item.salas}</option>
-                    )}
-                </select>
-
-                <p>Equipamento</p>
-                <select value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>
-                    <option value="">Selecione...</option>
-                    {listaEquipamentos.map(item =>
-                        <option value={item.id}>{item.nome}</option>
-                    )}
-                </select>
-
-                {/*  pega a quantidade do equipamentos */}
-                <p>
-                    Disponível: {equipamentoSelecionado ? equipamentoSelecionado.quantidade : 1}
-                </p>
-
-                {/*  */}
-                <p>Quantidade</p>
-                <input
-                    type="number"
-                    value={quantidade}
-                    max={equipamentoSelecionado?.quantidade || 0}
-                    onChange={e => alteraQuantidade(e.target.value)}
-                />
-
-                <p>Turno</p>
-                <select value={turno} onChange={e => alteraTurno(e.target.value)}>
-                    <option value="">Selecione...</option>
-                    <option value="Manhã">Manhã</option>
-                    <option value="Tarde">Tarde</option>
-                    <option value="Noite">Noite</option>
-                </select>
-
-                <br /><br />
-
-                {editando != null ? (
-                    <>
-                        <button onClick={cancelaEdicao}>Cancelar</button>
-                        <button onClick={atualizarAgora}>Atualizar</button>
-                    </>
-                ) : (
-                    <button type="submit">Salvar</button>
-                )}
-            </form>
+                </form>
+            </div>
 
             <hr />
-
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Setor</th>
-                        <th>Equipamento</th>
-                        <th>Qtd</th>
-                        <th>Turno</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {pedidos.map(item => (
-                        <tr key={item.id}>
-                            <td>{item.id_usuario?.nome}</td>
-                            <td>{item.id_setor?.salas}</td>
-                            <td>{item.id_equipamento?.nome}</td>
-                            <td>{item.quantidade}</td>
-                            <td>{item.turno}</td>
-                            <td> <button onClick={() => excluir(item.id)}>Excluir</button> 
-                                <button onClick={() => edita(item)}>Editar</button> 
-                                    </td>
+            <div className="my-3 rounded-4 overflow-hidden shadow" >
+                <table className="table table-hover table-bordered border-dark">
+                    <thead className="table-primary">
+                        <tr>
+                            <th>Nome</th>
+                            <th>Setor</th>
+                            <th>Equipamento</th>
+                            <th>Qtd</th>
+                            <th>Turno</th>
+                            <th>Ações</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {pedidos.map(item => (
+                            <tr key={item.id}>
+                                <td>{item.id_usuario?.nome}</td>
+                                <td>{item.id_setor?.salas}</td>
+                                <td>{item.id_equipamento?.nome}</td>
+                                <td>{item.quantidade}</td>
+                                <td>{item.turno}</td>
+                                <td>
+                                    <button className='btn btn-primary' onClick={() => edita(item)}> <i class="bi bi-pencil-fill"></i> </button>
+                                    <button className="btn btn-danger" onClick={() => excluir(item.id)} > <i class="bi bi-trash3-fill"></i> </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

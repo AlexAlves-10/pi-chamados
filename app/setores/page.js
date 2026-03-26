@@ -150,7 +150,7 @@ export default function Setores() {
 
                             <div className="my-3 rounded-4 overflow-hidden shadow">
                                 <table className="table table-hover table-bordered border-dark" >
-                                    <thead class="table-primary" >
+                                    <thead className="table-primary" >
                                         <tr>
                                             <th scope="col">Sala</th>
                                             <th> Ações </th>
