@@ -1,9 +1,7 @@
 'use client'
-
 import { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js'
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
 const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
 
 export default function Pedidos() {
