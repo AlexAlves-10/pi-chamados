@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js'
 
+
 const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
 
 export default function Pedidos() {
@@ -178,12 +179,12 @@ export default function Pedidos() {
     }, [])
 
     return (
-        <div>
+        <div href="./formulario.css" >
             <h1>Gerenciamento de pedidos</h1>
 
-            <form onSubmit={salvar}>
+            <form className="formulario" onSubmit={salvar}>
                 <p>Usuario</p>
-                <select value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
+                <select  disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
                     <option value="">Selecione...</option>
                     {listaUsuarios.map(item =>
                         <option value={item.id}>{item.nome}</option>
@@ -242,7 +243,7 @@ export default function Pedidos() {
 
             <hr />
 
-            <table>
+            <table className="table">
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -250,6 +251,7 @@ export default function Pedidos() {
                         <th>Equipamento</th>
                         <th>Qtd</th>
                         <th>Turno</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -260,6 +262,9 @@ export default function Pedidos() {
                             <td>{item.id_equipamento?.nome}</td>
                             <td>{item.quantidade}</td>
                             <td>{item.turno}</td>
+                            <td> <button onClick={() => excluir(item.id)}>Excluir</button> 
+                                <button onClick={() => edita(item)}>Editar</button> 
+                                    </td>
                         </tr>
                     ))}
                 </tbody>

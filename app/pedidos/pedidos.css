@@ -1,0 +1,91 @@
+.formulario {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    margin: 30px auto;
+}
+
+/* Título dos campos */
+.formulario p {
+    margin: 12px 0 5px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+}
+
+/* Inputs e selects */
+.formulario select,
+.formulario input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+/* Foco */
+.formulario select:focus,
+.formulario input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* Texto "Disponível" */
+.formulario p:nth-of-type(4) {
+    font-size: 13px;
+    color: #64748b;
+    font-weight: normal;
+}
+
+/* Botões */
+.formulario button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* Salvar */
+.formulario button[type="submit"] {
+    background-color: #22c55e;
+    color: white;
+}
+
+/* Cancelar */
+.formulario button:first-of-type {
+    background-color: #ef4444;
+    color: white;
+}
+
+/* Atualizar */
+.formulario button:last-of-type {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* Hover */
+.formulario button:hover {
+    opacity: 0.85;
+}
+/* Hover */
+form button:hover {
+    opacity: 0.85;
+}
+
+/* Responsivo */
+@media (max-width: 500px) {
+    form {
+        margin: 20px;
+        padding: 20px;
+    }
+}
+   /* Centraliza a tela inteira */
