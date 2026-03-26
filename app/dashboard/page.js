@@ -49,7 +49,7 @@ export default function Pedidos() {
 
       <div className="row">
 
-        {/* MANHÃ */}
+       
         <div className="col-md-4">
           <div className="card">
             <div className="card-header bg-warning text-dark">
@@ -78,7 +78,6 @@ export default function Pedidos() {
           </div>
         </div>
 
-        {/* TARDE */}
         <div className="col-md-4">
           <div className="card">
             <div className="card-header bg-info text-white">
@@ -107,7 +106,7 @@ export default function Pedidos() {
           </div>
         </div>
 
-        {/* NOITE */}
+       
         <div className="col-md-4">
           <div className="card">
             <div className="card-header bg-dark text-white">
