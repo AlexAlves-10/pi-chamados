@@ -1,26 +1,31 @@
 'use client'
-
 import { useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import supabase from "../conexao/bancos";
 
 
 function Login() {
     const [autenticado, alteraAutenticado] = useState(false)
 
-    const [usuario, alteraUsuario] = useState("")
+    const [email, alteraEmail] = useState("")
     const [senha, alteraSenha] = useState("")
 
-    function autenticar() {
+     async function autenticar() {
 
-        if (usuario == "admin" && senha == 123123) {
-            alert("Você se conectou!")
-            localStorage.setItem("logado", true)
-            alteraAutenticado(true)
-        } else {
-            alert("Erro! Algum dado está errado...")
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: senha,
+        })
+
+        if(data.user == null){
+            alert("Dados inválidos...")
+            return
         }
-    }
 
+        alert("Autenticado com sucesso!")
+        localStorage.setItem("id_usuario", data.user.id)
+
+    }
     function desconectar() {
         alert("Desconectado com sucesso!")
         localStorage.removeItem("logado")
@@ -36,18 +41,18 @@ function Login() {
 
 
     return (
-        <div  className="row" >
+        <div className="row" >
             {
                 autenticado == false ?
                     <div>
                         <h1> Login </h1>
                         <div className=" mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Digite seu email</label>
-                        <input className="form-control border-light" onChange={e => alteraUsuario(e.target.value)} />
+                            <label for="exampleFormControlInput1" className="form-label">Digite seu email</label>
+                            <input className="form-control border-light" onChange={e => alteraEmail(e.target.value)} />
                         </div>
                         <br />
 
-                        <label for="exampleFormControlInput1" class="form-label">Digite sua senha</label>
+                        <label for="exampleFormControlInput1" className="form-label">Digite sua senha</label>
                         <input type="password" className="form-control border-light" onChange={e => alteraSenha(e.target.value)} />
 
                         <br />
