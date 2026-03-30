@@ -27,12 +27,12 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         
 
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-2 menuLateral">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-2 menuLateral">
               <MenuLateral/>
             </div>
-            <div class="col-10">
+            <div className="col-10">
               {children}
             </div>
           </div>
