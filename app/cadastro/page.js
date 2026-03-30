@@ -72,15 +72,7 @@ function Cadastro() {
                 <div className="mb-3" >
                     <label for="exampleFormControlInput1" className="form-label" > Digite o email: <input className="form-control border-dark input-cadastro" onChange={e => alteraEmail(e.target.value)} /> </label>
                 </div>
-
-                <div className="mb-3" >
-                    <label for="exampleFormControlInput1" className="form-label" > Digite o CPF: <input className="form-control border-dark input-cadastro" onChange={e => alteraCPF(e.target.value)} /> </label>
-                </div>
-
-                <div className="mb-3" >
-                    <label for="exampleFormControlInput1" className="form-label" > Digite o seu endareço: <input className="form-control border-dark input-cadastro" onChange={e => alteraEndareco(e.target.value)} /> </label>
-                </div>
-
+                
                 <button type="button" className="btn btn-outline-primary w-100 shadow"
                     style={{
                         width: "350px",
