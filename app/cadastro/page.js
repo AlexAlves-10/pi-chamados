@@ -52,7 +52,7 @@ function Cadastro() {
             alignItems: "center",
         }}>
 
-            <div className="card shadow"
+            <div className="card shadow text-center"
                 style={{
                     width: "350px",
                     borderRadius: "15px",
