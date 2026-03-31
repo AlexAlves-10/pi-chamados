@@ -28,6 +28,15 @@ export default function Pedidos() {
   useEffect(() => {
     buscaPedidos()
   }, [])
+
+  // Função para remover o pedido apenas da visualização atual
+  function concluirPedido(idDoPedido) {
+    const listaAtualizada = listaPedidos.filter(function(pedido) {
+      return pedido.id !== idDoPedido;
+    });
+    alteraListaPedidos(listaAtualizada);
+  }
+
   // Separação por turno
   const pedidosManha = listaPedidos.filter(
     p => p.turno?.toLowerCase() === 'manhã'
@@ -49,7 +58,6 @@ export default function Pedidos() {
 
       <div className="row">
 
-       
         <div className="col-md-4">
           <div className="card">
             <div className="card-header bg-warning text-dark">
@@ -70,6 +78,7 @@ export default function Pedidos() {
                       <td>{pedido.setores?.salas}</td>
                       <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
+                      <td><button onClick={function() { concluirPedido(pedido.id) }}> Concluir </button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -98,6 +107,7 @@ export default function Pedidos() {
                       <td>{pedido.setores?.salas}</td>
                       <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
+                      <td><button onClick={function() { concluirPedido(pedido.id) }}> Concluir </button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -106,7 +116,6 @@ export default function Pedidos() {
           </div>
         </div>
 
-       
         <div className="col-md-4">
           <div className="card">
             <div className="card-header bg-dark text-white">
@@ -127,6 +136,7 @@ export default function Pedidos() {
                       <td>{pedido.setores?.salas}</td>
                       <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
+                      <td><button onClick={function() { concluirPedido(pedido.id) }}> Concluir </button></td>
                     </tr>
                   ))}
                 </tbody>
