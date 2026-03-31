@@ -119,6 +119,7 @@ export default function EquipamentosEscola() {
             <th>Descrição</th>
             <th>Quantidade</th>
             <th>Estoque</th>
+            <th>Ações</th>
           </tr>
         </thead>
 

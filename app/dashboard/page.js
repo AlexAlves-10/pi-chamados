@@ -70,6 +70,7 @@ export default function Pedidos() {
                       <td>{pedido.setores?.salas}</td>
                       <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
+                      <td><button> Concluir </button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -98,6 +99,7 @@ export default function Pedidos() {
                       <td>{pedido.setores?.salas}</td>
                       <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
+                      <td><button> Concluir </button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -127,6 +129,7 @@ export default function Pedidos() {
                       <td>{pedido.setores?.salas}</td>
                       <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
+                      <td><button> Concluir </button></td>
                     </tr>
                   ))}
                 </tbody>
