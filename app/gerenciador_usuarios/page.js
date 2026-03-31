@@ -39,12 +39,24 @@ function GerenciadorUsuarios() {
             return;
         }
 
+        const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: senha,
+        })
+        console.log(data, error)
+        if(data.user == null){
+            console.log("ae seu burro esqueceu do emil ou sena")
+            return
+        }
+
         const objeto = {
+            id: data.user.id,
             nome: nome,
             email: email,
             senha: senha,
             administrador: administrador,
         }
+
         if (editandoId) {
 
             const { error } = await supabase
@@ -62,6 +74,7 @@ function GerenciadorUsuarios() {
                 .from('usuarios')
                 .insert(objeto)
 
+                console.log(error)
             if (error) {
                 console.log(error)
                 alert("erro ao cadastrar")
