@@ -29,7 +29,7 @@ export default function Pedidos() {
     buscaPedidos()
   }, [])
 
-  // Função para remover o pedido apenas da visualização atual
+  
   function concluirPedido(idDoPedido) {
     const listaAtualizada = listaPedidos.filter(function(pedido) {
       return pedido.id !== idDoPedido;
@@ -37,11 +37,10 @@ export default function Pedidos() {
     alteraListaPedidos(listaAtualizada);
   }
 
-  // Separação por turno
+ 
   const pedidosManha = listaPedidos.filter(
     p => p.turno?.toLowerCase() === 'manhã'
-    // ✅ toLowerCase + comparação em minúsculo
-    // ✅ ?. evita quebrar se vier null
+   
   )
 
   const pedidosTarde = listaPedidos.filter(
