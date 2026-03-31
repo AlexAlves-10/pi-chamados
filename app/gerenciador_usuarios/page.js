@@ -52,8 +52,7 @@ function GerenciadorUsuarios() {
             id: data.user.id,
             nome: nome,
             email: email,
-            senha: senha,
-            administrador: administrador,
+               administrador: administrador,
         }
 
         if (editandoId) {
