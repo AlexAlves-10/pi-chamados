@@ -14,15 +14,8 @@ export default function Setores() {
 
     const [pesquisa, alteraPesquisa] = useState("")
     const [salas, alteraSalas] = useState("")
-    const [listaTabela, alteraListaTabela] = useState(
-
-        [
-            {
-                salas: "206"
-            }
-        ]
-
-    )
+    const [listaTabela, alteraListaTabela] = useState([])
+    const [usuario, alteraUsuario] = useState(null)
 
     async function buscar() {
         const { data, error } = await supabase
@@ -138,9 +131,14 @@ export default function Setores() {
                     </div>
 
                     {/* <!-- Cadastro --> */}
-                    <div className="text-end my-3">
-                        <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoModal">Novo</button>
-                    </div>
+                    {
+                        usuario != null && usuario.admin == true ?
+                            <button>Cadastrar novo funcionário</button>
+                        :
+                            <div className='text-end my-3'>
+                                <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoModal">Novo</button>
+                            </div>
+                    }
 
                     {/* <!-- Tabela de Listagem --> */}
                     <div>

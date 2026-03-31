@@ -1,15 +1,12 @@
 'use client'
 import { useState } from "react"
 import supabase from "../conexao/bancos";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Cadastro() {
 
     const [senha, alteraSenha] = useState("")
     const [email, alteraEmail] = useState("")
-    const [cpf, alteraCPF] = useState("")
-    const [nome, alteraNome] = useState("")
-    const [endareco, alteraEndareco] = useState("")
+    const [nome,alteraNome] = useState("")
 
     async function cadastro() {
         // CADASTRAR NO AUTHENTICATION DO SUPABASE
@@ -23,13 +20,11 @@ function Cadastro() {
             return
         }
 
-
         // CADASTRO NA MINHA TABELA DE USUÁRIOS
         const objeto = {
             id: data.user.id,
             nome: nome,
-            cpf: cpf,
-            endareco: endareco,
+            email: email
         }
 
         const resposta = await supabase
@@ -62,7 +57,7 @@ function Cadastro() {
                 <h1 className="text-center mb-4"> 🧾 Cadastro </h1>
 
                 <div className="mb-3" >
-                    <label for="exampleFormControlInput1" className="form-label" > Digite seu nome: <input className="form-control border-dark input-cadastro" onChange={e => alteraSenha(e.target.value)} /> </label>
+                    <label for="exampleFormControlInput1" className="form-label" > Digite seu nome: <input className="form-control border-dark input-cadastro" onChange={e => alteraNome(e.target.value)} /> </label>
                 </div>
 
                 <div className="mb-3" >
@@ -72,13 +67,13 @@ function Cadastro() {
                 <div className="mb-3" >
                     <label for="exampleFormControlInput1" className="form-label" > Digite o email: <input className="form-control border-dark input-cadastro" onChange={e => alteraEmail(e.target.value)} /> </label>
                 </div>
-                
+
                 <button type="button" className="btn btn-outline-primary w-100 shadow"
                     style={{
                         width: "350px",
                         borderRadius: "15px",
                         padding: "20px",
-                    }} onClick={cadastro} > Cadastrar 
+                    }} onClick={cadastro} > Cadastrar
                 </button>
             </div>
 
