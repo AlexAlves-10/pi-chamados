@@ -13,7 +13,6 @@ export default function MenuLateral() {
                 <Link href="gerenciador_usuarios" className="list-group-item list-group-item-action">Usuários</Link>
                 <Link href="pedidos" className="list-group-item list-group-item-action">Pedidos</Link>
                 <Link href="equipamentos" className="list-group-item list-group-item-action">Equipamentos</Link>
-                <Link href="calendario" className="list-group-item list-group-item-action">Calendário</Link>
                 <Link href="setores" className="list-group-item list-group-item-action">Setores</Link>
             </div>
             
