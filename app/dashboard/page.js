@@ -68,9 +68,7 @@ export default function Pedidos() {
     
         <div className="col-md-4">
           <div className="card">
-            <div className="card-header bg-warning text-dark">
-              Manhã
-            </div>
+            <div className="card-header bg-warning text-dark">Manhã</div>
             <div className="card-body">
               <table className="table">
                 <thead>
@@ -100,9 +98,7 @@ export default function Pedidos() {
        
         <div className="col-md-4">
           <div className="card">
-            <div className="card-header bg-info text-white">
-              Tarde
-            </div>
+            <div className="card-header bg-info text-white">Tarde</div>
             <div className="card-body">
               <table className="table">
                 <thead>
@@ -132,9 +128,7 @@ export default function Pedidos() {
 
         <div className="col-md-4">
           <div className="card">
-            <div className="card-header bg-dark text-white">
-              Noite
-            </div>
+            <div className="card-header bg-dark text-white">Noite</div>
             <div className="card-body">
               <table className="table">
                 <thead>
@@ -152,10 +146,7 @@ export default function Pedidos() {
                       <td>{pedido.equipamentos?.nome}</td>
                       <td>{pedido.quantidade}</td>
                       <td>
-                        <button className="btn btn-sm btn-success" onClick={function() { concluirPedido(pedido.id) }}> 
-                          Concluir 
-                        </button>
-                      </td>
+                        <button className="btn btn-sm btn-success" onClick={function() { concluirPedido(pedido.id) }}> Concluir </button></td>
                     </tr>
                   ))}
                 </tbody>
