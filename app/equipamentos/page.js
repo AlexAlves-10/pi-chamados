@@ -15,7 +15,7 @@ export default function EquipamentosEscola() {
   const [quantidade, alteraQuantidade] = useState("")
   const [estoque, alteraEstoque] = useState(true)
   const [editandoId, alteraEditandoId] = useState(null);
-
+ 
   const [pesquisa, alteraPesquisa] = useState("")
 
   const listaFiltrada = equipamentos.filter(
