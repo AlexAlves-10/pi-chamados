@@ -345,8 +345,8 @@ export default function Pedidos() {
                                         <th>Equipamento</th>
                                         <th>Qtd</th>
                                         <th>Turno</th>
-                                        <th>Ações</th>
                                         <th>Status</th>
+                                        <th>Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -358,6 +358,7 @@ export default function Pedidos() {
                                             <td>{item.quantidade}</td>
                                             <td>{item.turno}</td>
                                             <td>{item.status}</td>
+                                            <td>{item.ações}</td>
                                             <td>
                                                 <button className='btn btn-primary' onClick={() => edita(item)}> <i class="bi bi-pencil-fill"></i> </button>
                                                 <button className="btn btn-danger" onClick={() => excluir(item.id)} > <i class="bi bi-trash3-fill"></i> </button>
