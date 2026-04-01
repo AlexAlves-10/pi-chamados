@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import supabase from "../conexao/bancos";
+import { useRouter } from "next/router";
+
 
 
 function Login() {
@@ -10,6 +12,8 @@ function Login() {
 
     const [email, alteraEmail] = useState("")
     const [senha, alteraSenha] = useState("")
+
+    const router = useRouter();
 
     async function autenticar() {
 
@@ -41,6 +45,8 @@ function Login() {
 
 
         alert("Autenticado com sucesso!")
+
+        router.push("/")
     }
     function desconectar() {
         alert("Desconectado com sucesso!")
@@ -54,11 +60,15 @@ function Login() {
         const id = localStorage.getItem("id_usuario")
 
         if (id)
-        alteraAutenticado(true)
+            alteraAutenticado(true)
         alteraAutadmin(admin === "true")
 
         if (logado == "true") {
             alteraAutenticado(true)
+        }
+
+        if (data.user) {
+            router.push("/");
         }
     }, [])
 
@@ -95,11 +105,14 @@ function Login() {
 
                         <button onClick={autenticar} type='button' className="btn btn-outline-primary" > Entrar </button>
                     </div>
-                :
-                    <div>
-                        <p> Você já está logado. </p>
+                    :
+                    <div className="card shadow" style={{
+                        width: "350px",
+                        borderRadius: "15px",
+                        padding: "20px",
+                    }}>
+                        <p className="text-center"> <strong> Deseja sair? </strong> </p>
                         <button style={{
-                            width: "350px",
                             borderRadius: "15px",
                             padding: "20px",
                         }} onClick={desconectar} type='button' className="btn btn-outline-danger" > Sair da conta </button>
@@ -112,7 +125,7 @@ function Login() {
                     <div>
 
                     </div>
-                :
+                    :
                     <div>
 
                     </div>
