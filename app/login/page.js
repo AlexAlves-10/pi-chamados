@@ -6,6 +6,7 @@ import supabase from "../conexao/bancos";
 
 function Login() {
     const [autenticado, alteraAutenticado] = useState(false)
+    const [autadmin, alteraAutadmin] = useState(null)
 
     const [email, alteraEmail] = useState("")
     const [senha, alteraSenha] = useState("")
@@ -22,9 +23,24 @@ function Login() {
             return
         }
 
-        alert("Autenticado com sucesso!")
-        localStorage.setItem("id_usuario", data.user.id)
+        const { data: usuario, error: erroUsuario } = await supabase
+            .from('usuarios')
+            .select('administrador')
+            .eq('id', data.user.id)
+            .single()
 
+        if (erroUsuario) {
+            alert('Erro ao buscar usuário')
+            return
+        }
+
+        alteraAutadmin(usuario.administrador)
+
+        localStorage.setItem('id_usuario', data.user.id)
+        localStorage.setItem('administrador', usuario.administrador)
+
+
+        alert("Autenticado com sucesso!")
     }
     function desconectar() {
         alert("Desconectado com sucesso!")
@@ -34,6 +50,13 @@ function Login() {
 
     useEffect(() => {
         const logado = localStorage.getItem("logado")
+        const admin = localStorage.getItem('administrador')
+        const id = localStorage.getItem("id_usuario")
+
+        if (id)
+        alteraAutenticado(true)
+        alteraAutadmin(admin === "true")
+
         if (logado == "true") {
             alteraAutenticado(true)
         }
@@ -72,7 +95,7 @@ function Login() {
 
                         <button onClick={autenticar} type='button' className="btn btn-outline-primary" > Entrar </button>
                     </div>
-                    :
+                :
                     <div>
                         <p> Você já está logado. </p>
                         <button style={{
@@ -82,6 +105,17 @@ function Login() {
                         }} onClick={desconectar} type='button' className="btn btn-outline-danger" > Sair da conta </button>
                     </div>
 
+            }
+
+            {
+                autadmin == true ?
+                    <div>
+
+                    </div>
+                :
+                    <div>
+
+                    </div>
             }
         </div>
     );
