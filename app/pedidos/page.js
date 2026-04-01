@@ -27,7 +27,8 @@ export default function Pedidos() {
         const { data } = await supabase
             .from("pedidos")
             .select('*, id_usuario(id, nome), id_equipamento(id, nome), id_setor(id, salas)')
-        if (data) alteraPedidos(data)
+        if (data) 
+            alteraPedidos(data)
     }
 
     async function buscarUsuarios() {
@@ -74,7 +75,10 @@ export default function Pedidos() {
             return
         }
 
-        const { data: equip } = await supabase.from('equipamentos').select('*').eq('id', id_equipamento).single()
+        const { data: equip } = await supabase.from('equipamentos')
+        .select('*')
+        .eq('id', id_equipamento)
+        .single()
 
         if (qtd > equip.quantidade) {
             alert("Quantidade maior que o estoque!")
