@@ -19,7 +19,7 @@ export default function Pedidos() {
 
     const [editando, alteraEditando] = useState(null)
 
-    const [ autenticando, alteraAltenticando]= useState(true)
+    const [autenticando, alteraAltenticando] = useState(true)
 
     const equipamentoSelecionado = listaEquipamentos.find(item => item.id == id_equipamento)
 
@@ -89,11 +89,9 @@ export default function Pedidos() {
             turno
         }
 
-     
         const { error } = await supabase.from('pedidos').insert(objeto)
 
         if (!error) {
-        
             await supabase.from('equipamentos').update({ quantidade: equip.quantidade - qtd }).eq('id', id_equipamento)
             alert("Cadastrado!")
             cancelaEdicao()
@@ -105,47 +103,110 @@ export default function Pedidos() {
     }
 
     async function atualizarAgora() {
-        const objeto = { id_usuario, quantidade, id_equipamento, id_setor, turno }
-        await supabase.from('pedidos').update(objeto).eq('id', editando)
+        const qtd = Number(quantidade)
+
+        if (!id_equipamento || !qtd || !id_usuario) {
+            alert("Preencha os campos!")
+            return
+        }
+
+        const { data: equip, error: erroEquip } = await supabase
+            .from('equipamentos')
+            .select('*')
+            .eq('id', id_equipamento)
+            .single()
+
+        if (erroEquip || !equip) {
+            alert("Erro ao buscar equipamento")
+            return
+        }
+
+        const { data: pedidoAntigo, error: erroPedido } = await supabase
+            .from('pedidos')
+            .select('*')
+            .eq('id', editando)
+            .single()
+
+        if (erroPedido || !pedidoAntigo) {
+            alert("Erro ao buscar pedido antigo")
+            return
+        }
+
+        const qtdAntiga = Number(pedidoAntigo.quantidade)
+        const diferenca = qtd - qtdAntiga
+
+        if (diferenca > equip.quantidade) {
+            alert("Quantidade maior que o estoque disponível!")
+            return
+        }
+
+        const objeto = {
+            id_usuario,
+            quantidade: qtd,
+            id_equipamento,
+            id_setor,
+            turno
+        }
+
+        const { error } = await supabase
+            .from('pedidos')
+            .update(objeto)
+            .eq('id', editando)
+
+        if (error) {
+            alert("Erro: " + error.message)
+            return
+        }
+
+        await supabase
+            .from('equipamentos')
+            .update({ quantidade: equip.quantidade - diferenca })
+            .eq('id', id_equipamento)
+
+        alert("Atualizado!")
         cancelaEdicao()
         buscarPedidos()
+        buscarEquipamentos()
     }
 
     useEffect(() => {
         buscarPedidos(); buscarUsuarios(); buscarsetores(); buscarEquipamentos();
+        alteraAltenticando(false)
     }, [])
 
     return (
-        <div className="container mt-4">
-            <h1>Gerenciamento de pedidos</h1>
-
-<<<<<<< Updated upstream
-=======
-        <div href="./formulario.css" >
-
+        <div>
             {
-                verificar == false ?
+                autenticando == false ?
                     <div>
                         <p>Usuario</p>
-                        <input className="form-select w-25" disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)} />
+                        <select className="form-select w-25" disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
+                            <option value="">Selecione...</option>
+                            {listaUsuarios.map(item =>
+                                <option key={item.id} value={item.id}>{item.nome}</option>
+                            )}
+                        </select>
 
                         <p>Setor</p>
-                        <input className="form-select w-25" value={id_setor} onChange={e => alteraIdsetor(e.target.value)} /> 
-                            
+                        <select className="form-select w-25" disabled={editando != null} value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>
+                            <option value="">Selecione...</option>
+                            {listasetores.map(item =>
+                                <option key={item.id} value={item.id}>{item.salas}</option>
+                            )}
+                        </select>
+
                         <p>Equipamento</p>
                         <select className="form-select w-25" value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>
                             <option value="">Selecione...</option>
                             {listaEquipamentos.map(item =>
-                                <option value={item.id}>{item.nome}</option>
+                                <option key={item.id} value={item.id}>{item.nome}</option>
                             )}
                         </select>
 
-                        
                         <p>
                             Disponível: {equipamentoSelecionado ? equipamentoSelecionado.quantidade : 1}
                         </p>
 
-                        
                         <p>Quantidade</p>
                         <input
                             type="number"
@@ -161,10 +222,10 @@ export default function Pedidos() {
                             <option value="Tarde">Tarde</option>
                             <option value="Noite">Noite</option>
                         </select>
-                        <br/>
-                        <button className="btn btn-primary" type="submit">Salvar</button>
+                        <br />
+                        <button onClick={salvar} className="btn btn-primary">Salvar</button>
 
-<div className="my-3 rounded-4 overflow-hidden shadow" >
+                        <div className="my-3 rounded-4 overflow-hidden shadow">
                             <table className="table table-hover table-bordered border-dark">
                                 <thead className="table-primary">
                                     <tr>
@@ -173,107 +234,8 @@ export default function Pedidos() {
                                         <th>Equipamento</th>
                                         <th>Qtd</th>
                                         <th>Turno</th>
-                                        <th>Ações</th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {pedidos.map(item => (
-                                        <tr key={item.id}>
-                                            <td>{item.id_usuario?.nome}</td>
-                                            <td>{item.id_setor?.salas}</td>
-                                            <td>{item.id_equipamento?.nome}</td>
-                                            <td>{item.quantidade}</td>
-                                            <td>{item.turno}</td>
-                                            <td>
-                                                <button className='btn btn-primary' onClick={() => edita(item)}> <i class="bi bi-pencil-fill"></i> </button>
-                                                <button className="btn btn-danger" onClick={() => excluir(item.id)} > <i class="bi bi-trash3-fill"></i> </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                    :
-                    <div>
-                        <h1>Gerenciamento de pedidos</h1>
-
-                        <div className="col-4">
-                            <form className="formulario" onSubmit={salvar}>
-                                <p>Usuario</p>
-                                <select className="form-select w-25" disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
-                                    <option value="">Selecione...</option>
-                                    {listaUsuarios.map(item =>
-                                        <option value={item.id}>{item.nome}</option>
-                                    )}
-                                </select>
-
-                                <p>Setor</p>
-                                <select className="form-select w-25" value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>
-                                    <option value="">Selecione...</option>
-                                    {listasetores.map(item =>
-                                        <option value={item.id}>{item.salas}</option>
-                                    )}
-                                </select>
-
-                                <p>Equipamento</p>
-                                <select className="form-select w-25" value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>
-                                    <option value="">Selecione...</option>
-                                    {listaEquipamentos.map(item =>
-                                        <option value={item.id}>{item.nome}</option>
-                                    )}
-                                </select>
-
-                              
-                                <p>
-                                    Disponível: {equipamentoSelecionado ? equipamentoSelecionado.quantidade : 1}
-                                </p>
-
-                                {/*  */}
-                                <p>Quantidade</p>
-                                <input
-                                    type="number"
-                                    value={quantidade}
-                                    max={equipamentoSelecionado?.quantidade || 0}
-                                    onChange={e => alteraQuantidade(e.target.value)}
-                                />
-
-                                <p>Turno</p>
-                                <select className="form-select w-25" value={turno} onChange={e => alteraTurno(e.target.value)}>
-                                    <option value="">Selecione...</option>
-                                    <option value="Manhã">Manhã</option>
-                                    <option value="Tarde">Tarde</option>
-                                    <option value="Noite">Noite</option>
-                                </select>
-
-
-                                <br /><br />
-
-                                {editando != null ? (
-                                    <>
-                                        <button onClick={cancelaEdicao}>Cancelar</button>
-                                        <button onClick={atualizarAgora}>Atualizar</button>
-                                    </>
-                                ) : (
-                                    <button className="btn btn-primary" type="submit">Salvar</button>
-                                )}
-                            </form>
-                        </div>
-
-                        <hr />
-                        <div className="my-3 rounded-4 overflow-hidden shadow" >
-                            <table className="table table-hover table-bordered border-dark">
-                                <thead className="table-primary">
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>Setor</th>
-                                        <th>Equipamento</th>
-                                        <th>Qtd</th>
-                                        <th>Turno</th>
-                                        <th>Ações</th>
                                         <th>Status</th>
+                                        <th>Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -285,104 +247,20 @@ export default function Pedidos() {
                                             <td>{item.quantidade}</td>
                                             <td>{item.turno}</td>
                                             <td>{item.status}</td>
-                                            <td>{item.acoes}</td>
                                             <td>
-                                                <button className='btn btn-primary' onClick={() => edita(item)}> <i class="bi bi-pencil-fill"></i> </button>
-                                                <button className="btn btn-danger" onClick={() => excluir(item.id)} > <i class="bi bi-trash3-fill"></i> </button>
+                                                <button className='btn btn-primary' onClick={() => edita(item)}> <i className="bi bi-pencil-fill"></i> </button>
+                                                <button className="btn btn-danger" onClick={() => excluir(item.id)} > <i className="bi bi-trash3-fill"></i> </button>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
-                    </div>  
-                    
 
+                    </div>
+                    :
+                    <div>Carregando...</div>
             }
-
-           {/* <h1>Gerenciamento de pedidos</h1>
- 
->>>>>>> Stashed changes
-            <div className="col-4">
-                <form className="formulario" onSubmit={editando ? (e) => { e.preventDefault(); atualizarAgora() } : salvar}>
-                    <p>Usuario</p>
-                    <select className="form-select" disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
-                        <option value="">Selecione...</option>
-                        {listaUsuarios.map(item => <option key={item.id} value={item.id}>{item.nome}</option>)}
-
-                
-
-                    </select>
-
-                    <p>Setor</p>
-                    <select className="form-select" value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>
-                        <option value="">Selecione...</option>
-                        {listasetores.map(item => <option key={item.id} value={item.id}>{item.salas}</option>)}
-                    </select>
-
-                    <p>Equipamento</p>
-                    <select className="form-select" value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>
-                        <option value="">Selecione...</option>
-                        {listaEquipamentos.map(item => <option key={item.id} value={item.id}>{item.nome}</option>)}
-                    </select>
-
-                    <p>Disponível: {equipamentoSelecionado ? equipamentoSelecionado.quantidade : 0}</p>
-
-                    <p>Quantidade</p>
-                    <input type="number" className="form-control" value={quantidade} onChange={e => alteraQuantidade(e.target.value)} />
-
-                    <p>Turno</p>
-                    <select className="form-select" value={turno} onChange={e => alteraTurno(e.target.value)}>
-                        <option value="">Selecione...</option>
-                        <option value="Manhã">Manhã</option>
-                        <option value="Tarde">Tarde</option>
-                        <option value="Noite">Noite</option>
-                    </select>
-
-                    <br />
-                    {editando ? (
-                        <>
-                            <button className="btn btn-warning" type="button" onClick={atualizarAgora}>Atualizar</button>
-                            <button className="btn btn-secondary ms-2" type="button" onClick={cancelaEdicao}>Cancelar</button>
-                        </>
-                    ) : (
-                        <button className="btn btn-primary" type="submit">Salvar</button>
-                    )}
-                </form>
-            </div>
-
-            <hr />
-            <div className="my-3 shadow">
-                <table className="table table-hover table-bordered border-dark">
-                    <thead className="table-primary">
-                        <tr>
-                            <th>Nome</th>
-                            <th>Setor</th>
-                            <th>Equipamento</th>
-                            <th>Qtd</th>
-                            <th>Status</th>
-                            <th>Turno</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {pedidos.map(item => (
-                            <tr key={item.id}>
-                                <td>{item.id_usuario?.nome}</td>
-                                <td>{item.id_setor?.salas}</td>
-                                <td>{item.id_equipamento?.nome}</td>
-                                <td>{item.quantidade}</td>
-                                <td>{item.status}</td>
-                                <td>{item.turno}</td>
-                                <td>
-                                    <button className='btn btn-primary me-2' onClick={() => edita(item)}><i className="bi bi-pencil-fill"></i></button>
-                                    <button className="btn btn-danger" onClick={() => excluir(item.id)}><i className="bi bi-trash3-fill"></i></button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
         </div>
     )
 }
