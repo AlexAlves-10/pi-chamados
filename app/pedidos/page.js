@@ -19,6 +19,8 @@ export default function Pedidos() {
 
     const [editando, alteraEditando] = useState(null)
 
+    const [ autenticando, alteraAltenticando]= useState(true)
+
     const equipamentoSelecionado = listaEquipamentos.find(item => item.id == id_equipamento)
 
     async function buscarPedidos() {
@@ -123,6 +125,9 @@ export default function Pedidos() {
                     <select className="form-select" disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
                         <option value="">Selecione...</option>
                         {listaUsuarios.map(item => <option key={item.id} value={item.id}>{item.nome}</option>)}
+
+                
+
                     </select>
 
                     <p>Setor</p>
@@ -171,6 +176,7 @@ export default function Pedidos() {
                             <th>Setor</th>
                             <th>Equipamento</th>
                             <th>Qtd</th>
+                            <th>Status</th>
                             <th>Turno</th>
                             <th>Ações</th>
                         </tr>
@@ -182,6 +188,7 @@ export default function Pedidos() {
                                 <td>{item.id_setor?.salas}</td>
                                 <td>{item.id_equipamento?.nome}</td>
                                 <td>{item.quantidade}</td>
+                                <td>{item.status}</td>
                                 <td>{item.turno}</td>
                                 <td>
                                     <button className='btn btn-primary me-2' onClick={() => edita(item)}><i className="bi bi-pencil-fill"></i></button>
