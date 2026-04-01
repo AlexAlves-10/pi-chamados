@@ -345,8 +345,8 @@ export default function Pedidos() {
                                         <th>Equipamento</th>
                                         <th>Qtd</th>
                                         <th>Turno</th>
-                                        <th>Status</th>
                                         <th>Ações</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
