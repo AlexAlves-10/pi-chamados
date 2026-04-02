@@ -4,6 +4,8 @@ import supabase from "../conexao/bancos";
 
 function Painel() {
 
+    if(typeof window === "undefined") return null
+
     const id_usuario = localStorage.getItem("id_usuario")
 
     const [ usuario, alteraUsuario ] = useState(null)

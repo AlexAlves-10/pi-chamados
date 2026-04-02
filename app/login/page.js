@@ -1,19 +1,21 @@
 'use client'
 import { useEffect, useState } from "react"
-import 'bootstrap/dist/css/bootstrap.min.css';
 import supabase from "../conexao/bancos";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 
 
 function Login() {
+
+    if(typeof window === "undefined") return null
+
     const [autenticado, alteraAutenticado] = useState(false)
     const [autadmin, alteraAutadmin] = useState(null)
 
     const [email, alteraEmail] = useState("")
     const [senha, alteraSenha] = useState("")
 
-    const router = useRouter();
+    const router = useRouter()
 
     async function autenticar() {
 
@@ -59,17 +61,17 @@ function Login() {
         const admin = localStorage.getItem('administrador')
         const id = localStorage.getItem("id_usuario")
 
-        if (id)
+        if (id){
             alteraAutenticado(true)
-        alteraAutadmin(admin === "true")
+            alteraAutadmin(admin === "true")
+        }
 
         if (logado == "true") {
             alteraAutenticado(true)
         }
 
-        if (data.user) {
-            router.push("/");
-        }
+        
+
     }, [])
 
 
