@@ -4,7 +4,6 @@ import Link from "next/link"
 function desconectar() {
     alert("Desconectado com sucesso!")
     localStorage.removeItem("logado")
-    alteraAutenticado(false)
 }
 
 
