@@ -9,6 +9,10 @@ function Login() {
 
     if(typeof window === "undefined") return null
 
+    const logado = localStorage.getItem("logado")
+    const admin = localStorage.getItem('administrador')
+    const id = localStorage.getItem("id_usuario")
+
     const [autenticado, alteraAutenticado] = useState(false)
     const [autadmin, alteraAutadmin] = useState(null)
 
@@ -57,9 +61,7 @@ function Login() {
     }
 
     useEffect(() => {
-        const logado = localStorage.getItem("logado")
-        const admin = localStorage.getItem('administrador')
-        const id = localStorage.getItem("id_usuario")
+        
 
         if (id){
             alteraAutenticado(true)
@@ -69,8 +71,6 @@ function Login() {
         if (logado == "true") {
             alteraAutenticado(true)
         }
-
-        
 
     }, [])
 
