@@ -1,4 +1,11 @@
+'use client'
 import Link from "next/link"
+
+function desconectar() {
+    alert("Desconectado com sucesso!")
+    localStorage.removeItem("logado")
+    alteraAutenticado(false)
+}
 
 
 export default function MenuLateral() {
@@ -14,8 +21,11 @@ export default function MenuLateral() {
                 <Link href="pedidos" className="list-group-item list-group-item-action">Pedidos</Link>
                 <Link href="equipamentos" className="list-group-item list-group-item-action">Equipamentos</Link>
                 <Link href="setores" className="list-group-item list-group-item-action">Setores</Link>
+
+               <button onClick={desconectar} type='button' className="btn btn-outline-danger" > Sair da conta </button>
             </div>
-            
+
+
         </div>
     )
 }

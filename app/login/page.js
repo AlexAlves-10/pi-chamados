@@ -1,22 +1,17 @@
 'use client'
-import { useEffect, useState } from "react"
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from "react"
 import supabase from "../conexao/bancos";
-import { useRouter } from "next/router";
-
 
 
 function Login() {
 
+    if(typeof window === "undefined") return null
 
-
-    const [autenticado, alteraAutenticado] = useState(false)
-    const [autadmin, alteraAutadmin] = useState(null)
+    const admin = localStorage.getItem('administrador')
+    const id_usuario = localStorage.getItem("id_usuario")
 
     const [email, alteraEmail] = useState("")
     const [senha, alteraSenha] = useState("")
-
-    const router = useRouter();
 
     async function autenticar() {
 
@@ -41,39 +36,18 @@ function Login() {
             return
         }
 
-        alteraAutadmin(usuario.administrador)
-
         localStorage.setItem('id_usuario', data.user.id)
         localStorage.setItem('administrador', usuario.administrador)
 
 
         alert("Autenticado com sucesso!")
 
-        router.push("/")
     }
     function desconectar() {
         alert("Desconectado com sucesso!")
-        localStorage.removeItem("logado")
-        alteraAutenticado(false)
+        localStorage.removeItem("id_usuario")
+        localStorage.removeItem("administrador")
     }
-
-    useEffect(() => {
-        const logado = localStorage.getItem("logado")
-        const admin = localStorage.getItem('administrador')
-        const id = localStorage.getItem("id_usuario")
-
-        if (id)
-            alteraAutenticado(true)
-        alteraAutadmin(admin === "true")
-
-        if (logado == "true") {
-            alteraAutenticado(true)
-        }
-
-        if (data.user) {
-            router.push("/");
-        }
-    }, [])
 
 
     return (
@@ -85,7 +59,7 @@ function Login() {
             alignItems: "center",
         }}>
             {
-                autenticado == false ?
+                id_usuario == null ?
                     <div className="card sadow" style={{
                         width: "350px",
                         borderRadius: "15px",
@@ -121,17 +95,6 @@ function Login() {
                         }} onClick={desconectar} type='button' className="btn btn-outline-danger" > Sair da conta </button>
                     </div>
 
-            }
-
-            {
-                autadmin == true ?
-                    <div>
-
-                    </div>
-                    :
-                    <div>
-
-                    </div>
             }
         </div>
     );
