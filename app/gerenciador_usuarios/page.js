@@ -18,8 +18,7 @@ function GerenciadorUsuarios() {
     }, []);
 
     const listaFiltrada = usuarios.filter(item =>
-        (item.nome || "").toLowerCase().includes(pesquisa.toLowerCase()) ||
-        (item.email || "").toLowerCase().includes(pesquisa.toLowerCase())
+        (item.nome || "").toLowerCase().includes(pesquisa.toLowerCase()) || (item.email || "").toLowerCase().includes(pesquisa.toLowerCase())
     )
 
     async function buscar() {
