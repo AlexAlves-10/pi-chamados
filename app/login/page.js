@@ -1,13 +1,14 @@
 'use client'
-export const dynamic = 'force-dynamic'
 import { useState } from "react"
 import supabase from "../conexao/bancos";
 
 
 function Login() {
 
-    const [id_usuario, setIdUsuario] = useState(null)
-    const [admin, setAdmin] = useState(null)
+    if(typeof window === "undefined") return null
+
+    const admin = localStorage.getItem('administrador')
+    const id_usuario = localStorage.getItem("id_usuario")
 
     const [email, alteraEmail] = useState("")
     const [senha, alteraSenha] = useState("")
@@ -47,13 +48,6 @@ function Login() {
         localStorage.removeItem("id_usuario")
         localStorage.removeItem("administrador")
     }
-
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            setIdUsuario(localStorage.getItem("id_usuario"))
-            setAdmin(localStorage.getItem("administrador"))
-        }
-    }, [])
 
 
     return (
