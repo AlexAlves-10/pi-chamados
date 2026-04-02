@@ -26,24 +26,27 @@ export default function Pedidos() {
     async function buscarPedidos() {
         const { data } = await supabase
             .from("pedidos")
-            .select('*, id_usuario(id, nome), id_equipamento(id, nome), id_setor(id, salas)')
+            .select('*, id_equipamento(id, nome), id_setor(id, salas)')
         if (data) 
             alteraPedidos(data)
     }
 
     async function buscarUsuarios() {
-        const { data } = await supabase.from('usuarios').select('*')
-        alteraListaUsuarios(data || [])
+        const { data } = await supabase
+        .from('usuarios').select('*')
+        alteraListaUsuarios
     }
 
     async function buscarsetores() {
-        const { data } = await supabase.from('setores').select('*')
-        alteraListasetores(data || [])
+        const { data } = await supabase
+        .from('setores').select('*')
+        alteraListasetores
     }
 
     async function buscarEquipamentos() {
-        const { data } = await supabase.from('equipamentos').select('*')
-        alteraListaEquipamentos(data || [])
+        const { data } = await supabase
+        .from('equipamentos').select('*')
+        alteraListaEquipamentos
     }
 
     function edita(objeto) {
@@ -77,7 +80,7 @@ export default function Pedidos() {
 
         const qtd = Number(quantidade)
 
-        if (!id_equipamento || !qtd || !id_usuario) {
+        if (!id_equipamento || !qtd) {
             alert("Preencha os campos!")
             return
         }
@@ -119,7 +122,7 @@ export default function Pedidos() {
     async function atualizarAgora() {
         const qtd = Number(quantidade)
 
-        if (!id_equipamento || !qtd || !id_usuario) {
+        if (!id_equipamento || !qtd ) {
             alert("Preencha os campos!")
             return
         }
@@ -174,16 +177,8 @@ export default function Pedidos() {
     }
 
     useEffect(() => {
-       
-        const logado = localStorage.getItem("logado")
-
-        if (logado !== "true") {
-            alert("Você precisa estar logado!")
-            return
-        }
 
         buscarPedidos()
-        buscarUsuarios()
         buscarsetores()
         buscarEquipamentos()
 
@@ -195,14 +190,6 @@ export default function Pedidos() {
             {
                 autenticando == false ?
                     <div>
-                        <p>Usuario</p>
-                        <select className="form-select w-25" disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
-                            <option value="">Selecione...</option>
-                            {listaUsuarios.map(item =>
-                                <option key={item.id} value={item.id}>{item.nome}</option>
-                            )}
-                        </select>
-
                         <p>Setor</p>
                         <select className="form-select w-25" disabled={editando != null} value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>
                             <option value="">Selecione...</option>
@@ -290,7 +277,7 @@ export default function Pedidos() {
 
                     </div>
                     :
-                    <div>Carregando...</div>
+                    <div></div>
             }
         </div>
     )
