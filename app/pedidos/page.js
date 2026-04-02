@@ -19,7 +19,7 @@ export default function Pedidos() {
 
     const [editando, alteraEditando] = useState(null)
 
-    const [autenticando, alteraAltenticando] = useState(true)
+   
 
     const equipamentoSelecionado = listaEquipamentos.find(item => item.id == id_equipamento)
 
@@ -27,7 +27,7 @@ export default function Pedidos() {
         const { data } = await supabase
             .from("pedidos")
             .select('*, id_usuario(id, nome), id_equipamento(id, nome), id_setor(id, salas)')
-        if (data) 
+        if (data)
             alteraPedidos(data)
     }
 
@@ -69,7 +69,7 @@ export default function Pedidos() {
     async function salvar(e) {
         if (e) e.preventDefault()
 
-        
+
         if (editando != null) {
             atualizarAgora()
             return
@@ -83,9 +83,9 @@ export default function Pedidos() {
         }
 
         const { data: equip } = await supabase.from('equipamentos')
-        .select('*')
-        .eq('id', id_equipamento)
-        .single()
+            .select('*')
+            .eq('id', id_equipamento)
+            .single()
 
         if (qtd > equip.quantidade) {
             alert("Quantidade maior que o estoque!")
@@ -149,7 +149,8 @@ export default function Pedidos() {
             quantidade: qtd,
             id_equipamento,
             id_setor,
-            turno
+            turno,
+            
         }
 
         const { error } = await supabase
@@ -174,26 +175,20 @@ export default function Pedidos() {
     }
 
     useEffect(() => {
-       
-        const logado = localStorage.getItem("logado")
 
-        if (logado !== "true") {
-            alert("Você precisa estar logado!")
-            return
-        }
+    
 
         buscarPedidos()
         buscarUsuarios()
         buscarsetores()
         buscarEquipamentos()
 
-        alteraAltenticando(false)
     }, [])
 
     return (
         <div>
-            {
-                autenticando == false ?
+            
+                
                     <div>
                         <p>Usuario</p>
                         <select className="form-select w-25" disabled={editando != null} value={id_usuario} onChange={e => alteraIdusuario(e.target.value)}>
@@ -241,7 +236,7 @@ export default function Pedidos() {
 
                         <br />
 
-                        
+
                         <button onClick={salvar} className="btn btn-primary">
                             {editando ? "Atualizar" : "Salvar"}
                         </button>
@@ -289,9 +284,9 @@ export default function Pedidos() {
                         </div>
 
                     </div>
-                    :
+                    
                     <div>Carregando...</div>
-            }
+            
         </div>
     )
 }
