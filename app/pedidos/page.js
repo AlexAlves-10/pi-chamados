@@ -285,7 +285,7 @@ export default function Pedidos() {
 
                     </div>
                     
-                    <div>Carregando...</div>
+                   
             
         </div>
     )
