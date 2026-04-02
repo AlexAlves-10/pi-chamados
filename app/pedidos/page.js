@@ -19,7 +19,7 @@ export default function Pedidos() {
 
     const [editando, alteraEditando] = useState(null)
 
-    const [autenticando, alteraAltenticando] = useState(true)
+   
 
     const equipamentoSelecionado = listaEquipamentos.find(item => item.id == id_equipamento)
 
@@ -72,7 +72,7 @@ export default function Pedidos() {
     async function salvar(e) {
         if (e) e.preventDefault()
 
-        
+
         if (editando != null) {
             atualizarAgora()
             return
@@ -86,9 +86,9 @@ export default function Pedidos() {
         }
 
         const { data: equip } = await supabase.from('equipamentos')
-        .select('*')
-        .eq('id', id_equipamento)
-        .single()
+            .select('*')
+            .eq('id', id_equipamento)
+            .single()
 
         if (qtd > equip.quantidade) {
             alert("Quantidade maior que o estoque!")
@@ -152,7 +152,8 @@ export default function Pedidos() {
             quantidade: qtd,
             id_equipamento,
             id_setor,
-            turno
+            turno,
+            
         }
 
         const { error } = await supabase
@@ -182,13 +183,12 @@ export default function Pedidos() {
         buscarsetores()
         buscarEquipamentos()
 
-        alteraAltenticando(false)
     }, [])
 
     return (
         <div>
-            {
-                autenticando == false ?
+            
+                
                     <div>
                         <p>Setor</p>
                         <select className="form-select w-25" disabled={editando != null} value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>
@@ -228,7 +228,7 @@ export default function Pedidos() {
 
                         <br />
 
-                        
+
                         <button onClick={salvar} className="btn btn-primary">
                             {editando ? "Atualizar" : "Salvar"}
                         </button>
