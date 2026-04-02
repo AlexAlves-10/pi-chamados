@@ -68,6 +68,13 @@ export default function Pedidos() {
 
     async function salvar(e) {
         if (e) e.preventDefault()
+
+        
+        if (editando != null) {
+            atualizarAgora()
+            return
+        }
+
         const qtd = Number(quantidade)
 
         if (!id_equipamento || !qtd || !id_usuario) {
@@ -96,7 +103,10 @@ export default function Pedidos() {
         const { error } = await supabase.from('pedidos').insert(objeto)
 
         if (!error) {
-            await supabase.from('equipamentos').update({ quantidade: equip.quantidade - qtd }).eq('id', id_equipamento)
+            await supabase.from('equipamentos')
+                .update({ quantidade: equip.quantidade - qtd })
+                .eq('id', id_equipamento)
+
             alert("Cadastrado!")
             cancelaEdicao()
             buscarPedidos()
@@ -114,27 +124,17 @@ export default function Pedidos() {
             return
         }
 
-        const { data: equip, error: erroEquip } = await supabase
+        const { data: equip } = await supabase
             .from('equipamentos')
             .select('*')
             .eq('id', id_equipamento)
             .single()
 
-        if (erroEquip || !equip) {
-            alert("Erro ao buscar equipamento")
-            return
-        }
-
-        const { data: pedidoAntigo, error: erroPedido } = await supabase
+        const { data: pedidoAntigo } = await supabase
             .from('pedidos')
             .select('*')
             .eq('id', editando)
             .single()
-
-        if (erroPedido || !pedidoAntigo) {
-            alert("Erro ao buscar pedido antigo")
-            return
-        }
 
         const qtdAntiga = Number(pedidoAntigo.quantidade)
         const diferenca = qtd - qtdAntiga
@@ -174,7 +174,19 @@ export default function Pedidos() {
     }
 
     useEffect(() => {
-        buscarPedidos(); buscarUsuarios(); buscarsetores(); buscarEquipamentos();
+       
+        const logado = localStorage.getItem("logado")
+
+        if (logado !== "true") {
+            alert("Você precisa estar logado!")
+            return
+        }
+
+        buscarPedidos()
+        buscarUsuarios()
+        buscarsetores()
+        buscarEquipamentos()
+
         alteraAltenticando(false)
     }, [])
 
@@ -226,8 +238,19 @@ export default function Pedidos() {
                             <option value="Tarde">Tarde</option>
                             <option value="Noite">Noite</option>
                         </select>
+
                         <br />
-                        <button onClick={salvar} className="btn btn-primary">Salvar</button>
+
+                        
+                        <button onClick={salvar} className="btn btn-primary">
+                            {editando ? "Atualizar" : "Salvar"}
+                        </button>
+
+                        {editando && (
+                            <button onClick={cancelaEdicao} className="btn btn-secondary ms-2">
+                                Cancelar
+                            </button>
+                        )}
 
                         <div className="my-3 rounded-4 overflow-hidden shadow">
                             <table className="table table-hover table-bordered border-dark">
@@ -252,8 +275,12 @@ export default function Pedidos() {
                                             <td>{item.turno}</td>
                                             <td>{item.status}</td>
                                             <td>
-                                                <button className='btn btn-primary' onClick={() => edita(item)}> <i className="bi bi-pencil-fill"></i> </button>
-                                                <button className="btn btn-danger" onClick={() => excluir(item.id)} > <i className="bi bi-trash3-fill"></i> </button>
+                                                <button className='btn btn-primary' onClick={() => edita(item)}>
+                                                    <i className="bi bi-pencil-fill"></i>
+                                                </button>
+                                                <button className="btn btn-danger" onClick={() => excluir(item.id)}>
+                                                    <i className="bi bi-trash3-fill"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
