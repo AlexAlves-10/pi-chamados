@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import supabase from "../conexao/bancos";
 
 function Painel() {
+    
 
     const id_usuario = localStorage.getItem("id_usuario")
 
