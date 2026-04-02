@@ -5,10 +5,8 @@ import supabase from "../conexao/bancos";
 
 function Login() {
 
-    if(typeof window === "undefined") return null
-
-    const admin = localStorage.getItem('administrador')
-    const id_usuario = localStorage.getItem("id_usuario")
+    const [id_usuario, setIdUsuario] = useState(null)
+    const [admin, setAdmin] = useState(null)
 
     const [email, alteraEmail] = useState("")
     const [senha, alteraSenha] = useState("")
@@ -48,6 +46,13 @@ function Login() {
         localStorage.removeItem("id_usuario")
         localStorage.removeItem("administrador")
     }
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setIdUsuario(localStorage.getItem("id_usuario"))
+            setAdmin(localStorage.getItem("administrador"))
+        }
+    }, [])
 
 
     return (
