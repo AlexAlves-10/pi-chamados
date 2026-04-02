@@ -1,8 +1,6 @@
 'use client'
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import supabase from "../conexao/bancos";
-import { useRouter } from "next/navigation";
-
 
 
 function Login() {
@@ -14,8 +12,6 @@ function Login() {
 
     const [email, alteraEmail] = useState("")
     const [senha, alteraSenha] = useState("")
-
-    const router = useRouter()
 
     async function autenticar() {
 
@@ -46,7 +42,6 @@ function Login() {
 
         alert("Autenticado com sucesso!")
 
-        router.push("/")
     }
     function desconectar() {
         alert("Desconectado com sucesso!")
