@@ -155,7 +155,22 @@ export default function Pedidos() {
 
             <h3>Pedidos</h3>
 
-            {usuarios && (<h5><strong>Usuário:</strong> {usuarios.nome}</h5>)}
+            <div style={{
+                background: "linear-gradient(135deg, #0d6efd, #6610f2)",
+                color: "#fff",
+                padding: "10px 15px",
+                borderRadius: "10px",
+                display: "inline-block",
+                fontWeight: "500",
+                marginBottom: "15px"
+            }} >
+                <div style={{ fontSize: "20px" }}>  </div>
+                <div>
+                    <small style={{ color: "#888" }} > Usuário logado </small>
+                    {usuarios && (<h5 style={{ margin: 0, fontWeight: "bold" }} ><strong> <i class="bi bi-person-circle"></i> </strong> {usuarios.nome}</h5>)}
+                </div>
+
+            </div>
 
             <select className="form-select mb-2 w-25" value={id_setor} onChange={e => setIdSetor(e.target.value)}>
                 <option disabled hidden value="">Setor</option>
@@ -200,7 +215,7 @@ export default function Pedidos() {
             <hr />
             <div className="my-3 rounded-4 overflow-hidden shadow" >
                 <table className="table table-hover table-bordered">
-                    <thead>
+                    <thead className="table-primary" >
                         <tr>
                             <th>Usuário</th>
                             <th>Setor</th>
