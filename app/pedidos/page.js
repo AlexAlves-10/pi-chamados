@@ -155,7 +155,7 @@ export default function Pedidos() {
 
             <h3>Pedidos</h3>
 
-            {usuarios && (<p><strong>Usuário:</strong> {usuarios.nome}</p>)}
+            {usuarios && (<h5><strong>Usuário:</strong> {usuarios.nome}</h5>)}
 
             <select className="form-select mb-2 w-25" value={id_setor} onChange={e => setIdSetor(e.target.value)}>
                 <option disabled hidden value="">Setor</option>
