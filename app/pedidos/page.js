@@ -3,64 +3,76 @@ import { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const supabase = createClient("https://ekdskhpbgorgflhhehfp.supabase.co", "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ")
+const supabase = createClient(
+    "https://ekdskhpbgorgflhhehfp.supabase.co",
+    "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ"
+)
 
 export default function Pedidos() {
-    const [id_usuario, alteraIdusuario] = useState("")
-    const [id_setor, alteraIdsetor] = useState("")
-    const [id_equipamento, alteraIdequipamento] = useState("")
-    const [quantidade, alteraQuantidade] = useState("")
-    const [turno, alteraTurno] = useState("")
-    const [pedidos, alteraPedidos] = useState([])
 
-    const [listaUsuarios, alteraListaUsuarios] = useState([])
-    const [listasetores, alteraListasetores] = useState([])
-    const [listaEquipamentos, alteraListaEquipamentos] = useState([])
+    // STATES
+    const [id_usuario, setIdUsuario] = useState("")
+    const [id_setor, setIdSetor] = useState("")
+    const [id_equipamento, setIdEquipamento] = useState("")
+    const [quantidade, setQuantidade] = useState("")
+    const [turno, setTurno] = useState("")
 
-    const [editando, alteraEditando] = useState(null)
+    const [pedidos, setPedidos] = useState([])
+    const [usuarios, setUsuarios] = useState(null)
+    const [setores, setSetores] = useState([])
+    const [equipamentos, setEquipamentos] = useState([])
 
+    const [editando, setEditando] = useState(null)
 
+    const equipamentoSelecionado = equipamentos.find(e => e.id == id_equipamento)
 
-    const equipamentoSelecionado = listaEquipamentos.find(item => item.id == id_equipamento)
+    // =========================
+    // BUSCAS
+    // =========================
 
     async function buscarPedidos() {
         const { data } = await supabase
             .from("pedidos")
-            .select('*, id_equipamento(id, nome), id_setor(id, salas)')
-        if (data)
-            alteraPedidos(data)
+            .select('*, id_usuario(nome), id_equipamento(id,nome,quantidade), id_setor(id,salas)')
+
+        if (data) setPedidos(data)
     }
 
     async function buscarUsuarios() {
-        const { data } = await supabase
-            .from('usuarios').select('*')
-        alteraListaUsuarios
+        const { data } = await supabase.from('usuarios').select('*')
+        if (data) setUsuarios(data)
     }
 
-    async function buscarsetores() {
-        const { data } = await supabase
-            .from('setores').select('*')
-        alteraListasetores
+    async function buscarSetores() {
+        const { data } = await supabase.from('setores').select('*')
+        if (data) setSetores(data)
     }
 
     async function buscarEquipamentos() {
-        const { data } = await supabase
-            .from('equipamentos').select('*')
-        alteraListaEquipamentos
+        const { data } = await supabase.from('equipamentos').select('*')
+        if (data) setEquipamentos(data)
     }
 
-    function edita(objeto) {
-        alteraEditando(objeto.id)
-        alteraQuantidade(objeto.quantidade)
-        alteraTurno(objeto.turno)
-        alteraIdusuario(objeto.id_usuario?.id || "")
-        alteraIdsetor(objeto.id_setor?.id || "")
-        alteraIdequipamento(objeto.id_equipamento?.id || "")
+    // =========================
+    // AÇÕES
+    // =========================
+
+    function editar(item) {
+        setEditando(item.id)
+        setIdUsuario(item.id_usuario?.id || "")
+        setIdSetor(item.id_setor?.id || "")
+        setIdEquipamento(item.id_equipamento?.id || "")
+        setQuantidade(item.quantidade)
+        setTurno(item.turno)
     }
 
-    function cancelaEdicao() {
-        alteraEditando(null)
-        alteraIdusuario(""); alteraQuantidade(""); alteraIdsetor(""); alteraIdequipamento(""); alteraTurno("")
+    function cancelar() {
+        setEditando(null)
+        setIdUsuario("")
+        setIdSetor("")
+        setIdEquipamento("")
+        setQuantidade("")
+        setTurno("")
     }
 
     async function excluir(id) {
@@ -69,61 +81,12 @@ export default function Pedidos() {
         buscarPedidos()
     }
 
-    async function salvar(e) {
-        if (e) e.preventDefault()
-
-
-        if (editando != null) {
-            atualizarAgora()
-            return
-        }
+    async function salvar() {
 
         const qtd = Number(quantidade)
 
-        if (!id_equipamento || !qtd) {
-            alert("Preencha os campos!")
-            return
-        }
-
-        const { data: equip } = await supabase.from('equipamentos')
-            .select('*')
-            .eq('id', id_equipamento)
-            .single()
-
-        if (qtd > equip.quantidade) {
-            alert("Quantidade maior que o estoque!")
-            return
-        }
-
-        const objeto = {
-            id_usuario,
-            id_setor,
-            id_equipamento,
-            quantidade: qtd,
-            turno
-        }
-
-        const { error } = await supabase.from('pedidos').insert(objeto)
-
-        if (!error) {
-            await supabase.from('equipamentos')
-                .update({ quantidade: equip.quantidade - qtd })
-                .eq('id', id_equipamento)
-
-            alert("Cadastrado!")
-            cancelaEdicao()
-            buscarPedidos()
-            buscarEquipamentos()
-        } else {
-            alert("Erro: " + error.message)
-        }
-    }
-
-    async function atualizarAgora() {
-        const qtd = Number(quantidade)
-
-        if (!id_equipamento || !qtd) {
-            alert("Preencha os campos!")
+        if (!id_usuario || !id_setor || !id_equipamento || !qtd) {
+            alert("Preencha todos os campos!")
             return
         }
 
@@ -133,153 +96,138 @@ export default function Pedidos() {
             .eq('id', id_equipamento)
             .single()
 
-        const { data: pedidoAntigo } = await supabase
-            .from('pedidos')
-            .select('*')
-            .eq('id', editando)
-            .single()
-
-        const qtdAntiga = Number(pedidoAntigo.quantidade)
-        const diferenca = qtd - qtdAntiga
-
-        if (diferenca > equip.quantidade) {
-            alert("Quantidade maior que o estoque disponível!")
+        if (qtd > equip.quantidade) {
+            alert("Sem estoque!")
             return
         }
 
-        const objeto = {
+        const dados = {
             id_usuario,
-            quantidade: qtd,
-            id_equipamento,
             id_setor,
-            turno,
-
+            id_equipamento,
+            quantidade: qtd,
+            turno
         }
 
-        const { error } = await supabase
-            .from('pedidos')
-            .update(objeto)
-            .eq('id', editando)
+        if (editando) {
+            await supabase.from('pedidos').update(dados).eq('id', editando)
+            alert("Atualizado!")
+        } else {
+            await supabase.from('pedidos').insert(dados)
+            await supabase
+                .from('equipamentos')
+                .update({ quantidade: equip.quantidade - qtd })
+                .eq('id', id_equipamento)
 
-        if (error) {
-            alert("Erro: " + error.message)
-            return
+            alert("Cadastrado!")
         }
 
-        await supabase
-            .from('equipamentos')
-            .update({ quantidade: equip.quantidade - diferenca })
-            .eq('id', id_equipamento)
-
-        alert("Atualizado!")
-        cancelaEdicao()
+        cancelar()
         buscarPedidos()
         buscarEquipamentos()
     }
 
+    // =========================
+    // INIT
+    // =========================
+
     useEffect(() => {
 
-        buscarPedidos()
-        buscarsetores()
-        buscarEquipamentos()
+        const usuarioLogado = localStorage.getItem("logado")
 
+        if (usuarioLogado) {
+            const user = JSON.parse(usuarioLogado)
+            setUsuarios(user)
+            setIdUsuario(user.id)
+        }
+
+        buscarPedidos()
+        buscarSetores()
+        buscarEquipamentos()
     }, [])
 
+    // =========================
+    // UI
+    // =========================
+
     return (
-        <div>
-            <div>
-                <p>Setor</p>
-                <select className="form-select w-25" disabled={editando != null} value={id_setor} onChange={e => alteraIdsetor(e.target.value)}>
-                    <option value="">Selecione...</option>
-                    {listasetores.map(item =>
-                        <option key={item.id} value={item.id}>{item.salas}</option>
-                    )}
-                </select>
+        <div className="container mt-4">
 
-                <p>Equipamento</p>
-                <select className="form-select w-25" value={id_equipamento} onChange={e => alteraIdequipamento(e.target.value)}>
-                    <option value="">Selecione...</option>
-                    {listaEquipamentos.map(item =>
-                        <option key={item.id} value={item.id}>{item.nome}</option>
-                    )}
-                </select>
+            <h3>Pedidos</h3>
 
-                <p>
-                    Disponível: {equipamentoSelecionado ? equipamentoSelecionado.quantidade : 1}
-                </p>
+            {usuarios && (<p><strong>Usuário:</strong> {usuarios.nome}</p>)}
 
-                <p>Quantidade</p>
-                <input
-                    type="number"
-                    value={quantidade}
-                    max={equipamentoSelecionado?.quantidade || 0}
-                    onChange={e => alteraQuantidade(e.target.value)}
-                />
+            <select className="form-select mb-2 w-25" value={id_setor} onChange={e => setIdSetor(e.target.value)}>
+                <option disabled hidden value="">Setor</option>
+                {setores.map(s => (
+                    <option key={s.id} value={s.id}>{s.salas}</option>
+                ))}
+            </select>
 
-                <p>Turno</p>
-                <select className="form-select w-25" value={turno} onChange={e => alteraTurno(e.target.value)}>
-                    <option value="">Selecione...</option>
-                    <option value="Manhã">Manhã</option>
-                    <option value="Tarde">Tarde</option>
-                    <option value="Noite">Noite</option>
-                </select>
+            <select className="form-select mb-2 w-25" value={id_equipamento} onChange={e => setIdEquipamento(e.target.value)}>
+                <option disabled hidden value="">Equipamento</option>
+                {equipamentos.map(e => (
+                    <option key={e.id} value={e.id}>{e.nome}</option>
+                ))}
+            </select>
 
-                <br />
+            <p>Disponível: {equipamentoSelecionado?.quantidade || 0}</p>
 
+            <input
+                type="number"
+                className="form-control mb-2 w-25"
+                value={quantidade}
+                onChange={e => setQuantidade(e.target.value)}
+            />
 
-                <button onClick={salvar} className="btn btn-primary">
-                    {editando ? "Atualizar" : "Salvar"}
+            <select className="form-select mb-2 w-25" value={turno} onChange={e => setTurno(e.target.value)}>
+                <option disabled hidden value="">Turno</option>
+                <option>Manhã</option>
+                <option>Tarde</option>
+                <option>Noite</option>
+            </select>
+
+            <button className="btn btn-primary" onClick={salvar}>
+                {editando ? "Atualizar" : "Salvar"}
+            </button>
+
+            {editando && (
+                <button className="btn btn-secondary ms-2" onClick={cancelar}>
+                    Cancelar
                 </button>
+            )}
 
-                {editando && (
-                    <button onClick={cancelaEdicao} className="btn btn-secondary ms-2">
-                        Cancelar
-                    </button>
-                )}
-
-                <div className="my-3 rounded-4 overflow-hidden shadow">
-                    <table className="table table-hover table-bordered border-dark">
-                        <thead className="table-primary">
-                            <tr>
-                                <th>Nome</th>
-                                <th>Setor</th>
-                                <th>Equipamento</th>
-                                <th>Qtd</th>
-                                <th>Turno</th>
-                                <th>Status</th>
-                                <th>Ações</th>
+            <hr />
+            <div className="my-3 rounded-4 overflow-hidden shadow" >
+                <table className="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Setor</th>
+                            <th>Equipamento</th>
+                            <th>Qtd</th>
+                            <th>Turno</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {pedidos.map(p => (
+                            <tr key={p.id}>
+                                <td>{p.id_usuario?.nome}</td>
+                                <td>{p.id_setor?.salas}</td>
+                                <td>{p.id_equipamento?.nome}</td>
+                                <td>{p.quantidade}</td>
+                                <td>{p.turno}</td>
+                                <td>
+                                    <button className="btn btn-primary me-2" onClick={() => editar(p)}> <i class="bi bi-pencil-fill"></i> </button>
+                                    <button className="btn btn-danger" onClick={() => excluir(p.id)}> <i class="bi bi-trash3-fill"></i> </button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {pedidos.map(item => (
-                                <tr key={item.id}>
-                                    <td>{item.id_usuario?.nome}</td>
-                                    <td>{item.id_setor?.salas}</td>
-                                    <td>{item.id_equipamento?.nome}</td>
-                                    <td>{item.quantidade}</td>
-                                    <td>{item.turno}</td>
-                                    <td>{item.status}</td>
-                                    <td>
-                                        <button className='btn btn-primary' onClick={() => edita(item)}>
-                                            <i className="bi bi-pencil-fill"></i>
-                                        </button>
-                                        <button className="btn btn-danger" onClick={() => excluir(item.id)}>
-                                            <i className="bi bi-trash3-fill"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
+                        ))}
+                    </tbody>
+                </table>
             </div>
 
         </div>
     )
 }
-
-
-
-
-
