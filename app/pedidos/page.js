@@ -17,6 +17,7 @@ export default function Pedidos() {
     const [quantidade, setQuantidade] = useState("")
     const [turno, setTurno] = useState("")
 
+
     const [pedidos, setPedidos] = useState([])
     const [usuarios, setUsuarios] = useState(null)
     const [setores, setSetores] = useState([])
@@ -31,9 +32,18 @@ export default function Pedidos() {
     // =========================
 
     async function buscarPedidos() {
-        const { data } = await supabase
+
+        const admin = localStorage.getItem("administrador") === "true"
+        const usuarioLogado = JSON.parse(localStorage.getItem("logado"))
+
+        let query = supabase
             .from("pedidos")
             .select('*, id_usuario(nome), id_equipamento(id,nome,quantidade), id_setor(id,salas)')
+
+        if (!admin && usuarioLogado) {
+            query = query.eq("id_usuario", usuarioLogado.id)
+        }
+        const { data } = await query
 
         if (data) setPedidos(data)
     }
