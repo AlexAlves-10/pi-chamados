@@ -38,11 +38,6 @@ export default function Pedidos() {
         if (data) setPedidos(data)
     }
 
-    async function buscarUsuarios() {
-        const { data } = await supabase.from('usuarios').select('*')
-        if (data) setUsuarios(data)
-    }
-
     async function buscarSetores() {
         const { data } = await supabase.from('setores').select('*')
         if (data) setSetores(data)
