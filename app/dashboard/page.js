@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from "react";
-import supabase from '../conexao/bancos';
+import supabase from "../conexao/bancos";
 
 export default function Pedidos() {
 
@@ -15,6 +15,7 @@ export default function Pedidos() {
         setores (salas),
         equipamentos (nome)
       `)
+      .eq('status', false);
 
     if (error) {
       console.error(error)
@@ -40,8 +41,8 @@ export default function Pedidos() {
       alert("Erro ao concluir pedido.");
     } else {
       // 2. Se deu certo no banco, removemos da lista visual
-      const listaAtualizada = listaPedidos.filter(function(pedido) {
-        return pedido.id !== idDoPedido;
+      const listaAtualizada = listaPedidos.filter(function (pedidos) {
+        return pedidos.id !== idDoPedido;
       });
       alteraListaPedidos(listaAtualizada);
     }
@@ -77,8 +78,8 @@ export default function Pedidos() {
                         <td>{pedido.equipamentos?.nome}</td>
                         <td>{pedido.quantidade}</td>
                         <td>
-                          <button 
-                            className="btn btn-sm btn-success" 
+                          <button
+                            className="btn btn-sm btn-success"
                             onClick={() => concluirPedido(pedido.id)}
                           >
                             Concluir
@@ -116,8 +117,8 @@ export default function Pedidos() {
                         <td>{pedido.equipamentos?.nome}</td>
                         <td>{pedido.quantidade}</td>
                         <td>
-                          <button 
-                            className="btn btn-sm btn-success" 
+                          <button
+                            className="btn btn-sm btn-success"
                             onClick={() => concluirPedido(pedido.id)}
                           >
                             Concluir
@@ -155,8 +156,8 @@ export default function Pedidos() {
                         <td>{pedido.equipamentos?.nome}</td>
                         <td>{pedido.quantidade}</td>
                         <td>
-                          <button 
-                            className="btn btn-sm btn-success" 
+                          <button
+                            className="btn btn-sm btn-success"
                             onClick={() => concluirPedido(pedido.id)}
                           >
                             Concluir

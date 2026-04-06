@@ -111,7 +111,8 @@ export default function Pedidos() {
             id_setor,
             id_equipamento,
             quantidade: qtd,
-            turno
+            turno,
+            status: false
         }
 
         if (editando) {
