@@ -97,139 +97,155 @@ function GerenciadorUsuarios() {
     return (
         <div className="container mt-4">
 
-            <div className="card">
+            <div className="card shadow-sm border-0">
 
-                <div className="card-header d-flex justify-content-between">
-                    <h5>Usuários</h5>
+                <div className="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                    <h5 className="m-0 fw-bold" style={{ color: '#004a8f' }}>Gestão de Usuários</h5>
 
+                    {/* BOTÃO ADICIONAR - Laranja Senac */}
                     <button
-                        className="btn btn-success btn-sm"
+                        className="btn fw-bold shadow-sm"
+                        style={{ backgroundColor: '#f26922', color: '#ffffff', borderRadius: '8px' }}
                         data-bs-toggle="modal"
                         data-bs-target="#modalUsuario"
                         onClick={limpar}
                     >
-                        + Novo
+                        ➕ Adicionar Usuário
                     </button>
                 </div>
 
                 <div className="card-body">
 
                     <input
-                        className="form-control mb-3"
-                        placeholder="Pesquisar"
+                        className="form-control mb-4 shadow-sm"
+                        style={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
+                        placeholder="🔍 Pesquisar por nome ou email..."
                         value={pesquisa}
                         onChange={e => alteraPesquisa(e.target.value)}
                     />
 
-                    <table className="table">
+                    <div className="table-responsive">
+                        <table className="table table-hover align-middle">
 
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Admin</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {listaFiltrada.map(item => (
-                                <tr >
-                                    <td>{item.nome}</td>
-                                    <td>{item.email}</td>
-                                    <td>{item.administrador ? "Sim" : "Não"}</td>
-
-                                    <td>
-                                        <button
-                                            className="btn btn-warning btn-sm me-2"
-                                            onClick={() => editar(item)}
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalUsuario"
-                                        >
-                                            Editar
-                                        </button>
-
-                                        <button
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() => deletar(item.id)}
-                                        >
-                                            Deletar
-                                        </button>
-                                    </td>
+                            <thead className="table-light">
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Admin</th>
+                                    <th className="text-center">Ações</th>
                                 </tr>
-                            ))}
-                        </tbody>
+                            </thead>
 
-                    </table>
+                            <tbody>
+                                {listaFiltrada.map(item => (
+                                    <tr key={item.id}>
+                                        <td className="fw-medium">{item.nome}</td>
+                                        <td className="text-muted">{item.email}</td>
+                                        <td>
+                                            {item.administrador ? 
+                                                <span className="badge bg-primary rounded-pill">Sim</span> : 
+                                                <span className="badge bg-secondary rounded-pill">Não</span>
+                                            }
+                                        </td>
+
+                                        <td className="text-center">
+                                            {/* BOTÃO EDITAR - Azul Senac */}
+                                            <button
+                                                className="btn btn-sm text-white me-2 fw-medium shadow-sm"
+                                                style={{ backgroundColor: '#004a8f', borderRadius: '6px' }}
+                                                onClick={() => editar(item)}
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalUsuario"
+                                            >
+                                                ✏️ Editar
+                                            </button>
+
+                                            {/* BOTÃO DELETAR - Outline Vermelho (mais elegante) */}
+                                            <button
+                                                className="btn btn-outline-danger btn-sm fw-medium shadow-sm"
+                                                style={{ borderRadius: '6px' }}
+                                                onClick={() => deletar(item.id)}
+                                            >
+                                                🗑️ Excluir
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+
+                        </table>
+                    </div>
 
                 </div>
             </div>
 
-
-
-
-            {/* parte de modal */}
-
-
+            {/* PARTE DO MODAL - Mantida intacta, só dei um tapa no visual dos botões */}
             <div className="modal fade" id="modalUsuario" tabIndex="-1">
-                <div className="modal-dialog">
-                    <div className="modal-content">
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-content border-0 shadow">
 
-                        <div className="modal-header">
-                            <h5 className="modal-title">
-                                {editandoId ? "Editar Usuário" : "Novo Usuário"}
+                        <div className="modal-header" style={{ backgroundColor: '#004a8f', color: 'white' }}>
+                            <h5 className="modal-title fw-bold">
+                                {editandoId ? "✏️ Editar Usuário" : "➕ Novo Usuário"}
                             </h5>
-                            <button className="btn-close" data-bs-dismiss="modal"></button>
+                            <button className="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
 
-                        <div className="modal-body">
+                        <div className="modal-body p-4">
 
+                            <label className="form-label text-muted small fw-bold mb-1">Nome Completo</label>
                             <input
-                                className="form-control mb-2"
-                                placeholder="Nome"
+                                className="form-control mb-3"
+                                placeholder="Ex: João da Silva"
                                 value={nome}
                                 onChange={e => alteraNome(e.target.value)}
                             />
 
+                            <label className="form-label text-muted small fw-bold mb-1">Email</label>
                             <input
-                                className="form-control mb-2"
-                                placeholder="Email"
+                                className="form-control mb-3"
+                                placeholder="joao@email.com"
                                 value={email}
                                 onChange={e => alteraEmail(e.target.value)}
                             />
 
                             {!editandoId && (
-                                <input
-                                    type="password"
-                                    className="form-control mb-2"
-                                    placeholder="Senha"
-                                    value={senha}
-                                    onChange={e => alteraSenha(e.target.value)}
-                                />
+                                <>
+                                    <label className="form-label text-muted small fw-bold mb-1">Senha</label>
+                                    <input
+                                        type="password"
+                                        className="form-control mb-3"
+                                        placeholder="••••••••"
+                                        value={senha}
+                                        onChange={e => alteraSenha(e.target.value)}
+                                    />
+                                </>
                             )}
 
+                            <label className="form-label text-muted small fw-bold mb-1">Permissão de Acesso</label>
                             <select
-                                className="form-control"
+                                className="form-select"
                                 value={administrador.toString()}
                                 onChange={e => alteraAdministrador(e.target.value === "true")}
                             >
-                                <option value="false">Comum</option>
-                                <option value="true">Admin</option>
+                                <option value="false">Usuário Comum</option>
+                                <option value="true">Administrador</option>
                             </select>
 
                         </div>
 
-                        <div className="modal-footer">
-                            <button className="btn btn-secondary" data-bs-dismiss="modal">
+                        <div className="modal-footer bg-light">
+                            <button className="btn btn-outline-secondary fw-medium" data-bs-dismiss="modal">
                                 Cancelar
                             </button>
 
                             <button
-                                className="btn btn-success"
+                                className="btn text-white fw-bold px-4"
+                                style={{ backgroundColor: '#f26922' }}
                                 onClick={salvar}
                                 data-bs-dismiss="modal"
                             >
-                                Salvar
+                                Salvar Dados
                             </button>
                         </div>
 

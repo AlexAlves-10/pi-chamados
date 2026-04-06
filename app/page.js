@@ -58,7 +58,7 @@ export default function Home() {
   return (
 
     <div className="row" style={{
-      background: "#c5b5b5",
+      background: "#f5f5f5",
       height: "100vh",
       display: "flex",
       justifyContent: "center",
