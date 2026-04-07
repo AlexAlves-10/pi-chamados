@@ -43,13 +43,13 @@ export default function Calendario() {
 
       {/* Header */}
       <div style={styles.header}>
-        <button onClick={() => mudarMes(-1)} style={styles.btn}>◀</button>
+        <button onClick={() => mudarMes(-1)} style={styles.btn}> <i class="bi bi-chevron-left"></i> </button>
 
         <h2 style={{ margin: 0 }}>
           {dataAtual.toLocaleString('pt-BR', { month: 'long' })} {dataAtual.getFullYear()}
         </h2>
 
-        <button onClick={() => mudarMes(1)} style={styles.btn}>▶</button>
+        <button onClick={() => mudarMes(1)} style={styles.btn}> <i class="bi bi-chevron-right"></i> </button>
       </div>
 
       {/* Dias da semana */}
@@ -77,18 +77,24 @@ export default function Calendario() {
           return (
             <div
               key={index}
-              onClick={() => dia && setDataSelecionada(dia)}
+              onClick={() => {
+                if (!dia) return;
+
+                setDataSelecionada(dia);
+
+                // 🔥 ADIÇÃO AQUI (navegação)
+                const dataFormatada = dia.toISOString().split('T')[0];
+                window.location.href = `/pedidos?data=${dataFormatada}`;
+              }}
               style={{
                 ...styles.dia,
 
-                // 🔥 prioridade: selecionado > hoje
                 backgroundColor: ehSelecionado
                   ? '#0d6efd'
                   : '#fff',
 
                 color: ehSelecionado ? '#fff' : '#000',
 
-                // 🔥 hoje aparece como borda
                 border: ehHoje
                   ? '2px solid #198754'
                   : '1px solid #eee',
