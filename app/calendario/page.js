@@ -6,6 +6,9 @@ export default function Calendario() {
   const [dataAtual, setDataAtual] = useState(new Date());
   const [dataSelecionada, setDataSelecionada] = useState(null);
 
+  // 🔥 novo estado pro hover
+  const [hoverIndex, setHoverIndex] = useState(null);
+
   const hoje = new Date();
 
   const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
@@ -82,18 +85,28 @@ export default function Calendario() {
 
                 setDataSelecionada(dia);
 
-                // 🔥 ADIÇÃO AQUI (navegação)
                 const dataFormatada = dia.toISOString().split('T')[0];
                 window.location.href = `/pedidos?data=${dataFormatada}`;
               }}
+
+              // 🔥 hover eventos
+              onMouseEnter={() => setHoverIndex(index)}
+              onMouseLeave={() => setHoverIndex(null)}
+
               style={{
                 ...styles.dia,
 
-                backgroundColor: ehSelecionado
-                  ? '#0d6efd'
-                  : '#fff',
+                backgroundColor:
+                  ehSelecionado
+                    ? '#0d6efd'
+                    : hoverIndex === index
+                    ? '#0d6efd'
+                    : '#fff',
 
-                color: ehSelecionado ? '#fff' : '#000',
+                color:
+                  (ehSelecionado || hoverIndex === index)
+                    ? '#fff'
+                    : '#000',
 
                 border: ehHoje
                   ? '2px solid #198754'
@@ -158,6 +171,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '5px',
-    fontSize: '16px'
+    fontSize: '16px',
+    transition: '0.2s' // 👈 deixa o hover suave 🔥
   }
 };
