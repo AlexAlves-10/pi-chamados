@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import supabase from '../conexao/bancos';
+import { ToastContainer, toast } from 'react-toastify';
 
 function GerenciadorUsuarios() {
 
@@ -22,12 +23,22 @@ function GerenciadorUsuarios() {
     )
 
     async function buscar() {
-        const res = await supabase.from('usuarios').select()
+        const promise = supabase
+            .from('usuarios').
+            select()
+
+        await toast.promise(promise, {
+            pending: "Buscando usuários...",
+            success: "Usuários carregados!",
+            error: "Erro ao buscar usuários"
+        })
+
+        const res = await promise
 
         if (res.data) {
             alteraUsuarios(res.data)
         } else {
-            alert("Erro ao buscar")
+            toast.error("Erro ao buscar")
             console.log(res.error)
         }
     }
@@ -35,22 +46,38 @@ function GerenciadorUsuarios() {
     async function salvar() {
 
         if (!nome || !email || (!editandoId && !senha)) {
-            alert("Preencha tudo")
+            toast.success("Preencha tudo")
             return;
         }
 
         if (editandoId) {
-            await supabase
+
+            const promise = supabase
                 .from('usuarios')
                 .update({ nome, email, administrador })
                 .eq('id', editandoId)
 
+            await toast.promise(promise, {
+                pending: "Atualizando usuário...",
+                success: "Usuário atualizado!",
+                error: "Erro ao atualizar usuário"
+            })
+
+            await promise
         } else {
 
-            const res = await supabase.auth.signUp({
+            const promiseCadastro = supabase.auth.signUp({
                 email: email,
                 password: senha,
             })
+
+            await toast.promise(promiseCadastro, {
+                pending: "Cadastrando usuário...",
+                success: "Usuário cadastrado!",
+                error: "Erro ao cadastrar usuário"
+            })
+
+            const res = await promiseCadastro
 
             if (res.data.user) {
                 await supabase
@@ -63,8 +90,7 @@ function GerenciadorUsuarios() {
                     })
             }
         }
-
-        alert("Salvo!")
+        toast.success("Salvo!")
         limpar()
         buscar()
     }
@@ -87,16 +113,25 @@ function GerenciadorUsuarios() {
     async function deletar(id) {
         if (!confirm("Deletar?")) return;
 
-        await supabase.from('usuarios')
+        const promise = supabase
+            .from('usuarios')
             .delete()
             .eq('id', id)
+
+        await toast.promise(promise, {
+            pending: "Excluindo usuário...",
+            success: "Usuário excluído!",
+            error: "Erro ao excluir usuário"
+        })
+
+        await promise
 
         buscar()
     }
 
     return (
         <div className="container mt-4">
-
+            <ToastContainer position="top-right" theme="colored" autoClose={3000} />
             <div className="card shadow-sm border-0">
 
                 <div className="card-header bg-white d-flex justify-content-between align-items-center py-3">
@@ -142,8 +177,8 @@ function GerenciadorUsuarios() {
                                         <td className="fw-medium">{item.nome}</td>
                                         <td className="text-muted">{item.email}</td>
                                         <td>
-                                            {item.administrador ? 
-                                                <span className="badge bg-primary rounded-pill">Sim</span> : 
+                                            {item.administrador ?
+                                                <span className="badge bg-primary rounded-pill">Sim</span> :
                                                 <span className="badge bg-secondary rounded-pill">Não</span>
                                             }
                                         </td>

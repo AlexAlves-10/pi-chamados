@@ -5,11 +5,15 @@ export default function Calendario() {
 
   const [dataAtual, setDataAtual] = useState(new Date());
   const [dataSelecionada, setDataSelecionada] = useState(null);
-
-  // 🔥 novo estado pro hover
   const [hoverIndex, setHoverIndex] = useState(null);
 
   const hoje = new Date();
+
+  // 🔥 DADOS DE EXEMPLO (depois você vai puxar do banco)
+  const pedidosPorDia = {
+    '2026-04-06': ['manha', 'tarde'],
+    '2026-04-07': ['noite'],
+  };
 
   const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
@@ -46,13 +50,17 @@ export default function Calendario() {
 
       {/* Header */}
       <div style={styles.header}>
-        <button onClick={() => mudarMes(-1)} style={styles.btn}> <i class="bi bi-chevron-left"></i> </button>
+        <button onClick={() => mudarMes(-1)} style={styles.btn}>
+          <i class="bi bi-chevron-left"></i>
+        </button>
 
         <h2 style={{ margin: 0 }}>
           {dataAtual.toLocaleString('pt-BR', { month: 'long' })} {dataAtual.getFullYear()}
         </h2>
 
-        <button onClick={() => mudarMes(1)} style={styles.btn}> <i class="bi bi-chevron-right"></i> </button>
+        <button onClick={() => mudarMes(1)} style={styles.btn}>
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
 
       {/* Dias da semana */}
@@ -77,6 +85,12 @@ export default function Calendario() {
             dia &&
             dia.toDateString() === dataSelecionada.toDateString();
 
+          const dataFormatada = dia
+            ? dia.toISOString().split('T')[0]
+            : null;
+
+          const turnos = dataFormatada ? pedidosPorDia[dataFormatada] : [];
+
           return (
             <div
               key={index}
@@ -89,7 +103,6 @@ export default function Calendario() {
                 window.location.href = `/pedidos?data=${dataFormatada}`;
               }}
 
-              // 🔥 hover eventos
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
 
@@ -116,6 +129,16 @@ export default function Calendario() {
               }}
             >
               {dia ? dia.getDate() : ''}
+
+              {/* 🔥 TURNOS */}
+              {dia && (
+                <div style={styles.turnos}>
+                  {turnos?.includes('manha') && <span style={{ color: 'orange' }}>●</span>}
+                  {turnos?.includes('tarde') && <span style={{ color: 'red' }}>●</span>}
+                  {turnos?.includes('noite') && <span style={{ color: 'blue' }}>●</span>}
+                </div>
+              )}
+
             </div>
           );
         })}
@@ -166,12 +189,21 @@ const styles = {
   },
 
   dia: {
+    position: 'relative', // 🔥 necessário pros turnos
     aspectRatio: '1 / 1',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '5px',
     fontSize: '16px',
-    transition: '0.2s' // 👈 deixa o hover suave 🔥
+    transition: '0.2s'
+  },
+
+  turnos: {
+    position: 'absolute',
+    bottom: '5px',
+    display: 'flex',
+    gap: '3px',
+    fontSize: '10px'
   }
 };

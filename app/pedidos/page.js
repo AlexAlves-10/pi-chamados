@@ -1,12 +1,7 @@
 'use client'
 import { useEffect, useState } from "react";
-import { createClient } from '@supabase/supabase-js'
-import 'bootstrap-icons/font/bootstrap-icons.css';
-
-const supabase = createClient(
-    "https://ekdskhpbgorgflhhehfp.supabase.co",
-    "sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ"
-)
+import supabase from "../conexao/bancos";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Pedidos() {
 
@@ -38,7 +33,7 @@ export default function Pedidos() {
 
         let query = supabase
             .from("pedidos")
-            .select('*, id_usuario(nome), id_equipamento(id,nome,quantidade), id_setor(id,salas)')
+            .select('id, id_usuario(id,nome), id_setor(id,salas), id_equipamento(id,nome,quantidade), quantidade, turno, status')
 
         if (!admin && usuarioLogado) {
             query = query.eq("id_usuario", usuarioLogado.id)
@@ -64,9 +59,19 @@ export default function Pedidos() {
 
     function editar(item) {
         setEditando(item.id)
+
         setIdUsuario(item.id_usuario?.id || "")
-        setIdSetor(item.id_setor?.id || "")
-        setIdEquipamento(item.id_equipamento?.id || "")
+
+        setIdSetor(
+            typeof item.id_setor === "object"
+                ? item.id_setor.id
+                : item.id_setor
+        )
+
+        setIdEquipamento(
+            item.id_equipamento?.id ? Number(item.id_equipamento.id) : ""
+        )
+
         setQuantidade(item.quantidade)
         setTurno(item.turno)
     }
@@ -82,13 +87,27 @@ export default function Pedidos() {
 
     async function excluir(id) {
         if (!confirm("Tem certeza?")) return
-        await supabase.from('pedidos').delete().eq('id', id)
+
+        const promise = supabase
+            .from('pedidos')
+            .delete()
+            .eq('id', id)
+
+        toast.promise(promise, {
+            pending: "Excluindo pedido...",
+            success: "Pedido excluído!",
+            error: "Erro ao excluir pedido"
+        })
+
+        await promise
+
         buscarPedidos()
     }
 
     async function salvar() {
-
         const qtd = Number(quantidade)
+
+        const idEquipamentoFinal = Number(id_equipamento)
 
         if (!id_usuario || !id_setor || !id_equipamento || !qtd) {
             alert("Preencha todos os campos!")
@@ -98,8 +117,13 @@ export default function Pedidos() {
         const { data: equip } = await supabase
             .from('equipamentos')
             .select('*')
-            .eq('id', id_equipamento)
+            .eq('id', idEquipamentoFinal)
             .single()
+
+        if (!equip) {
+            toast.error("Erro ao buscar equipamento")
+            return
+        }
 
         if (qtd > equip.quantidade) {
             alert("Sem estoque!")
@@ -109,23 +133,44 @@ export default function Pedidos() {
         const dados = {
             id_usuario,
             id_setor,
-            id_equipamento,
+            id_equipamento: idEquipamentoFinal,
             quantidade: qtd,
             turno,
             status: false
         }
 
         if (editando) {
-            await supabase.from('pedidos').update(dados).eq('id', editando)
-            alert("Atualizado!")
+
+            const promise = supabase
+                .from('pedidos')
+                .update(dados)
+                .eq('id', editando)
+
+            await toast.promise(promise, {
+                pending: "Atualizando pedido...",
+                success: "Pedido atualizado!",
+                error: "Erro ao atualizar pedido"
+            })
+
+            await promise
         } else {
-            await supabase.from('pedidos').insert(dados)
+
+            const promise = supabase
+                .from('pedidos')
+                .insert(dados)
+
+            await toast.promise(promise, {
+                pending: "Cadastrando pedido...",
+                success: "Pedido cadastrado!",
+                error: "Erro ao cadastrar pedido"
+            })
+
+            await promise
+
             await supabase
                 .from('equipamentos')
                 .update({ quantidade: equip.quantidade - qtd })
                 .eq('id', id_equipamento)
-
-            alert("Cadastrado!")
         }
 
         cancelar()
@@ -158,6 +203,7 @@ export default function Pedidos() {
 
     return (
         <div className="container mt-4">
+            <ToastContainer position="top-right" theme="colored" autoClose={3000} />
 
             <h3>Pedidos</h3>
 
@@ -185,7 +231,7 @@ export default function Pedidos() {
                 ))}
             </select>
 
-            <select className="form-select mb-2 w-25" value={id_equipamento} onChange={e => setIdEquipamento(e.target.value)}>
+            <select className="form-select mb-2 w-25" value={id_equipamento} onChange={e => setIdEquipamento(Number(e.target.value))}>
                 <option disabled hidden value="">Equipamento</option>
                 {equipamentos.map(e => (
                     <option key={e.id} value={e.id}>{e.nome}</option>

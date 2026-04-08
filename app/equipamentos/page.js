@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { useState, useEffect } from "react";
 import "./Equipamentos.css"
 import supabase from '../conexao/bancos';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function EquipamentosEscola() {
 
@@ -15,7 +16,7 @@ export default function EquipamentosEscola() {
   const [quantidade, alteraQuantidade] = useState("")
   const [estoque, alteraEstoque] = useState(true)
   const [editandoId, alteraEditandoId] = useState(null);
- 
+
   const [pesquisa, alteraPesquisa] = useState("")
 
   const listaFiltrada = equipamentos.filter(
@@ -40,7 +41,7 @@ export default function EquipamentosEscola() {
 
   async function salvar() {
     if (!nome || !quantidade || !descricao) {
-      alert("Preencha todos os campos!")
+      toast.warning("Preencha todos os campos!")
       return;
     }
 
@@ -52,27 +53,38 @@ export default function EquipamentosEscola() {
     }
     if (editandoId) {
 
-      const { error } = await supabase
+      const promise = supabase
         .from('equipamentos')
         .update(objeto)
         .eq('id', editandoId)
+
+      await toast.promise(promise, {
+        pending: "Atualizando...",
+        success: "Atualizado com sucesso!",
+        error: "Erro ao atualizar"
+      })
       if (error) {
         console.log(error)
-        alert("erro ao atualizar")
+        toast.error("erro ao atualizar")
         return
       }
-      alert("atualizado")
+      toast.success("atualizado")
     } else {
-      const { error } = await supabase
+      const promise = supabase
         .from('equipamentos')
         .insert(objeto)
 
+      await toast.promise(promise, {
+        pending: "Cadastrando...",
+        success: "Cadastrado com sucesso!",
+        error: "Erro ao cadastrar"
+      })
+
       if (error) {
         console.log(error)
-        alert("erro ao cadastrar")
+        toast.error("erro ao cadastrar")
         return
       }
-      alert("cadastrado!")
     }
 
     alteraNome("")
@@ -99,6 +111,7 @@ export default function EquipamentosEscola() {
   return (
 
     <div className="card shadow-sm p-4 mt-3">
+      <ToastContainer position="top-right" theme="colored" autoClose={3000} />
       <h3 className="mb-4">Lista de Equipamentos</h3>
 
       <div className="row">
