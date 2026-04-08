@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import supabase from "../conexao/bancos";
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -20,6 +20,8 @@ export default function Pedidos() {
 
     const [editando, setEditando] = useState(null)
 
+    const clicando = useRef(false)
+
     const equipamentoSelecionado = equipamentos.find(e => e.id == id_equipamento)
 
     // =========================
@@ -27,6 +29,8 @@ export default function Pedidos() {
     // =========================
 
     async function buscarPedidos() {
+
+        if (typeof window === "undefined") return
 
         const admin = localStorage.getItem("administrador") === "true"
         const usuarioLogado = JSON.parse(localStorage.getItem("logado"))
@@ -78,7 +82,6 @@ export default function Pedidos() {
 
     function cancelar() {
         setEditando(null)
-        setIdUsuario("")
         setIdSetor("")
         setIdEquipamento("")
         setQuantidade("")
@@ -105,77 +108,85 @@ export default function Pedidos() {
     }
 
     async function salvar() {
-        const qtd = Number(quantidade)
 
-        const idEquipamentoFinal = Number(id_equipamento)
+        if (clicando.current) return
+        clicando.current = true
 
-        if (!id_usuario || !id_setor || !id_equipamento || !qtd) {
-            alert("Preencha todos os campos!")
-            return
-        }
+        try {
 
-        const { data: equip } = await supabase
-            .from('equipamentos')
-            .select('*')
-            .eq('id', idEquipamentoFinal)
-            .single()
+            const qtd = Number(quantidade)
+            const idEquipamentoFinal = Number(id_equipamento)
 
-        if (!equip) {
-            toast.error("Erro ao buscar equipamento")
-            return
-        }
+            if (!id_usuario || !id_setor || !id_equipamento || qtd <= 0) {
+                alert("Preencha todos os campos corretamente!")
+                return
+            }
 
-        if (qtd > equip.quantidade) {
-            alert("Sem estoque!")
-            return
-        }
-
-        const dados = {
-            id_usuario,
-            id_setor,
-            id_equipamento: idEquipamentoFinal,
-            quantidade: qtd,
-            turno,
-            status: false
-        }
-
-        if (editando) {
-
-            const promise = supabase
-                .from('pedidos')
-                .update(dados)
-                .eq('id', editando)
-
-            await toast.promise(promise, {
-                pending: "Atualizando pedido...",
-                success: "Pedido atualizado!",
-                error: "Erro ao atualizar pedido"
-            })
-
-            await promise
-        } else {
-
-            const promise = supabase
-                .from('pedidos')
-                .insert(dados)
-
-            await toast.promise(promise, {
-                pending: "Cadastrando pedido...",
-                success: "Pedido cadastrado!",
-                error: "Erro ao cadastrar pedido"
-            })
-
-            await promise
-
-            await supabase
+            const { data: equip } = await supabase
                 .from('equipamentos')
-                .update({ quantidade: equip.quantidade - qtd })
-                .eq('id', id_equipamento)
-        }
+                .select('*')
+                .eq('id', idEquipamentoFinal)
+                .single()
 
-        cancelar()
-        buscarPedidos()
-        buscarEquipamentos()
+            if (!equip) {
+                toast.error("Erro ao buscar equipamento")
+                return
+            }
+
+            if (qtd > equip.quantidade) {
+                alert("Sem estoque!")
+                return
+            }
+
+            const dados = {
+                id_usuario,
+                id_setor,
+                id_equipamento: idEquipamentoFinal,
+                quantidade: qtd,
+                turno,
+                status: false
+            }
+
+            if (editando) {
+
+                const { error } = await supabase
+                    .from('pedidos')
+                    .update(dados)
+                    .eq('id', editando)
+
+                if (error) {
+                    toast.error("Erro ao atualizar pedido")
+                    return
+                } else {
+                    toast.success("Pedido atualizado!")
+                }
+
+            } else {
+
+                const { error } = await supabase
+                    .from('pedidos')
+                    .insert(dados)
+
+                if (error) {
+                    toast.error("Erro ao cadastrar pedido")
+                    return
+                } else {
+                    toast.success("Pedido cadastrado!")
+                }
+
+                await supabase
+                    .from('equipamentos')
+                    .update({ quantidade: equip.quantidade - qtd })
+                    .eq('id', id_equipamento)
+            }
+
+            cancelar()
+            await buscarPedidos()
+            await buscarEquipamentos()
+
+        } finally {
+            clicando.current = false
+        }
     }
 
     // =========================
@@ -219,7 +230,7 @@ export default function Pedidos() {
                 <div style={{ fontSize: "20px" }}>  </div>
                 <div>
                     <small style={{ color: "#888" }} > Usuário logado </small>
-                    {usuarios && (<h5 style={{ margin: 0, fontWeight: "bold" }} ><strong> <i class="bi bi-person-circle"></i> </strong> {usuarios.nome}</h5>)}
+                    {usuarios && (<h5 style={{ margin: 0, fontWeight: "bold" }} ><strong> <i className="bi bi-person-circle"></i> </strong> {usuarios.nome}</h5>)}
                 </div>
 
             </div>
@@ -254,7 +265,7 @@ export default function Pedidos() {
                 <option>Noite</option>
             </select>
 
-            <button className="btn btn-primary" onClick={salvar}>
+            <button type="button" className="btn btn-primary" onClick={salvar}>
                 {editando ? "Atualizar" : "Salvar"}
             </button>
 
@@ -286,8 +297,8 @@ export default function Pedidos() {
                                 <td>{p.quantidade}</td>
                                 <td>{p.turno}</td>
                                 <td>
-                                    <button className="btn btn-primary me-2" onClick={() => editar(p)}> <i class="bi bi-pencil-fill"></i> </button>
-                                    <button className="btn btn-danger" onClick={() => excluir(p.id)}> <i class="bi bi-trash3-fill"></i> </button>
+                                    <button className="btn btn-primary me-2" onClick={() => editar(p)}> <i className="bi bi-pencil-fill"></i> </button>
+                                    <button className="btn btn-danger" onClick={() => excluir(p.id)}> <i className="bi bi-trash3-fill"></i> </button>
                                 </td>
                             </tr>
                         ))}
