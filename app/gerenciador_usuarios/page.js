@@ -27,12 +27,6 @@ function GerenciadorUsuarios() {
             .from('usuarios').
             select()
 
-        await toast.promise(promise, {
-            pending: "Buscando usuários...",
-            success: "Usuários carregados!",
-            error: "Erro ao buscar usuários"
-        })
-
         const res = await promise
 
         if (res.data) {

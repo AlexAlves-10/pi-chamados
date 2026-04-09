@@ -28,7 +28,7 @@ export default function EquipamentosEscola() {
     const { data, error } = await supabase
       .from('equipamentos')
       .select()
-      .order('id', { ascending: true })
+      .order('id', { ascending: false })
 
     console.log(data)
     alteraEquipamentos(data)
@@ -53,37 +53,27 @@ export default function EquipamentosEscola() {
     }
     if (editandoId) {
 
-      const promise = supabase
+      const { error } = await supabase
         .from('equipamentos')
         .update(objeto)
         .eq('id', editandoId)
 
-      await toast.promise(promise, {
-        pending: "Atualizando...",
-        success: "Atualizado com sucesso!",
-        error: "Erro ao atualizar"
-      })
       if (error) {
-        console.log(error)
-        toast.error("erro ao atualizar")
+        toast.error("Erro ao atualizar equipamento")
         return
+      } else {
+        toast.success("Equipamento atualizado!")
       }
-      toast.success("atualizado")
     } else {
-      const promise = supabase
+      const { error } = await supabase
         .from('equipamentos')
         .insert(objeto)
 
-      await toast.promise(promise, {
-        pending: "Cadastrando...",
-        success: "Cadastrado com sucesso!",
-        error: "Erro ao cadastrar"
-      })
-
       if (error) {
-        console.log(error)
-        toast.error("erro ao cadastrar")
+        toast.error("Erro ao cadastrar equipamento")
         return
+      } else {
+        toast.success("Equipamento cadastrado!")
       }
     }
 
@@ -103,6 +93,13 @@ export default function EquipamentosEscola() {
     alteraDescricao(equipamento.descricao);
     alteraEditandoId(equipamento.id)
     alteraVerModal(true)
+  }
+
+  function limparCampos() {
+    alteraNome("")
+    alteraDescricao("")
+    alteraQuantidade("")
+    alteraEditandoId(null)
   }
 
 
@@ -153,7 +150,7 @@ export default function EquipamentosEscola() {
 
       <div className="text-end mt-3">
 
-        <button className="btn btn-success me-2" onClick={() => { alteraVerModal(true); alteraEditandoId(false) }}> Cadastrar </button>
+        <button className="btn btn-success me-2" onClick={() => { alteraVerModal(true); limparCampos() }}> Cadastrar </button>
 
       </div>
 
