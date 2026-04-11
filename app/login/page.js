@@ -107,6 +107,7 @@
 'use client'
 import { useState, useEffect } from "react"
 import supabase from "../conexao/bancos";
+import { ToastContainer, toast } from 'react-toastify';
 
 function Login() {
   // Estado para o id_usuario (controla render)
@@ -126,7 +127,7 @@ function Login() {
 
   async function autenticar() {
     if (!email || !senha) {
-      alert("Preencha o email e a senha")
+      toast.warning("Preencha o email e a senha")
       return
     }
 
@@ -137,7 +138,7 @@ function Login() {
       })
 
       if (error || !data.user) {
-        alert("Dados inválidos...")
+        toast.error("Dados inválidos...")
         return
       }
 
@@ -148,7 +149,7 @@ function Login() {
         .single()
 
       if (erroUsuario) {
-        alert('Erro ao buscar usuário')
+        toast.error('Erro ao buscar usuário')
         return
       }
 
@@ -156,10 +157,10 @@ function Login() {
       localStorage.setItem('administrador', usuario.administrador)
       setIdUsuario(data.user.id) // Atualiza o estado para re-render
 
-      alert("Autenticado com sucesso!")
+      toast.success("Autenticado com sucesso!")
 
     } catch (error) {
-      alert("Erro no login: " + error.message)
+      toast.error("Erro no login: " + error.message)
     }
   }
 
@@ -167,7 +168,7 @@ function Login() {
     localStorage.removeItem("id_usuario")
     localStorage.removeItem("administrador")
     setIdUsuario(null) // Atualiza estado para mostrar formulário
-    alert("Desconectado com sucesso!")
+    toast.info("Desconectado com sucesso!")
   }
 
   if (typeof window === "undefined") return null
@@ -181,12 +182,13 @@ function Login() {
       alignItems: "center",
       padding: "20px"
     }}>
+      <ToastContainer position="top-right" theme="colored" autoClose={3000} />
       {!idUsuario ? (
         <div className="glass-card p-5 mx-auto" style={{
           width: "100%",
           maxWidth: "400px"
         }}>
-          <h1 className="text-center mb-4"> Login </h1>
+          <h1 className="text-center mb-4 text-body fw-bold"><i className="bi bi-box-arrow-in-right me-3 text-primary"></i>Login</h1>
 
           <div className="mb-3">
             <label htmlFor="emailInput" className="form-label">Digite seu email</label>

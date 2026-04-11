@@ -1,10 +1,8 @@
 "use client";
 import { createClient } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ');
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-
 
 
 
@@ -37,7 +35,12 @@ export default function Setores() {
             .from('setores')
             .insert(objeto)
             .order('setores', { ascending: false })
-        console.log(error)
+
+        if (error) {
+            toast.error("Erro ao salvar setor!")
+        } else {
+            toast.success("Setor salvo com sucesso!")
+        }
 
         const modal = document.getElementById('novoModal')
         const modalBootstrap = bootstrap.Modal.getInstance(modal)
@@ -84,10 +87,10 @@ export default function Setores() {
             .eq('id', editando)
 
         if (error == null) {
-            alert("Atulalizado com sucesso!")
+            toast.success("Atualizado com sucesso!")
             cancelaEdicao()
         } else {
-            alert("Dados inválidos! Verifique os campos e tente novamento...")
+            toast.error("Dados inválidos! Verifique os campos e tente novamente...")
         }
 
         const modal = document.getElementById('editarModal')
@@ -107,16 +110,14 @@ export default function Setores() {
 
     return (
         <div className="container py-4">
-
+            <ToastContainer position="top-right" theme="colored" autoClose={3000} />
             <div className="glass-card p-4 mx-auto w-100">
 
                 {/* Conteúdo Pricipal */}
                 <div className="mt-2">
 
-                    {/* <!-- Introdução --> */}
-                    <div>
-                        <h2> <strong> Setores </strong> </h2>
-                        <hr />
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h2 className="fw-bold text-body m-0"><i className="bi bi-diagram-3 me-3 text-primary"></i>Setores</h2>
                     </div>
 
                     {/* <!-- Pesquisa e Filtro --> */}

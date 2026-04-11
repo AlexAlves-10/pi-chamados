@@ -14,12 +14,12 @@ export default function Calendario() {
   const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   async function buscarPedidos() {
-    const { data, error } = await supabase.from('pedidos').select('turno, criado_em');
+    const { data, error } = await supabase.from('pedidos').select('turno, data');
     if (data && !error) {
       const mapaPedidos = {};
       data.forEach(p => {
-        if (!p.criado_em) return;
-        const dataFormatada = p.criado_em.split('T')[0];
+        if (!p.data) return;
+        const dataFormatada = p.data.split('T')[0];
         
         let turnoNorm = p.turno.toLowerCase();
         if (turnoNorm === 'manhã') turnoNorm = 'manha';
@@ -132,18 +132,24 @@ export default function Calendario() {
 
               let backgroundColor = 'transparent';
               let color = 'var(--text-main)';
-              let border = ehHoje ? '2px solid var(--text-primary)' : '1px solid var(--glass-border)';
+              let border = ehHoje ? '2px solid var(--text-primary)' : '1px solid rgba(130, 130, 130, 0.25)';
+              let transform = 'none';
+              let boxShadow = 'none';
+              let fontWeight = 'normal';
               
               if (diaCheio) {
-                backgroundColor = '#fdf3f4';
-                border = '1px solid #f5c2c7';
+                backgroundColor = 'rgba(220, 53, 69, 0.1)';
+                border = '2px solid #dc3545';
                 color = '#dc3545';
+                fontWeight = 'bold';
               } else if (ehSelecionado) {
                 backgroundColor = 'var(--text-primary)';
                 color = '#fff';
                 border = '1px solid var(--text-primary)';
               } else if (hoverIndex === index && dia) {
                 backgroundColor = 'var(--glass-border)';
+                transform = 'translateY(-3px)';
+                boxShadow = '0 6px 12px rgba(0,0,0,0.1)';
               }
 
               return (
@@ -169,9 +175,11 @@ export default function Calendario() {
                     backgroundColor,
                     color,
                     border,
+                    transform,
+                    boxShadow,
+                    fontWeight,
                     cursor: dia ? 'pointer' : 'default',
-                    fontWeight: ehHoje ? 'bold' : (diaCheio ? 'bold' : 'normal'),
-                    opacity: diaCheio && !ehSelecionado ? 0.9 : 1
+                    transition: 'all 0.2s ease-in-out'
                   }}
                 >
                   <span style={{ zIndex: 2 }}>{dia ? dia.getDate() : ''}</span>

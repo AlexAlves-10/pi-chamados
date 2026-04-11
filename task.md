@@ -1,7 +1,3 @@
-- `[/]` 1. **Setup das Variáveis Globais**: Atualizar `globals.css` com as definições de tema claro (`:root`) e tema escuro (`[data-theme='dark']`), e criar classes utilitárias (`.custom-gradient-bg`, `.glass-card`, `.glass-input`).
-- `[ ]` 2. **Configuração de Layout Local**: Ajustar `app/layout.js` com um script de pre-processamento (para ler o `localStorage` do tema) e padronizar o `<body>`.
-- `[ ]` 3. **Botão Toggle no Menu**: Inserir a alternância de temas na barra lateral `app/components/MenuLateral.js` e atualizar seu design em `MenuLateral.css`.
-- `[ ]` 4. **Refatoração - Home & Login**: Normalizar `app/page.js` e `app/login/page.js` com os novos tokens visuais (removendo inline style).
-- `[ ]` 5. **Refatoração - Dashboard & Painel**: Atualizar `app/dashboard/page.js` e `app/painel/page.js` para usar as classes glass e cards consistentes.
-- `[ ]` 6. **Refatoração - Configurações Secundárias**: Atualizar Cadastros (`cadastro/page.js`), Calendário (`calendario/page.js`), Setores, Equipamentos, Pedidos e Gerenciamento de Usuários.
-- `[ ]` 7. **Revisão e Testes Livres**: Repassar todas as visões para corrigir o contraste do Bootstrap para light/dark mode e classes das tabelas.
+- `[x]` 1. **Data no Pedido**: Adicionar seletor nativo `<input type="date">` em Pedidos, gravando-o localmente e validando. Se redirecionado do calendário com `?data=`, auto-preencher campo. Salvar no Supabase a coluna `.data`.
+- `[x]` 2. **Lógica e UI do Calendário**: Refatorar `app/calendario` para puxar `data` ao invés de `criado_em`. Estabelecer Hover effect animado nas caixas e estilo condicional explícito de "Dia Cheio".
+- `[x]` 3. **Correção de Usuários**: Expor os erros nativos do Supabase Auth no Cadastro (se a pessoa já existir no `auth.users` mas foi apagada do `public.usuarios`, alertar).

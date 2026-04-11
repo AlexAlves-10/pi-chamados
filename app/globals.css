@@ -63,7 +63,6 @@ body {
 /* Global Background Wrapper */
 .custom-gradient-bg {
     background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-    min-height: 100vh;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -98,7 +97,7 @@ body {
 /* MENU LATERAL */
 .menuLateral {
     background: linear-gradient(180deg, var(--menu-bg-start), var(--menu-bg-end));
-    min-height: 100vh;
+    min-height: 100%;
     padding: 25px;
     box-shadow: 4px 0 15px rgba(0,0,0,0.15);
     transition: background 0.3s ease;
@@ -167,4 +166,4 @@ body {
 [data-theme="dark"] .modal-content {
     background-color: var(--table-bg);
     color: var(--text-main);
-}
+}

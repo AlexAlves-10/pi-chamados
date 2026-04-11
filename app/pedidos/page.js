@@ -11,6 +11,7 @@ export default function Pedidos() {
     const [id_equipamento, setIdEquipamento] = useState("")
     const [quantidade, setQuantidade] = useState("")
     const [turno, setTurno] = useState("")
+    const [dataPedido, setDataPedido] = useState("")
 
 
     const [pedidos, setPedidos] = useState([])
@@ -37,7 +38,7 @@ export default function Pedidos() {
 
         let query = supabase
             .from("pedidos")
-            .select('id, id_usuario(id,nome), id_setor(id,salas), id_equipamento(id,nome,quantidade), quantidade, turno, status')
+            .select('id, id_usuario(id,nome), id_setor(id,salas), id_equipamento(id,nome,quantidade), quantidade, turno, data, status')
 
         if (!admin && usuarioLogado) {
             query = query.eq("id_usuario", usuarioLogado.id)
@@ -78,6 +79,7 @@ export default function Pedidos() {
 
         setQuantidade(item.quantidade)
         setTurno(item.turno)
+        setDataPedido(item.data || "")
     }
 
     function cancelar() {
@@ -86,6 +88,7 @@ export default function Pedidos() {
         setIdEquipamento("")
         setQuantidade("")
         setTurno("")
+        setDataPedido("")
     }
 
     async function excluir(id) {
@@ -141,7 +144,7 @@ export default function Pedidos() {
             const qtd = Number(quantidade)
             const idEquipamentoFinal = Number(id_equipamento)
 
-            if (!id_usuario || !id_setor || !id_equipamento || qtd <= 0) {
+            if (!id_usuario || !id_setor || !id_equipamento || qtd <= 0 || !dataPedido) {
                 alert("Preencha todos os campos corretamente!")
                 return
             }
@@ -168,6 +171,7 @@ export default function Pedidos() {
                 id_equipamento: idEquipamentoFinal,
                 quantidade: qtd,
                 turno,
+                data: dataPedido,
                 status: false
             }
 
@@ -230,6 +234,12 @@ export default function Pedidos() {
         buscarPedidos()
         buscarSetores()
         buscarEquipamentos()
+
+        if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search);
+            const dataParam = params.get("data");
+            if (dataParam) setDataPedido(dataParam);
+        }
     }, [])
 
     // =========================
@@ -241,7 +251,7 @@ export default function Pedidos() {
             <ToastContainer position="top-right" theme="colored" autoClose={3000} />
 
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="fw-bold text-primary m-0"><i className="bi bi-box-seam me-2"></i>Pedidos</h2>
+                <h2 className="fw-bold text-body m-0"><i className="bi bi-box-seam me-3 text-primary"></i>Pedidos</h2>
                     <div className="d-flex align-items-center glass-card px-4 py-2 shadow-sm border-0">
                     <i className="bi bi-person-circle fs-4 text-primary me-2"></i>
                     <div>
@@ -255,7 +265,7 @@ export default function Pedidos() {
                 <div className="card-body p-4">
                     <h5 className="card-title fw-bold text-secondary mb-4">{editando ? "Editar Pedido" : "Novo Pedido"}</h5>
                     <div className="row g-3">
-                        <div className="col-md-3">
+                        <div className="col-12 col-md-3">
                             <select className="form-select form-select-lg" value={id_setor} onChange={e => setIdSetor(e.target.value)}>
                                 <option disabled hidden value="">Setor</option>
                                 {setores.map(s => (
@@ -264,7 +274,7 @@ export default function Pedidos() {
                             </select>
                         </div>
 
-                        <div className="col-md-3">
+                        <div className="col-12 col-md-3">
                             <select className="form-select form-select-lg" value={id_equipamento} onChange={e => setIdEquipamento(Number(e.target.value))}>
                                 <option disabled hidden value="">Equipamento</option>
                                 {equipamentos.map(e => (
@@ -274,17 +284,17 @@ export default function Pedidos() {
                             <small className="text-success fw-semibold mt-1 d-block"><i className="bi bi-check-circle-fill me-1"></i> Estoque: {equipamentoSelecionado?.quantidade || 0} unid.</small>
                         </div>
 
-                        <div className="col-md-2">
+                        <div className="col-6 col-md-2">
                             <input
                                 type="number"
                                 className="form-control form-control-lg"
-                                placeholder="Quantidade"
+                                placeholder="Qtd"
                                 value={quantidade}
                                 onChange={e => setQuantidade(e.target.value)}
                             />
                         </div>
 
-                        <div className="col-md-2">
+                        <div className="col-6 col-md-2">
                             <select className="form-select form-select-lg" value={turno} onChange={e => setTurno(e.target.value)}>
                                 <option disabled hidden value="">Turno</option>
                                 <option>Manhã</option>
@@ -293,12 +303,21 @@ export default function Pedidos() {
                             </select>
                         </div>
 
-                        <div className="col-md-2 d-flex align-items-start gap-2">
-                            <button type="button" className={`btn btn-lg w-100 fw-bold ${editando ? "btn-warning text-white" : "btn-primary"}`} onClick={salvar}>
-                                <i className={`bi ${editando ? "bi-check2-square" : "bi-plus-circle"} me-2`}></i>{editando ? "Atualizar" : "Salvar"}
+                        <div className="col-12 col-md-2">
+                            <input 
+                                type="date" 
+                                className="form-control form-control-lg" 
+                                value={dataPedido} 
+                                onChange={e => setDataPedido(e.target.value)} 
+                            />
+                        </div>
+
+                        <div className="col-12 mt-4 d-flex gap-2">
+                            <button type="button" className={`btn btn-lg fw-bold flex-grow-1 shadow-sm ${editando ? "btn-warning text-white" : "btn-primary"}`} onClick={salvar}>
+                                <i className={`bi ${editando ? "bi-check2-square" : "bi-plus-circle"} me-2`}></i>{editando ? "Atualizar Pedido" : "Confirmar Pedido"}
                             </button>
                             {editando && (
-                                <button className="btn btn-lg btn-light border w-100 fw-bold" onClick={cancelar}>Cancelar</button>
+                                <button className="btn btn-lg btn-light border fw-bold px-4" onClick={cancelar}>Cancelar</button>
                             )}
                         </div>
                     </div>
@@ -314,6 +333,7 @@ export default function Pedidos() {
                                 <th>Setor</th>
                                 <th>Equipamento</th>
                                 <th className="text-center">Qtd</th>
+                                <th>Data Agendada</th>
                                 <th>Turno</th>
                                 <th className="text-end pe-4">Ações</th>
                             </tr>
@@ -321,12 +341,18 @@ export default function Pedidos() {
                         <tbody>
                             {pedidos.map(p => (
                                 <tr key={p.id}>
-                                    <td className="ps-4 fw-medium text-dark">{p.id_usuario?.nome}</td>
+                                    <td className="ps-4 fw-medium">{p.id_usuario?.nome}</td>
                                     <td><span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-2 py-1">{p.id_setor?.salas}</span></td>
                                     <td className="fw-medium">{p.id_equipamento?.nome}</td>
                                     <td className="text-center fw-bold">{p.quantidade}</td>
                                     <td>
-                                        <span className={`badge ${p.turno === 'Manhã' ? 'bg-warning text-dark' : p.turno === 'Tarde' ? 'bg-danger' : 'bg-primary'} rounded-pill px-3`}>
+                                        <div className="d-flex align-items-center text-secondary-custom fw-medium">
+                                            <i className="bi bi-calendar-event me-2"></i>
+                                            {p.data ? p.data.split('-').reverse().join('/') : '-'}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span className={`badge ${p.turno === 'Manhã' ? 'bg-warning text-black' : p.turno === 'Tarde' ? 'bg-danger' : 'bg-primary'} rounded-pill px-3`}>
                                             {p.turno}
                                         </span>
                                     </td>

@@ -1,7 +1,6 @@
 'use client'
 import { createClient } from '@supabase/supabase-js'
 import { useState, useEffect } from "react";
-import "./Equipamentos.css"
 import supabase from '../conexao/bancos';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -113,7 +112,7 @@ export default function EquipamentosEscola() {
     <div className="container py-4">
       <div className="glass-card shadow-sm p-4 mt-1 mx-auto w-100">
       <ToastContainer position="top-right" theme="colored" autoClose={3000} />
-      <h3 className="mb-4 text-primary-custom fw-bold">Lista de Equipamentos</h3>
+      <h3 className="mb-4 text-body fw-bold"><i className="bi bi-pc-display me-3 text-primary"></i>Lista de Equipamentos</h3>
 
       <div className="row">
         <div className="col-8">

@@ -1,65 +1,30 @@
-# Padronização Visual e Tema Claro/Escuro
+# Plano de Ação: Seleção de Datas e Integração do Calendário
 
-Este plano de implementação detalha as alterações necessárias para aplicar melhorias visuais abrangentes e padronizadas em todo o sistema, com suporte a temas claro e escuro, usando a arquitetura de variáveis CSS e Bootstrap.
-
-## General Approach
-
-1.  **Variáveis CSS (`globals.css`)**
-    *   Definiremos todas as cores como variáveis no escopo do `:root` (tema claro) e `:root[data-theme='dark']` (tema escuro).
-    *   Criaremos classes utilitárias CSS para efeitos de `glassmorphism`, gradientes e texturas de fundo.
-    
-2.  **Alternador de Tema (`ThemeToggle`)**
-    *   Criaremos um componente dedicado para alternar o tema, manipulando local storage e a propriedade `data-theme` no `document.documentElement`.
-    *   Para evitar cintilação (flicker) no carregamento, adicionaremos um pequeno script no lado cliente para pré-carregar o tema ou faremos o hook em `layout.js` e `MenuLateral.js`.
-
-3.  **Refatoração de Estilos em Componentes e Páginas**
-    *   Removeremos hard-coded e inline styles na maioria das páginas (e.g. `page.js`, `dashboard/page.js`, `cadastro/page.js`, e outras).
-    *   Substituiremos cores do Bootstrap (ex: `bg-light`, `bg-white`, `text-dark`, etc.), nos lugares que demandam adaptação para o modo escuro, por classes globais suportadas pelas variáveis CSS, ou adaptando via SCSS/CSS nativo.
-    *   Aplicaremos os mesmos efeitos de glassmorphism já vistos na tela inicial para outros cards como login, dashboard, e tabelas.
+Para evoluir a lógica temporal do sistema removendo a restrição de que "todo pedido é implicitamente para o dia de hoje", executaremos uma integração ponta-a-ponta entre a página de Pedidos e o Calendário.
 
 ## User Review Required
 
 > [!WARNING]
-> Muitas das páginas atualmente misturam uso pesado de estilos inline (ex: `style={{ backgroundColor: "rgba..." }}`) e variações de CSS do Bootstrap. A remoção destes estilos pode influenciar o layout de algumas tabelas. Gostaria de confirmar se todas as páginas devem usar obrigatoriamente o visual "Glassmorphism" (cards semi-transparentes flutuando sobre um gradiente animado/misto) ou se apenas os cards usarão glassmorphism com fundos sólidos dentro da área interna?
-> Assumirei pela sua instrução que será padronização *completa*, então um fundo geral com gradiente cobrirá o sistema, enquanto painéis usarão estilo "vidro" (glass) na frente, alterando cores e sombras conforme claro/escuro.
+> **Alteração de Banco de Dados Obrigatória**
+> A tabela `pedidos` no Supabase precisará possuir uma nova coluna chamada **`data`** (tipo `date` ou `text`). Verifiquei na API neste exato segundo e a coluna ainda não existe (apenas `criado_em`). Sem essa coluna, o sistema de inserção gerará um erro. Certifique-se de adicioná-la no painel do seu Supabase antes ou durante a aplicação desta alteração.
 
 ## Proposed Changes
 
-### Configuration & Base Layout
+### 1. Novo Campo de Data em Pedidos
+#### [MODIFY] [app/pedidos/page.js](file:///c:/Users/matos/Documents/GitHub/pi-chamados/app/pedidos/page.js)
+*   **Estado**: Criação da variável `['data', setData]`.
+*   **Auto-Preenchimento**: Leitura da URL (`?data=XXXX-XX-XX`). Se o usuário vier do Calendário clicando num determinado dia, a data já vem selecionada no modal do pedido automaticamente!
+*   **UI**: Inserção de um campo `<input type="date">` no formulário "Novo Pedido" com atributos customizados de tema. Modificarei também a tabela para demonstrar a Data para quem visualiza.
+*   **Validação e Envio**: Trava no `salvar()` caso a Data não seja escolhida, e inserção do campo no objeto global do Supabase (`dados = { ... , data: data }`).
 
-#### [MODIFY] [globals.css](file:///C:/Users/matos/Documents/GitHub/pi-chamados/app/globals.css)
-*   Adicionar declarações de variáveis CSS.
-*   Criar seletores `[data-theme='dark']`.
-*   Criar classes de tipografia, `glass-card`, `glass-input` e `gradient-bg` globais.
-
-#### [MODIFY] [layout.js](file:///C:/Users/matos/Documents/GitHub/pi-chamados/app/layout.js)
-*   Integrar script na tag `<head>` para inicializar tema do `localStorage` prevenindo flicker.
-*   Atualizar lógica de wrapper geral do background.
-
-### UI Components
-
-#### [MODIFY] [MenuLateral.js](file:///C:/Users/matos/Documents/GitHub/pi-chamados/app/components/MenuLateral.js)
-*   Modificar cores para usar variáveis CSS (via `globals.css` ou `MenuLateral.css` usando as globais).
-*   Adicionar botão/switch "Modo Escuro / Claro" com persistência no `localStorage`.
-
-#### [MODIFY] [MenuLateral.css](file:///C:/Users/matos/Documents/GitHub/pi-chamados/app/components/MenuLateral.css)
-*   Adaptar para herdar as variáveis do document.
-
-### Pages Standardization
-
-#### [MODIFY] Diversos Arquivos `page.js` e `.css` associados
-*   **Home**, **Dashboard**, **Cadastro**, **Equipamentos**, **Usuarios**, **Pedidos**, **Setores**, **Login**, **Painel**, **Calendário**:
-    *   Substituir estilos de background, texto e elementos do Bootstrap.
-    *   Aplicar padrão `<div className="custom-gradient-bg">` e `<div className="glass-card">`.
-    *   Refatorar tabelas para usarem variações do Bootstrap dark/light dinamicamente.
+### 2. Refatoração Visual e Lógica do Calendário
+#### [MODIFY] [app/calendario/page.js](file:///c:/Users/matos/Documents/GitHub/pi-chamados/app/calendario/page.js)
+*   **Nova Lógica (backend)**: Em vez de agrupar pela data mecânica de `criado_em`, passaremos a agrupar pela coluna referencial informada pelo funcionário (`p.data`).
+*   **Contraste (Light Mode)**: Ajuste nas bordas de `var(--glass-border)` para `rgba(100,100,100, 0.15)` quando não houver modo escuro engatilhado, para as grades aparecerem firmes num céu claro.
+*   **Hover Elegante**: Transição CSS suave infundida no React. Ao passar o mouse, a caixa reagirá com uma "elevação" (`transform: translateY`) e brilho sombreado (`box-shadow`), para encorajar percepção de clique.
+*   **Dia Cheio (Full)**: O estilo condicional de *Dia Cheio* perderá a delicadeza e dominará a caixa inteira com um vermelho-rubi de fundo (opacidade baixa) e letra sangria (vermelho vivo), emitindo um grito visual alto de "LOTADO".
 
 ## Open Questions
 
-Nenhuma no momento, aguardo revisão da proposta de uso geral de painéis "Glassmorphism" sobre um fundo gradiente, ou se isso for muito exagerado para uma dashboard corporativa, posso limitar a tela inicial a glassmorphism e usar fundos minimalistas elegantes na área interna (dashboard, listagens).
-
-## Verification Plan
-
-### Manual Verification
-*   Navegar na aplicação web usando um browser test.
-*   Conferir página por página para garantir que as tabelas fiquem visíveis no Dark Mode (contraste correto de texto sobre fundos de tabela e formulários).
-*   Testar se o `localStorage` mantém o tema correto ao fazer F5.
+- Na tabela da página de "Pedidos", devo exibir a coluna "Data Escolhida" ou prefere manter a tabela focada nas colisões de *Usuário > Setor > Equipamento* e a "Data" ser visível apenas no calendário? 
+- Lembre-se que para continuarmos você deve aprovar este plano e se assegurar que a coluna `data` estará presente no painel SQL do seu banco vinculada à tabela de `pedidos`! Posso aplicar o código?

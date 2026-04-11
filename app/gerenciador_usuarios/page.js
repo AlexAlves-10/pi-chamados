@@ -66,21 +66,19 @@ function GerenciadorUsuarios() {
             await promise
         } else {
 
-            const promiseCadastro = supabase.auth.signUp({
+            const toastId = toast.loading("Cadastrando usuário...")
+            const res = await supabase.auth.signUp({
                 email: email,
                 password: senha,
             })
 
-            await toast.promise(promiseCadastro, {
-                pending: "Cadastrando usuário...",
-                success: "Usuário cadastrado!",
-                error: "Erro ao cadastrar usuário"
-            })
+            if (res.error) {
+                toast.update(toastId, { render: "Falha de Autenticação: " + res.error.message, type: "error", isLoading: false, autoClose: 4000 });
+                return;
+            }
 
-            const res = await promiseCadastro
-
-            if (res.data.user) {
-                await supabase
+            if (res.data?.user) {
+                const insertRes = await supabase
                     .from('usuarios')
                     .insert({
                         id: res.data.user.id,
@@ -88,9 +86,15 @@ function GerenciadorUsuarios() {
                         email: email,
                         administrador: administrador
                     })
+                
+                if(insertRes.error) {
+                    toast.update(toastId, { render: "Erro na Tabela: " + insertRes.error.message, type: "error", isLoading: false, autoClose: 4000 });
+                    return;
+                }
+                
+                toast.update(toastId, { render: "Usuário validado e cadastrado!", type: "success", isLoading: false, autoClose: 3000 });
             }
         }
-        toast.success("Salvo!")
         limpar()
         buscar()
     }
@@ -135,7 +139,7 @@ function GerenciadorUsuarios() {
             <div className="glass-card shadow-sm border-0 w-100">
 
                 <div className="card-header bg-transparent d-flex justify-content-between align-items-center py-3 border-bottom border-secondary-subtle">
-                    <h5 className="m-0 fw-bold text-primary-custom">Gestão de Usuários</h5>
+                    <h5 className="m-0 fw-bold text-body"><i className="bi bi-people me-3 text-primary"></i>Gestão de Usuários</h5>
 
                     {/* BOTÃO ADICIONAR - Laranja Senac */}
                     <button

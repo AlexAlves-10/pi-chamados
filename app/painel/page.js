@@ -31,7 +31,7 @@ function Painel() {
     return (
         <div className="container py-5 d-flex justify-content-center">
             <div className="glass-card p-5 text-center" style={{ maxWidth: "600px", width: "100%" }}>
-                <h1 className="mb-4 fw-bold text-primary-custom">Painel do Usuário</h1>
+                <h1 className="mb-4 fw-bold text-body"><i className="bi bi-person-badge me-3 text-primary"></i>Painel do Usuário</h1>
                 <p className="lead text-secondary-custom">
                     Seja bem-vindo, {usuario == null ? "Carregando..." : <strong className="text-main">{usuario.nome}</strong>}!
                 </p>

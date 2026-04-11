@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react"
 import supabase from "../conexao/bancos";
+import { ToastContainer, toast } from 'react-toastify';
 
 function Cadastro() {
 
@@ -16,7 +17,7 @@ function Cadastro() {
         })
 
         if (data == null) {
-            alert("Dados inálidos?")
+            toast.error("Dados inválidos!")
             return
         }
 
@@ -32,9 +33,12 @@ function Cadastro() {
             .insert(objeto)
 
         if (resposta.error == null) {
-            alert("Cadatrado com sucesso!")
+            toast.success("Cadastrado com sucesso!")
+            alteraNome("")
+            alteraEmail("")
+            alteraSenha("")
         } else {
-            alert("Varifique os dados novamente")
+            toast.error("Verifique os dados novamente")
         }
     }
 
@@ -47,6 +51,7 @@ function Cadastro() {
             alignItems: "center",
             padding: "20px"
         }}>
+            <ToastContainer position="top-right" theme="colored" autoClose={3000} />
 
             <div className="glass-card shadow px-4 py-5 text-center"
                 style={{
@@ -54,7 +59,7 @@ function Cadastro() {
                     maxWidth: "350px"
                 }}>
 
-                <h1 className="text-center mb-4"> 🧾 Cadastro </h1>
+                <h1 className="text-center mb-4 text-body fw-bold"><i className="bi bi-person-plus-fill me-3 text-primary"></i>Cadastro</h1>
 
                 <div className="mb-3" >
                     <label for="exampleFormControlInput1" className="form-label" > Digite seu nome: <input className="form-control border-dark input-cadastro" onChange={e => alteraNome(e.target.value)} /> </label>

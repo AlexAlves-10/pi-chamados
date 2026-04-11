@@ -46,15 +46,15 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} custom-gradient-bg-page`}>
         
 
-        <div className="container-fluid p-0">
-          <div className="row g-0">
-            <div className="col-12 col-md-auto menuLateral-wrapper">
-              <MenuLateral/>
-            </div>
-            <div className="col">
-              {children}
-            </div>
-          </div>
+        <div className="d-flex flex-column min-vh-100 w-100">
+          
+          <MenuLateral />
+
+          {/* Conteúdo Principal */}
+          <main className="flex-grow-1 p-3 p-md-4 w-100" style={{ maxWidth: "100%", overflowX: "hidden" }}>
+            {children}
+          </main>
+
         </div>
 
         <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossOrigin="anonymous" />
