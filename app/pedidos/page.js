@@ -242,7 +242,7 @@ export default function Pedidos() {
 
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2 className="fw-bold text-primary m-0"><i className="bi bi-box-seam me-2"></i>Pedidos</h2>
-                <div className="d-flex align-items-center bg-white px-4 py-2 rounded-pill shadow-sm border">
+                    <div className="d-flex align-items-center glass-card px-4 py-2 shadow-sm border-0">
                     <i className="bi bi-person-circle fs-4 text-primary me-2"></i>
                     <div>
                         <small className="text-muted d-block lh-1" style={{ fontSize: "11px" }}>Usuário logado</small>
@@ -251,7 +251,7 @@ export default function Pedidos() {
                 </div>
             </div>
 
-            <div className="card shadow-sm border-0 rounded-4 mb-5 bg-white">
+            <div className="glass-card shadow-sm border-0 mb-5">
                 <div className="card-body p-4">
                     <h5 className="card-title fw-bold text-secondary mb-4">{editando ? "Editar Pedido" : "Novo Pedido"}</h5>
                     <div className="row g-3">
@@ -305,7 +305,7 @@ export default function Pedidos() {
                 </div>
             </div>
 
-            <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <div className="glass-card shadow-sm border-0 overflow-hidden">
                 <div className="table-responsive">
                     <table className="table table-hover align-middle mb-0">
                         <thead className="table-light">

@@ -49,15 +49,15 @@ export default function Pedidos() {
   }
 
   return (
-    <div className="container">
-      <h2 className="text-center mb-4">Pedidos em aberto</h2>
+    <div className="container py-4">
+      <h2 className="text-center mb-4 fw-bold text-primary-custom">Pedidos em aberto</h2>
 
       <div className="row">
 
         {/* MANHÃ */}
         <div className="col-md-4">
-          <div className="card">
-            <div className="card-header bg-warning text-dark">Manhã</div>
+          <div className="glass-card mb-4">
+            <div className="card-header bg-warning text-dark fw-bold rounded-top-4">Manhã</div>
             <div className="card-body">
               <table className="table">
                 <thead>
@@ -95,8 +95,8 @@ export default function Pedidos() {
 
         {/* TARDE */}
         <div className="col-md-4">
-          <div className="card">
-            <div className="card-header bg-info text-dark">Tarde</div>
+          <div className="glass-card mb-4">
+            <div className="card-header bg-info text-dark fw-bold rounded-top-4">Tarde</div>
             <div className="card-body">
               <table className="table">
                 <thead>
@@ -134,8 +134,8 @@ export default function Pedidos() {
 
         {/* NOITE */}
         <div className="col-md-4">
-          <div className="card">
-            <div className="card-header bg-dark text-white">Noite</div>
+          <div className="glass-card mb-4">
+            <div className="card-header bg-dark text-white fw-bold rounded-top-4">Noite</div>
             <div className="card-body">
               <table className="table">
                 <thead>

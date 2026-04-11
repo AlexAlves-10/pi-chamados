@@ -70,7 +70,7 @@ export default function Calendario() {
 
   return (
     <div className="container mt-5 mb-5 d-flex justify-content-center">
-      <div className="card shadow-lg border-0 rounded-4 w-100" style={{ maxWidth: '900px', backgroundColor: '#ffffff' }}>
+      <div className="glass-card shadow-lg border-0 w-100" style={{ maxWidth: '900px' }}>
         
         {/* Header */}
         <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center p-4 border-0" style={{ borderTopLeftRadius: '1rem', borderTopRightRadius: '1rem' }}>
@@ -130,20 +130,20 @@ export default function Calendario() {
               const turnos = dataFormatada ? (pedidosPorDia[dataFormatada] || []) : [];
               const diaCheio = turnos.length >= 3;
 
-              let backgroundColor = '#fff';
-              let color = '#343a40';
-              let border = ehHoje ? '2px solid #0d6efd' : '1px solid #e9ecef';
+              let backgroundColor = 'transparent';
+              let color = 'var(--text-main)';
+              let border = ehHoje ? '2px solid var(--text-primary)' : '1px solid var(--glass-border)';
               
               if (diaCheio) {
                 backgroundColor = '#fdf3f4';
                 border = '1px solid #f5c2c7';
                 color = '#dc3545';
               } else if (ehSelecionado) {
-                backgroundColor = '#0d6efd';
+                backgroundColor = 'var(--text-primary)';
                 color = '#fff';
-                border = '1px solid #0d6efd';
+                border = '1px solid var(--text-primary)';
               } else if (hoverIndex === index && dia) {
-                backgroundColor = '#eef2f7';
+                backgroundColor = 'var(--glass-border)';
               }
 
               return (

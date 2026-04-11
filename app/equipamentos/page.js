@@ -110,9 +110,10 @@ export default function EquipamentosEscola() {
 
   return (
 
-    <div className="card shadow-sm p-4 mt-3">
+    <div className="container py-4">
+      <div className="glass-card shadow-sm p-4 mt-1 mx-auto w-100">
       <ToastContainer position="top-right" theme="colored" autoClose={3000} />
-      <h3 className="mb-4">Lista de Equipamentos</h3>
+      <h3 className="mb-4 text-primary-custom fw-bold">Lista de Equipamentos</h3>
 
       <div className="row">
         <div className="col-8">
@@ -227,6 +228,7 @@ export default function EquipamentosEscola() {
         </>
       )}
 
+      </div>
     </div>
   )
 }

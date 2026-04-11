@@ -67,7 +67,6 @@ export default function Home() {
   return (
 
     <div style={{
-      background: "linear-gradient(135deg, #0d6efd, #003366)",
       minHeight: "100vh",
       width: "100%",
       display: "flex",
@@ -78,13 +77,9 @@ export default function Home() {
       <ToastContainer position="top-right" theme="colored" autoClose={3000} />
       {
         id_usuario == null ?
-          <div className="card shadow-lg border-0" style={{
+          <div className="glass-card p-5 mx-auto" style={{
             width: "100%",
-            maxWidth: "400px",
-            borderRadius: "20px",
-            padding: "40px",
-            background: "rgba(255, 255, 255, 0.95)",
-            backdropFilter: "blur(10px)",
+            maxWidth: "400px"
           }}>
             <h2 className="text-center mb-4 fw-bold text-primary"> Acesso </h2>
             <p className="text-center text-muted mb-4">Bem-vindo ao Sistema de Chamados</p>
@@ -102,7 +97,7 @@ export default function Home() {
           </div>
           :
           <div className="container text-center py-5">
-            <div className="card shadow-lg p-5 border-0 mx-auto" style={{ maxWidth: "800px", borderRadius: "20px", background: "rgba(255, 255, 255, 0.95)", backdropFilter: "blur(10px)" }}>
+            <div className="glass-card p-5 mx-auto" style={{ maxWidth: "800px" }}>
               <h1 className="mb-4 fw-bold text-primary">Sistema de Chamados</h1>
 
               <p className="lead text-secondary mb-5">
@@ -117,23 +112,23 @@ export default function Home() {
 
               <div className="row g-4 mt-2">
                 <div className="col-md-4">
-                  <div className="p-3 bg-light rounded-4 shadow-sm h-100 border border-primary-subtle">
-                    <h5 className="fw-bold text-primary"><i className="bi bi-pencil-square me-2"></i>Rápido</h5>
-                    <p className="text-muted small mb-0 mt-2">Abra chamados em poucos cliques diretamente do seu celular ou PC.</p>
+                  <div className="p-3 bg-light rounded-4 shadow-sm h-100 border border-primary-subtle glass-card-inner">
+                    <h5 className="fw-bold text-primary-custom"><i className="bi bi-pencil-square me-2"></i>Rápido</h5>
+                    <p className="text-secondary-custom small mb-0 mt-2">Abra chamados em poucos cliques diretamente do seu celular ou PC.</p>
                   </div>
                 </div>
 
                 <div className="col-md-4">
-                  <div className="p-3 bg-light rounded-4 shadow-sm h-100 border border-success-subtle">
+                  <div className="p-3 bg-light rounded-4 shadow-sm h-100 border border-success-subtle glass-card-inner">
                     <h5 className="fw-bold text-success"><i className="bi bi-bar-chart-fill me-2"></i>Ao Vivo</h5>
-                    <p className="text-muted small mb-0 mt-2">Veja o status dos seus chamados em tempo real na plataforma.</p>
+                    <p className="text-secondary-custom small mb-0 mt-2">Veja o status dos seus chamados em tempo real na plataforma.</p>
                   </div>
                 </div>
 
                 <div className="col-md-4">
-                  <div className="p-3 bg-light rounded-4 shadow-sm h-100 border border-warning-subtle">
+                  <div className="p-3 bg-light rounded-4 shadow-sm h-100 border border-warning-subtle glass-card-inner">
                     <h5 className="fw-bold text-warning"><i className="bi bi-collection-fill me-2"></i>Fácil</h5>
-                    <p className="text-muted small mb-0 mt-2">Mantenha tudo centralizado e organizado sem perder os detalhes.</p>
+                    <p className="text-secondary-custom small mb-0 mt-2">Mantenha tudo centralizado e organizado sem perder os detalhes.</p>
                   </div>
                 </div>
               </div>

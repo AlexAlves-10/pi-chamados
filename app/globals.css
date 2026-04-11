@@ -1,63 +1,170 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* MENU LATERAL - TEMA SENAC */
+:root {
+  /* LIGHT THEME VARIABLES */
+  --bg-gradient-start: #0d6efd;
+  --bg-gradient-end: #003366;
+  
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  
+  --text-main: #212529;
+  --text-primary: #0d6efd;
+  --text-secondary: #6c757d;
+  
+  --menu-bg-start: #004a8f;
+  --menu-bg-end: #003366;
+  --menu-hover: #f26922;
+  --menu-text: #e2e8f0;
+  
+  --app-bg: #f1f5f9;
+  --table-bg: #ffffff;
+  --card-bg-light: #f8f9fa;
+}
+
+[data-theme="dark"] {
+  /* DARK THEME VARIABLES */
+  --bg-gradient-start: #0f172a; /* slate-900 */
+  --bg-gradient-end: #020617; /* slate-950 */
+  
+  --glass-bg: rgba(30, 41, 59, 0.85); /* slate-800 translucent */
+  --glass-border: rgba(255, 255, 255, 0.08); /* faint white */
+  
+  --text-main: #f8fafc;
+  --text-primary: #60a5fa; /* blue-400 */
+  --text-secondary: #94a3b8; /* slate-400 */
+  
+  --menu-bg-start: #1e293b; /* slate-800 */
+  --menu-bg-end: #0f172a; /* slate-900 */
+  --menu-hover: #f97316; /* orange-500 */
+  --menu-text: #cbd5e1;
+  
+  --app-bg: #0f172a;
+  --table-bg: rgba(15, 23, 42, 0.95);
+  --card-bg-light: #1e293b;
+
+  /* Bootstrap Variable Overrides */
+  --bs-body-color: var(--text-main);
+  --bs-primary: #60a5fa;
+  --bs-secondary: #94a3b8;
+  --bs-light: #1e293b;
+  --bs-dark: #f8fafc;
+  --bs-body-bg: var(--app-bg);
+}
+
+/* Base Body Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--app-bg);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Global Background Wrapper */
+.custom-gradient-bg {
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: background 0.3s ease;
+}
+
+.custom-gradient-bg-page {
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    min-height: 100vh;
+    width: 100%;
+    padding: 30px;
+    transition: background 0.3s ease;
+}
+
+/* Glassmorphism Class */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Global typography resets for themes */
+.text-primary-custom { color: var(--text-primary) !important; }
+.text-secondary-custom { color: var(--text-secondary) !important; }
+
+/* MENU LATERAL */
 .menuLateral {
-    /* Fundo em degradê com o Azul Institucional */
-    background: linear-gradient(180deg, #004a8f, #003366);
+    background: linear-gradient(180deg, var(--menu-bg-start), var(--menu-bg-end));
     min-height: 100vh;
     padding: 25px;
     box-shadow: 4px 0 15px rgba(0,0,0,0.15);
+    transition: background 0.3s ease;
 }
 
-/* Título */
+/* Título Menu */
 .menuLateral h4 {
     color: #ffffff;
     font-weight: 700;
     text-align: center;
     font-size: 28px;
     margin-bottom: 25px;
-    
-    /* Fundo Laranja Vibrante para destacar a logo/título */
-    background-color: #f26922;
+    background-color: var(--menu-hover);
     padding: 12px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* Itens da Lista */
+/* Itens da Lista Menu */
 .menuLateral .list-group-item {
-    background-color: transparent;
-    color: #e2e8f0; /* Branco levemente suave para não cansar a vista */
+    background-color: transparent !important;
+    color: var(--menu-text) !important;
     border: none;
     margin-bottom: 8px;
     border-radius: 8px;
     padding: 12px 15px;
     font-weight: 500;
-    
     transition: all 0.3s ease;
 }
 
-/* Efeito Hover mais moderno */
 .menuLateral .list-group-item:hover {
-    background-color: #f26922; /* Laranja Senac no hover */
-    color: #ffffff;
+    background-color: var(--menu-hover) !important;
+    color: #ffffff !important;
     transform: translateX(5px);
     box-shadow: 0 2px 8px rgba(242, 105, 34, 0.4);
 }
 
-/* Item Ativo (página atual) */
 .menuLateral .active {
-    background-color: #f26922;
-    color: #ffffff;
+    background-color: var(--menu-hover) !important;
+    color: #ffffff !important;
     font-weight: 600;
     box-shadow: 0 4px 10px rgba(242, 105, 34, 0.4);
-    /* Um pequeno detalhe branco na lateral para dar mais estilo */
     border-left: 4px solid #ffffff; 
 }
 
-/* Body */
-body {
-    font-family: 'Inter', sans-serif;
-    /* Fundo claro para contrastar com o menu escuro e colorido */
-    background-color: #f1f5f9;
+/* Override de Tabelas do Bootstrap para Dark Mode */
+[data-theme="dark"] .table {
+    --bs-table-bg: var(--table-bg);
+    --bs-table-color: var(--text-main);
 }
+[data-theme="dark"] .card-header, [data-theme="dark"] .bg-light {
+    background-color: var(--card-bg-light) !important;
+    color: var(--text-main) !important;
+}
+[data-theme="dark"] .text-dark {
+    color: var(--text-main) !important;
+}
+[data-theme="dark"] .form-control {
+    background-color: var(--card-bg-light);
+    color: var(--text-main);
+    border-color: rgba(255,255,255,0.2);
+}
+[data-theme="dark"] .form-control::placeholder {
+    color: var(--text-secondary);
+}
+[data-theme="dark"] .modal-content {
+    background-color: var(--table-bg);
+    color: var(--text-main);
+}

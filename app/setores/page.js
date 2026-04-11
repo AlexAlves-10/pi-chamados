@@ -106,12 +106,12 @@ export default function Setores() {
     )
 
     return (
-        <div className="col-9 p-4 bg-ligh">
+        <div className="container py-4">
 
-            <div className="row m-0 card shadow-sm rounded-3">
+            <div className="glass-card p-4 mx-auto w-100">
 
                 {/* Conteúdo Pricipal */}
-                <div className="mt-4">
+                <div className="mt-2">
 
                     {/* <!-- Introdução --> */}
                     <div>
@@ -132,12 +132,13 @@ export default function Setores() {
 
                     {/* <!-- Cadastro --> */}
                     {
-                        usuario != null && usuario.admin == true ?
-                            <button>Cadastrar novo funcionário</button>
-                        :
+                        usuario != null && usuario.administrador == true ? (
+                            <button className="btn btn-primary">Cadastrar novo funcionário</button>
+                        ) : (
                             <div className='text-end my-3'>
-                                <button className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#novoModal">Novo</button>
+                                <button className="btn btn-primary px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#novoModal">Novo Setor</button>
                             </div>
+                        )
                     }
 
                     {/* <!-- Tabela de Listagem --> */}
@@ -146,8 +147,8 @@ export default function Setores() {
                         {/* <!-- ID,foto,nome --> */}
                         <span>
 
-                            <div className="my-3 rounded-4 overflow-hidden shadow">
-                                <table className="table table-hover table-bordered border-dark" >
+                            <div className="my-3 rounded-4 overflow-hidden shadow-sm table-responsive">
+                                <table className="table table-hover table-bordered mb-0" >
                                     <thead className="table-primary" >
                                         <tr>
                                             <th scope="col">Sala</th>
@@ -160,7 +161,10 @@ export default function Setores() {
                                                 (item) =>
                                                     <tr>
                                                         <th scope="row"> {item.salas} </th>
-                                                        <th> <button data-bs-toggle="modal" data-bs-target="#editarModal" className='btn btn-primary' onClick={() => editar(item)} > <i class="bi bi-pencil-fill"></i> </button> <button className='btn btn-danger' onClick={() => excluir(item.id)} > <i class="bi bi-trash3-fill"></i> </button> </th>
+                                                        <th> 
+                                                            <button data-bs-toggle="modal" data-bs-target="#editarModal" className='btn btn-primary me-2 shadow-sm' onClick={() => editar(item)} > <i className="bi bi-pencil-fill"></i> </button> 
+                                                            <button className='btn btn-danger shadow-sm' onClick={() => excluir(item.id)} > <i className="bi bi-trash3-fill"></i> </button> 
+                                                        </th>
                                                     </tr>
                                             )
                                         }

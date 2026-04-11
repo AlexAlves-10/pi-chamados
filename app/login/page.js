@@ -173,18 +173,18 @@ function Login() {
   if (typeof window === "undefined") return null
 
   return (
-    <div className="row" style={{
-      background: "#c5b5b5",
-      height: "100vh",
+    <div style={{
+      minHeight: "100vh",
+      width: "100%",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
+      padding: "20px"
     }}>
       {!idUsuario ? (
-        <div className="card shadow" style={{
-          width: "350px",
-          borderRadius: "15px",
-          padding: "20px",
+        <div className="glass-card p-5 mx-auto" style={{
+          width: "100%",
+          maxWidth: "400px"
         }}>
           <h1 className="text-center mb-4"> Login </h1>
 
@@ -217,10 +217,9 @@ function Login() {
           </button>
         </div>
       ) : (
-        <div className="card shadow" style={{
-          width: "350px",
-          borderRadius: "15px",
-          padding: "20px",
+        <div className="glass-card p-5 mx-auto" style={{
+          width: "100%",
+          maxWidth: "400px"
         }}>
           <p className="text-center"><strong>Deseja sair?</strong></p>
           <button

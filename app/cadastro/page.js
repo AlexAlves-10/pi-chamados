@@ -40,18 +40,18 @@ function Cadastro() {
 
     return (
         <div style={{
-            background: "#c5b5b5",
-            height: "100vh",
+            minHeight: "100vh",
+            width: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            padding: "20px"
         }}>
 
-            <div className="card shadow text-center"
+            <div className="glass-card shadow px-4 py-5 text-center"
                 style={{
-                    width: "350px",
-                    borderRadius: "15px",
-                    padding: "20px",
+                    width: "100%",
+                    maxWidth: "350px"
                 }}>
 
                 <h1 className="text-center mb-4"> 🧾 Cadastro </h1>

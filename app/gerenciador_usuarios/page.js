@@ -130,17 +130,16 @@ function GerenciadorUsuarios() {
     }
 
     return (
-        <div className="container mt-4">
+        <div className="container py-4">
             <ToastContainer position="top-right" theme="colored" autoClose={3000} />
-            <div className="card shadow-sm border-0">
+            <div className="glass-card shadow-sm border-0 w-100">
 
-                <div className="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                    <h5 className="m-0 fw-bold" style={{ color: '#004a8f' }}>Gestão de Usuários</h5>
+                <div className="card-header bg-transparent d-flex justify-content-between align-items-center py-3 border-bottom border-secondary-subtle">
+                    <h5 className="m-0 fw-bold text-primary-custom">Gestão de Usuários</h5>
 
                     {/* BOTÃO ADICIONAR - Laranja Senac */}
                     <button
-                        className="btn fw-bold shadow-sm"
-                        style={{ backgroundColor: '#f26922', color: '#ffffff', borderRadius: '8px' }}
+                        className="btn btn-primary fw-bold shadow-sm rounded-3"
                         data-bs-toggle="modal"
                         data-bs-target="#modalUsuario"
                         onClick={limpar}
@@ -186,8 +185,7 @@ function GerenciadorUsuarios() {
                                         <td className="text-center">
                                             {/* BOTÃO EDITAR - Azul Senac */}
                                             <button
-                                                className="btn btn-sm text-white me-2 fw-medium shadow-sm"
-                                                style={{ backgroundColor: '#004a8f', borderRadius: '6px' }}
+                                                className="btn btn-primary btn-sm me-2 fw-medium shadow-sm rounded-2"
                                                 onClick={() => editar(item)}
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalUsuario"
@@ -214,12 +212,12 @@ function GerenciadorUsuarios() {
                 </div>
             </div>
 
-            {/* PARTE DO MODAL - Mantida intacta, só dei um tapa no visual dos botões */}
+            {/* PARTE DO MODAL */}
             <div className="modal fade" id="modalUsuario" tabIndex="-1">
                 <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content border-0 shadow">
+                    <div className="modal-content border-0 shadow" style={{backgroundColor: "var(--table-bg)"}}>
 
-                        <div className="modal-header" style={{ backgroundColor: '#004a8f', color: 'white' }}>
+                        <div className="modal-header border-0 bg-primary text-white">
                             <h5 className="modal-title fw-bold">
                                 {editandoId ? "✏️ Editar Usuário" : "➕ Novo Usuário"}
                             </h5>
@@ -275,8 +273,7 @@ function GerenciadorUsuarios() {
                             </button>
 
                             <button
-                                className="btn text-white fw-bold px-4"
-                                style={{ backgroundColor: '#f26922' }}
+                                className="btn btn-primary fw-bold px-4"
                                 onClick={salvar}
                                 data-bs-dismiss="modal"
                             >
