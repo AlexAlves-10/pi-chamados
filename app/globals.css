@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 /* MENU LATERAL - TEMA SENAC */
 .menuLateral {
     /* Fundo em degradê com o Azul Institucional */
@@ -55,6 +57,7 @@
 
 /* Body */
 body {
+    font-family: 'Inter', sans-serif;
     /* Fundo claro para contrastar com o menu escuro e colorido */
-    background-color: #c9e0f7; 
+    background-color: #f1f5f9;
 }

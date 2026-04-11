@@ -91,6 +91,13 @@ export default function Pedidos() {
     async function excluir(id) {
         if (!confirm("Tem certeza?")) return
 
+        // Buscar o pedido antes para saber a qual equipamento pertence
+        const { data: pedidoParaExcluir } = await supabase
+            .from('pedidos')
+            .select('id_equipamento, quantidade')
+            .eq('id', id)
+            .single()
+
         const promise = supabase
             .from('pedidos')
             .delete()
@@ -102,7 +109,24 @@ export default function Pedidos() {
             error: "Erro ao excluir pedido"
         })
 
-        await promise
+        const { error } = await promise
+
+        if (!error && pedidoParaExcluir?.id_equipamento) {
+            const { data: equip } = await supabase
+                .from('equipamentos')
+                .select('quantidade')
+                .eq('id', pedidoParaExcluir.id_equipamento)
+                .single()
+            
+            if (equip) {
+                await supabase
+                    .from('equipamentos')
+                    .update({ quantidade: equip.quantidade + pedidoParaExcluir.quantidade })
+                    .eq('id', pedidoParaExcluir.id_equipamento)
+                
+                buscarEquipamentos()
+            }
+        }
 
         buscarPedidos()
     }
@@ -213,99 +237,116 @@ export default function Pedidos() {
     // =========================
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-5 mb-5">
             <ToastContainer position="top-right" theme="colored" autoClose={3000} />
 
-            <h3>Pedidos</h3>
-
-            <div style={{
-                background: "linear-gradient(135deg, #0d6efd, #6610f2)",
-                color: "#fff",
-                padding: "10px 15px",
-                borderRadius: "10px",
-                display: "inline-block",
-                fontWeight: "500",
-                marginBottom: "15px"
-            }} >
-                <div style={{ fontSize: "20px" }}>  </div>
-                <div>
-                    <small style={{ color: "#888" }} > Usuário logado </small>
-                    {usuarios && (<h5 style={{ margin: 0, fontWeight: "bold" }} ><strong> <i className="bi bi-person-circle"></i> </strong> {usuarios.nome}</h5>)}
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h2 className="fw-bold text-primary m-0"><i className="bi bi-box-seam me-2"></i>Pedidos</h2>
+                <div className="d-flex align-items-center bg-white px-4 py-2 rounded-pill shadow-sm border">
+                    <i className="bi bi-person-circle fs-4 text-primary me-2"></i>
+                    <div>
+                        <small className="text-muted d-block lh-1" style={{ fontSize: "11px" }}>Usuário logado</small>
+                        <span className="fw-bold">{usuarios ? usuarios.nome : 'Carregando...'}</span>
+                    </div>
                 </div>
-
             </div>
 
-            <select className="form-select mb-2 w-25" value={id_setor} onChange={e => setIdSetor(e.target.value)}>
-                <option disabled hidden value="">Setor</option>
-                {setores.map(s => (
-                    <option key={s.id} value={s.id}>{s.salas}</option>
-                ))}
-            </select>
+            <div className="card shadow-sm border-0 rounded-4 mb-5 bg-white">
+                <div className="card-body p-4">
+                    <h5 className="card-title fw-bold text-secondary mb-4">{editando ? "Editar Pedido" : "Novo Pedido"}</h5>
+                    <div className="row g-3">
+                        <div className="col-md-3">
+                            <select className="form-select form-select-lg" value={id_setor} onChange={e => setIdSetor(e.target.value)}>
+                                <option disabled hidden value="">Setor</option>
+                                {setores.map(s => (
+                                    <option key={s.id} value={s.id}>{s.salas}</option>
+                                ))}
+                            </select>
+                        </div>
 
-            <select className="form-select mb-2 w-25" value={id_equipamento} onChange={e => setIdEquipamento(Number(e.target.value))}>
-                <option disabled hidden value="">Equipamento</option>
-                {equipamentos.map(e => (
-                    <option key={e.id} value={e.id}>{e.nome}</option>
-                ))}
-            </select>
+                        <div className="col-md-3">
+                            <select className="form-select form-select-lg" value={id_equipamento} onChange={e => setIdEquipamento(Number(e.target.value))}>
+                                <option disabled hidden value="">Equipamento</option>
+                                {equipamentos.map(e => (
+                                    <option key={e.id} value={e.id}>{e.nome}</option>
+                                ))}
+                            </select>
+                            <small className="text-success fw-semibold mt-1 d-block"><i className="bi bi-check-circle-fill me-1"></i> Estoque: {equipamentoSelecionado?.quantidade || 0} unid.</small>
+                        </div>
 
-            <p>Disponível: {equipamentoSelecionado?.quantidade || 0}</p>
+                        <div className="col-md-2">
+                            <input
+                                type="number"
+                                className="form-control form-control-lg"
+                                placeholder="Quantidade"
+                                value={quantidade}
+                                onChange={e => setQuantidade(e.target.value)}
+                            />
+                        </div>
 
-            <input
-                type="number"
-                className="form-control mb-2 w-25"
-                value={quantidade}
-                onChange={e => setQuantidade(e.target.value)}
-            />
+                        <div className="col-md-2">
+                            <select className="form-select form-select-lg" value={turno} onChange={e => setTurno(e.target.value)}>
+                                <option disabled hidden value="">Turno</option>
+                                <option>Manhã</option>
+                                <option>Tarde</option>
+                                <option>Noite</option>
+                            </select>
+                        </div>
 
-            <select className="form-select mb-2 w-25" value={turno} onChange={e => setTurno(e.target.value)}>
-                <option disabled hidden value="">Turno</option>
-                <option>Manhã</option>
-                <option>Tarde</option>
-                <option>Noite</option>
-            </select>
+                        <div className="col-md-2 d-flex align-items-start gap-2">
+                            <button type="button" className={`btn btn-lg w-100 fw-bold ${editando ? "btn-warning text-white" : "btn-primary"}`} onClick={salvar}>
+                                <i className={`bi ${editando ? "bi-check2-square" : "bi-plus-circle"} me-2`}></i>{editando ? "Atualizar" : "Salvar"}
+                            </button>
+                            {editando && (
+                                <button className="btn btn-lg btn-light border w-100 fw-bold" onClick={cancelar}>Cancelar</button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <button type="button" className="btn btn-primary" onClick={salvar}>
-                {editando ? "Atualizar" : "Salvar"}
-            </button>
-
-            {editando && (
-                <button className="btn btn-secondary ms-2" onClick={cancelar}>
-                    Cancelar
-                </button>
-            )}
-
-            <hr />
-            <div className="my-3 rounded-4 overflow-hidden shadow" >
-                <table className="table table-hover table-bordered">
-                    <thead className="table-primary" >
-                        <tr>
-                            <th>Usuário</th>
-                            <th>Setor</th>
-                            <th>Equipamento</th>
-                            <th>Qtd</th>
-                            <th>Turno</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {pedidos.map(p => (
-                            <tr key={p.id}>
-                                <td>{p.id_usuario?.nome}</td>
-                                <td>{p.id_setor?.salas}</td>
-                                <td>{p.id_equipamento?.nome}</td>
-                                <td>{p.quantidade}</td>
-                                <td>{p.turno}</td>
-                                <td>
-                                    <button className="btn btn-primary me-2" onClick={() => editar(p)}> <i className="bi bi-pencil-fill"></i> </button>
-                                    <button className="btn btn-danger" onClick={() => excluir(p.id)}> <i className="bi bi-trash3-fill"></i> </button>
-                                </td>
+            <div className="card shadow-sm border-0 rounded-4 overflow-hidden">
+                <div className="table-responsive">
+                    <table className="table table-hover align-middle mb-0">
+                        <thead className="table-light">
+                            <tr>
+                                <th className="ps-4">Solicitante</th>
+                                <th>Setor</th>
+                                <th>Equipamento</th>
+                                <th className="text-center">Qtd</th>
+                                <th>Turno</th>
+                                <th className="text-end pe-4">Ações</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {pedidos.map(p => (
+                                <tr key={p.id}>
+                                    <td className="ps-4 fw-medium text-dark">{p.id_usuario?.nome}</td>
+                                    <td><span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-2 py-1">{p.id_setor?.salas}</span></td>
+                                    <td className="fw-medium">{p.id_equipamento?.nome}</td>
+                                    <td className="text-center fw-bold">{p.quantidade}</td>
+                                    <td>
+                                        <span className={`badge ${p.turno === 'Manhã' ? 'bg-warning text-dark' : p.turno === 'Tarde' ? 'bg-danger' : 'bg-primary'} rounded-pill px-3`}>
+                                            {p.turno}
+                                        </span>
+                                    </td>
+                                    <td className="text-end pe-4">
+                                        <div className="btn-group shadow-sm">
+                                            <button className="btn btn-outline-primary btn-sm px-3" onClick={() => editar(p)} title="Editar"><i className="bi bi-pencil-fill"></i></button>
+                                            <button className="btn btn-outline-danger btn-sm px-3" onClick={() => excluir(p.id)} title="Excluir"><i className="bi bi-trash3-fill"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                            {pedidos.length === 0 && (
+                                <tr>
+                                    <td colSpan="6" className="text-center py-5 text-muted">Ainda não há nenhum pedido cadastrado.</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
         </div>
     )
 }
