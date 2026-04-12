@@ -149,7 +149,7 @@ export default function Setores() {
                         <span>
 
                             <div className="my-3 rounded-4 overflow-hidden shadow-sm table-responsive">
-                                <table className="table table-hover table-bordered mb-0" >
+                                <table className="table table-bordered border-primary table-hover" >
                                     <thead className="table-primary" >
                                         <tr>
                                             <th scope="col">Sala</th>

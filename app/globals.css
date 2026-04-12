@@ -1,20 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* LIGHT THEME VARIABLES */
-  --bg-gradient-start: #0d6efd;
-  --bg-gradient-end: #003366;
+  /* LIGHT THEME VARIABLES (SENAC IDENTITY) */
+  --bg-gradient-start: #004a8d;
+  --bg-gradient-end: #002d5c;
   
   --glass-bg: rgba(255, 255, 255, 0.95);
   --glass-border: rgba(255, 255, 255, 0.5);
   
   --text-main: #212529;
-  --text-primary: #0d6efd;
+  --text-primary: #004a8d;
   --text-secondary: #6c757d;
   
-  --menu-bg-start: #004a8f;
-  --menu-bg-end: #003366;
-  --menu-hover: #f26922;
+  --menu-bg-start: #004a8d;
+  --menu-bg-end: #002d5c;
+  --menu-hover: #f37021;
   --menu-text: #e2e8f0;
   
   --app-bg: #f1f5f9;
@@ -36,7 +36,7 @@
   
   --menu-bg-start: #1e293b; /* slate-800 */
   --menu-bg-end: #0f172a; /* slate-900 */
-  --menu-hover: #f97316; /* orange-500 */
+  --menu-hover: #f37021; /* SENAC Orange */
   --menu-text: #cbd5e1;
   
   --app-bg: #0f172a;
@@ -130,9 +130,9 @@ body {
 
 .menuLateral .list-group-item:hover {
     background-color: var(--menu-hover) !important;
-    color: #ffffff !important;
+    color: #db9005 !important;
     transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(242, 105, 34, 0.4);
+    box-shadow: 0 2px 8px rgba(185, 62, 0, 0.4);
 }
 
 .menuLateral .active {
@@ -169,4 +169,65 @@ body {
 }
 [data-theme="dark"] .text-body {
     color: var(--text-main) !important;
+}
+
+/* ---------------------------------------------------
+   SENAC IDENTITY BOOTSTRAP OVERRIDES (Light & Dark) 
+--------------------------------------------------- */
+/* Buttons Overrides */
+.btn-primary {
+    background-color: var(--text-primary) !important;
+    border-color: var(--text-primary) !important;
+    color: #ffffff !important;
+}
+.btn-primary:hover {
+    background-color: #00366b !important; /* Darker SENAC blue */
+    border-color: #00366b !important;
+}
+.btn-outline-primary {
+    color: var(--text-primary) !important;
+    border-color: var(--text-primary) !important;
+}
+.btn-outline-primary:hover {
+    background-color: var(--text-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Orange / Accent Overrides */
+.btn-warning {
+    background-color: #f37021 !important;
+    border-color: #f37021 !important;
+    color: #ffffff !important;
+}
+.btn-warning:hover {
+    background-color: #d6601b !important; /* Darker SENAC orange */
+    border-color: #d6601b !important;
+}
+.btn-outline-warning {
+    color: #f37021 !important;
+    border-color: #f37021 !important;
+}
+.btn-outline-warning:hover {
+    background-color: #f37021 !important;
+    color: #ffffff !important;
+}
+/* Dark mode buttons enhancements */
+[data-theme="dark"] .btn-primary {
+    background-color: var(--text-primary) !important;
+    border-color: var(--text-primary) !important;
+    color: #0f172a !important;
+    font-weight: 600;
+}
+[data-theme="dark"] .btn-primary:hover {
+    background-color: #93c5fd !important;
+    border-color: #93c5fd !important;
+}
+[data-theme="dark"] .btn-warning {
+    background-color: #f37021 !important;
+    border-color: #f37021 !important;
+    color: #ffffff !important;
+}
+[data-theme="dark"] .btn-warning:hover {
+    background-color: #ff8b46 !important;
+    border-color: #ff8b46 !important;
 }

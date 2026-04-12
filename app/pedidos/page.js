@@ -256,7 +256,7 @@ export default function Pedidos() {
                     <div className="d-flex align-items-center glass-card px-4 py-2 shadow-sm border-0">
                     <i className="bi bi-person-circle fs-4 text-primary me-2"></i>
                     <div>
-                        <small className="text-muted d-block lh-1" style={{ fontSize: "11px" }}>Usuário logado</small>
+                        <small className="text-muted d-block lh-1" style={{ fontSize: "11px", color: "#9ec5fe" }}>Usuário logado</small>
                         <span className="fw-bold">{usuarios ? usuarios.nome : 'Carregando...'}</span>
                     </div>
                 </div>
