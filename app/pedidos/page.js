@@ -38,7 +38,7 @@ export default function Pedidos() {
 
         let query = supabase
             .from("pedidos")
-            .select('id, id_usuario(id,nome), id_setor(id,salas), id_equipamento(id,nome,quantidade), quantidade, turno, data, status')
+            .select('id, id_usuario(id,nome), id_setor(id,salas), id_equipamento(id,nome,quantidade), quantidade, turno, data_agendada, status')
 
         if (!admin && usuarioLogado) {
             query = query.eq("id_usuario", usuarioLogado.id)
@@ -79,7 +79,7 @@ export default function Pedidos() {
 
         setQuantidade(item.quantidade)
         setTurno(item.turno)
-        setDataPedido(item.data || "")
+        setDataPedido(item.data_agendada || "")
     }
 
     function cancelar() {
@@ -144,8 +144,8 @@ export default function Pedidos() {
             const qtd = Number(quantidade)
             const idEquipamentoFinal = Number(id_equipamento)
 
-            if (!id_usuario || !id_setor || !id_equipamento || qtd <= 0 || !dataPedido) {
-                alert("Preencha todos os campos corretamente!")
+            if (!id_usuario || !id_setor || !id_equipamento || qtd <= 0 || !turno || !dataPedido || dataPedido.trim() === "") {
+                toast.error("Preencha todos os campos corretamente!")
                 return
             }
 
@@ -167,11 +167,11 @@ export default function Pedidos() {
 
             const dados = {
                 id_usuario,
-                id_setor,
+                id_setor: Number(id_setor),
                 id_equipamento: idEquipamentoFinal,
                 quantidade: qtd,
                 turno,
-                data: dataPedido,
+                data_agendada: dataPedido,
                 status: false
             }
 
@@ -196,6 +196,7 @@ export default function Pedidos() {
                     .insert(dados)
 
                 if (error) {
+                    console.error("Erro ao cadastrar pedido:", error);
                     toast.error("Erro ao cadastrar pedido")
                     return
                 } else {
@@ -251,7 +252,7 @@ export default function Pedidos() {
             <ToastContainer position="top-right" theme="colored" autoClose={3000} />
 
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="fw-bold text-body m-0"><i className="bi bi-box-seam me-3 text-primary"></i>Pedidos</h2>
+                <h2 className="fw-bold text-body m-0"><i className="bi bi-box-seam me-3 text-dark"></i>Pedidos</h2>
                     <div className="d-flex align-items-center glass-card px-4 py-2 shadow-sm border-0">
                     <i className="bi bi-person-circle fs-4 text-primary me-2"></i>
                     <div>
@@ -348,7 +349,7 @@ export default function Pedidos() {
                                     <td>
                                         <div className="d-flex align-items-center text-secondary-custom fw-medium">
                                             <i className="bi bi-calendar-event me-2"></i>
-                                            {p.data ? p.data.split('-').reverse().join('/') : '-'}
+                                            {p.data_agendada ? p.data_agendada.split('-').reverse().join('/') : '-'}
                                         </div>
                                     </td>
                                     <td>

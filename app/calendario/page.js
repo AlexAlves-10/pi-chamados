@@ -14,12 +14,12 @@ export default function Calendario() {
   const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   async function buscarPedidos() {
-    const { data, error } = await supabase.from('pedidos').select('turno, data');
+    const { data, error } = await supabase.from('pedidos').select('turno, data_agendada');
     if (data && !error) {
       const mapaPedidos = {};
       data.forEach(p => {
-        if (!p.data) return;
-        const dataFormatada = p.data.split('T')[0];
+        if (!p.data_agendada) return;
+        const dataFormatada = p.data_agendada.split('T')[0];
         
         let turnoNorm = p.turno.toLowerCase();
         if (turnoNorm === 'manhã') turnoNorm = 'manha';

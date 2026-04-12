@@ -59,7 +59,7 @@ export default function Pedidos() {
       <ToastContainer position="top-right" theme="colored" autoClose={3000} />
       
       <div className="d-flex align-items-center mb-4">
-        <h2 className="fw-bold text-body m-0"><i className="bi bi-speedometer2 me-3 text-primary"></i>Dashboard Operacional</h2>
+        <h2 className="fw-bold text-body m-0"><i className="bi bi-speedometer2 me-3 text-dark"></i>Dashboard Operacional</h2>
       </div>
 
       {/* KPIs / Cards Superiores */}

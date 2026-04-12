@@ -167,3 +167,6 @@ body {
     background-color: var(--table-bg);
     color: var(--text-main);
 }
+[data-theme="dark"] .text-body {
+    color: var(--text-main) !important;
+}
