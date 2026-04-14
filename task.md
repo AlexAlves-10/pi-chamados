@@ -1,0 +1,3 @@
+- `[x]` 1. **Data no Pedido**: Adicionar seletor nativo `<input type="date">` em Pedidos, gravando-o localmente e validando. Se redirecionado do calendário com `?data=`, auto-preencher campo. Salvar no Supabase a coluna `.data`.
+- `[x]` 2. **Lógica e UI do Calendário**: Refatorar `app/calendario` para puxar `data` ao invés de `criado_em`. Estabelecer Hover effect animado nas caixas e estilo condicional explícito de "Dia Cheio".
+- `[x]` 3. **Correção de Usuários**: Expor os erros nativos do Supabase Auth no Cadastro (se a pessoa já existir no `auth.users` mas foi apagada do `public.usuarios`, alertar).

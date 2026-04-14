@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import supabase from '../conexao/bancos';
 import { ToastContainer, toast } from 'react-toastify';
+import Paginacao from '../components/Paginacao';
 
 function GerenciadorUsuarios() {
 
@@ -21,6 +22,12 @@ function GerenciadorUsuarios() {
     const listaFiltrada = usuarios.filter(item =>
         (item.nome || "").toLowerCase().includes(pesquisa.toLowerCase()) || (item.email || "").toLowerCase().includes(pesquisa.toLowerCase())
     )
+
+    const [paginaAtual, setPaginaAtual] = useState(1);
+    const itensPorPagina = 8;
+    const indexUltimoItem = paginaAtual * itensPorPagina;
+    const indexPrimeiroItem = indexUltimoItem - itensPorPagina;
+    const itensAtuais = listaFiltrada.slice(indexPrimeiroItem, indexUltimoItem);
 
     async function buscar() {
         const promise = supabase
@@ -60,21 +67,19 @@ function GerenciadorUsuarios() {
             await promise
         } else {
 
-            const promiseCadastro = supabase.auth.signUp({
+            const toastId = toast.loading("Cadastrando usuário...")
+            const res = await supabase.auth.signUp({
                 email: email,
                 password: senha,
             })
 
-            await toast.promise(promiseCadastro, {
-                pending: "Cadastrando usuário...",
-                success: "Usuário cadastrado!",
-                error: "Erro ao cadastrar usuário"
-            })
+            if (res.error) {
+                toast.update(toastId, { render: "Falha de Autenticação: " + res.error.message, type: "error", isLoading: false, autoClose: 4000 });
+                return;
+            }
 
-            const res = await promiseCadastro
-
-            if (res.data.user) {
-                await supabase
+            if (res.data?.user) {
+                const insertRes = await supabase
                     .from('usuarios')
                     .insert({
                         id: res.data.user.id,
@@ -82,9 +87,15 @@ function GerenciadorUsuarios() {
                         email: email,
                         administrador: administrador
                     })
+                
+                if(insertRes.error) {
+                    toast.update(toastId, { render: "Erro na Tabela: " + insertRes.error.message, type: "error", isLoading: false, autoClose: 4000 });
+                    return;
+                }
+                
+                toast.update(toastId, { render: "Usuário validado e cadastrado!", type: "success", isLoading: false, autoClose: 3000 });
             }
         }
-        toast.success("Salvo!")
         limpar()
         buscar()
     }
@@ -124,17 +135,16 @@ function GerenciadorUsuarios() {
     }
 
     return (
-        <div className="container mt-4">
+        <div className="container py-4">
             <ToastContainer position="top-right" theme="colored" autoClose={3000} />
-            <div className="card shadow-sm border-0">
+            <div className="glass-card shadow-sm border-0 w-100">
 
-                <div className="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                    <h5 className="m-0 fw-bold" style={{ color: '#004a8f' }}>Gestão de Usuários</h5>
+                <div className="card-header bg-transparent d-flex justify-content-between align-items-center py-3 border-bottom border-secondary-subtle">
+                    <h5 className="m-0 fw-bold text-body"><i className="bi bi-people me-3 text-primary"></i>Gestão de Usuários</h5>
 
                     {/* BOTÃO ADICIONAR - Laranja Senac */}
                     <button
-                        className="btn fw-bold shadow-sm"
-                        style={{ backgroundColor: '#f26922', color: '#ffffff', borderRadius: '8px' }}
+                        className="btn btn-primary fw-bold shadow-sm rounded-3"
                         data-bs-toggle="modal"
                         data-bs-target="#modalUsuario"
                         onClick={limpar}
@@ -166,7 +176,7 @@ function GerenciadorUsuarios() {
                             </thead>
 
                             <tbody>
-                                {listaFiltrada.map(item => (
+                                {itensAtuais.map(item => (
                                     <tr key={item.id}>
                                         <td className="fw-medium">{item.nome}</td>
                                         <td className="text-muted">{item.email}</td>
@@ -180,8 +190,7 @@ function GerenciadorUsuarios() {
                                         <td className="text-center">
                                             {/* BOTÃO EDITAR - Azul Senac */}
                                             <button
-                                                className="btn btn-sm text-white me-2 fw-medium shadow-sm"
-                                                style={{ backgroundColor: '#004a8f', borderRadius: '6px' }}
+                                                className="btn btn-primary btn-sm me-2 fw-medium shadow-sm rounded-2"
                                                 onClick={() => editar(item)}
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalUsuario"
@@ -203,17 +212,19 @@ function GerenciadorUsuarios() {
                             </tbody>
 
                         </table>
+                        
+                        <Paginacao totalItens={listaFiltrada.length} itensPorPagina={itensPorPagina} paginaAtual={paginaAtual} setPaginaAtual={setPaginaAtual} />
                     </div>
 
                 </div>
             </div>
 
-            {/* PARTE DO MODAL - Mantida intacta, só dei um tapa no visual dos botões */}
+            {/* PARTE DO MODAL */}
             <div className="modal fade" id="modalUsuario" tabIndex="-1">
                 <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content border-0 shadow">
+                    <div className="modal-content border-0 shadow" style={{backgroundColor: "var(--table-bg)"}}>
 
-                        <div className="modal-header" style={{ backgroundColor: '#004a8f', color: 'white' }}>
+                        <div className="modal-header border-0 bg-primary text-white">
                             <h5 className="modal-title fw-bold">
                                 {editandoId ? "✏️ Editar Usuário" : "➕ Novo Usuário"}
                             </h5>
@@ -269,8 +280,7 @@ function GerenciadorUsuarios() {
                             </button>
 
                             <button
-                                className="btn text-white fw-bold px-4"
-                                style={{ backgroundColor: '#f26922' }}
+                                className="btn btn-primary fw-bold px-4"
                                 onClick={salvar}
                                 data-bs-dismiss="modal"
                             >
