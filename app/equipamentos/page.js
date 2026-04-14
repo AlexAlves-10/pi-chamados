@@ -2,6 +2,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { useState, useEffect } from "react";
 import supabase from '../conexao/bancos';
+import Paginacao from '../components/Paginacao';
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function EquipamentosEscola() {
@@ -22,6 +23,12 @@ export default function EquipamentosEscola() {
   const listaFiltrada = equipamentos.filter(
     (item) => item.nome.toLocaleLowerCase().includes(pesquisa.toLocaleLowerCase())
   )
+
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const itensPorPagina = 8;
+  const indexUltimoItem = paginaAtual * itensPorPagina;
+  const indexPrimeiroItem = indexUltimoItem - itensPorPagina;
+  const itensAtuais = listaFiltrada.slice(indexPrimeiroItem, indexUltimoItem);
 
   async function buscar() {
 
@@ -147,8 +154,8 @@ export default function EquipamentosEscola() {
           </thead>
 
           <tbody>
-            {listaFiltrada.map((item) => (
-              <tr>
+            {itensAtuais.map((item) => (
+              <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.nome}</td>
                 <td>{item.descricao}</td>
@@ -160,6 +167,8 @@ export default function EquipamentosEscola() {
           </tbody>
 
         </table>
+        
+        <Paginacao totalItens={listaFiltrada.length} itensPorPagina={itensPorPagina} paginaAtual={paginaAtual} setPaginaAtual={setPaginaAtual} />
 
         {verModalCadastro && (
           <>

@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import supabase from "../conexao/bancos";
 import { ToastContainer, toast } from 'react-toastify';
+import Paginacao from '../components/Paginacao';
 
 export default function Pedidos() {
 
@@ -29,18 +30,30 @@ export default function Pedidos() {
     // BUSCAS
     // =========================
 
+    const [paginaAtual, setPaginaAtual] = useState(1);
+    const itensPorPagina = 8;
+    const indexUltimoItem = paginaAtual * itensPorPagina;
+    const indexPrimeiroItem = indexUltimoItem - itensPorPagina;
+    const itensAtuais = pedidos.slice(indexPrimeiroItem, indexUltimoItem);
+
     async function buscarPedidos() {
 
         if (typeof window === "undefined") return
 
-        const admin = localStorage.getItem("administrador") === "true"
         const usuarioLogado = JSON.parse(localStorage.getItem("logado"))
+        
+        let isAdmin = false;
+        if (usuarioLogado) {
+             const { data } = await supabase.from('usuarios').select('administrador').eq('id', usuarioLogado.id).single();
+             isAdmin = data?.administrador || false;
+        }
 
         let query = supabase
             .from("pedidos")
             .select('id, id_usuario(id,nome), id_setor(id,salas), id_equipamento(id,nome,quantidade), quantidade, turno, data_agendada, status')
 
-        if (!admin && usuarioLogado) {
+        // Filtro de Segurança
+        if (!isAdmin && usuarioLogado) {
             query = query.eq("id_usuario", usuarioLogado.id)
         }
         const { data } = await query
@@ -147,6 +160,26 @@ export default function Pedidos() {
             if (!id_usuario || !id_setor || !id_equipamento || qtd <= 0 || !turno || !dataPedido || dataPedido.trim() === "") {
                 toast.error("Preencha todos os campos corretamente!")
                 return
+            }
+
+            // Barreira de Turnos Duplicados e Dia Lotado
+            const { data: turnosNoDia } = await supabase
+                .from('pedidos')
+                .select('id, turno')
+                .eq('data_agendada', dataPedido)
+                
+            if (turnosNoDia) {
+                const turnosValidos = editando ? turnosNoDia.filter(p => p.id !== editando) : turnosNoDia;
+                
+                if (turnosValidos.some(p => p.turno.toLowerCase() === turno.toLowerCase())) {
+                    toast.error(`O turno da ${turno} já está reservado neste dia!`);
+                    return;
+                }
+                
+                if (turnosValidos.length >= 3) {
+                    toast.error("Este dia já está completamente lotado (3/3)!");
+                    return;
+                }
             }
 
             const { data: equip } = await supabase
@@ -340,7 +373,7 @@ export default function Pedidos() {
                             </tr>
                         </thead>
                         <tbody>
-                            {pedidos.map(p => (
+                            {itensAtuais.map(p => (
                                 <tr key={p.id}>
                                     <td className="ps-4 fw-medium">{p.id_usuario?.nome}</td>
                                     <td><span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-2 py-1">{p.id_setor?.salas}</span></td>
@@ -372,6 +405,10 @@ export default function Pedidos() {
                             )}
                         </tbody>
                     </table>
+                    
+                    <div className="p-3">
+                        <Paginacao totalItens={pedidos.length} itensPorPagina={itensPorPagina} paginaAtual={paginaAtual} setPaginaAtual={setPaginaAtual} />
+                    </div>
                 </div>
             </div>
         </div>

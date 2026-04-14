@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import supabase from '../conexao/bancos';
 import { ToastContainer, toast } from 'react-toastify';
+import Paginacao from '../components/Paginacao';
 
 function GerenciadorUsuarios() {
 
@@ -21,6 +22,12 @@ function GerenciadorUsuarios() {
     const listaFiltrada = usuarios.filter(item =>
         (item.nome || "").toLowerCase().includes(pesquisa.toLowerCase()) || (item.email || "").toLowerCase().includes(pesquisa.toLowerCase())
     )
+
+    const [paginaAtual, setPaginaAtual] = useState(1);
+    const itensPorPagina = 8;
+    const indexUltimoItem = paginaAtual * itensPorPagina;
+    const indexPrimeiroItem = indexUltimoItem - itensPorPagina;
+    const itensAtuais = listaFiltrada.slice(indexPrimeiroItem, indexUltimoItem);
 
     async function buscar() {
         const promise = supabase
@@ -175,7 +182,7 @@ function GerenciadorUsuarios() {
                             </thead>
 
                             <tbody>
-                                {listaFiltrada.map(item => (
+                                {itensAtuais.map(item => (
                                     <tr key={item.id}>
                                         <td className="fw-medium">{item.nome}</td>
                                         <td className="text-muted">{item.email}</td>
@@ -211,6 +218,8 @@ function GerenciadorUsuarios() {
                             </tbody>
 
                         </table>
+                        
+                        <Paginacao totalItens={listaFiltrada.length} itensPorPagina={itensPorPagina} paginaAtual={paginaAtual} setPaginaAtual={setPaginaAtual} />
                     </div>
 
                 </div>

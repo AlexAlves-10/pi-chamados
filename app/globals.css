@@ -94,53 +94,109 @@ body {
 .text-primary-custom { color: var(--text-primary) !important; }
 .text-secondary-custom { color: var(--text-secondary) !important; }
 
-/* MENU LATERAL */
-.menuLateral {
+/* LAYOUT BASE & SIDEBAR */
+.layout-wrapper {
+    background-color: var(--app-bg);
+    overflow: hidden;
+}
+
+.app-bg {
+    background-color: var(--app-bg) !important;
+}
+
+.bg-sidebar {
+    background-color: var(--menu-bg-start);
+}
+
+.desktop-sidebar {
+    width: 250px;
     background: linear-gradient(180deg, var(--menu-bg-start), var(--menu-bg-end));
-    min-height: 100%;
-    padding: 25px;
     box-shadow: 4px 0 15px rgba(0,0,0,0.15);
-    transition: background 0.3s ease;
+    z-index: 1030;
+    transition: width 0.3s ease;
+    flex-shrink: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-/* Título Menu */
-.menuLateral h4 {
-    color: #ffffff;
-    font-weight: 700;
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 25px;
-    background-color: var(--menu-hover);
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+/* Oculta scrollbar na sidebar para ficar clean */
+.desktop-sidebar::-webkit-scrollbar {
+    width: 0px;
 }
 
-/* Itens da Lista Menu */
-.menuLateral .list-group-item {
-    background-color: transparent !important;
-    color: var(--menu-text) !important;
-    border: none;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    padding: 12px 15px;
-    font-weight: 500;
+[data-theme="dark"] .desktop-sidebar,
+[data-theme="dark"] .offcanvas.bg-sidebar {
+    background: linear-gradient(180deg, var(--menu-bg-start), var(--menu-bg-end));
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar-link {
+    color: var(--menu-text);
     transition: all 0.3s ease;
+    border-left: 4px solid transparent;
 }
 
-.menuLateral .list-group-item:hover {
-    background-color: var(--menu-hover) !important;
-    color: #db9005 !important;
-    transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(185, 62, 0, 0.4);
+.sidebar-link:hover {
+    color: #f97316; /* Hover orange */
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
 }
 
-.menuLateral .active {
-    background-color: var(--menu-hover) !important;
+.sidebar-link.active {
     color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid #f97316; /* Laranja SENAC realçado na esquerda */
+    box-shadow: inset 2px 0 8px rgba(0, 0, 0, 0.1);
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba(242, 105, 34, 0.4);
-    border-left: 4px solid #ffffff; 
+}
+
+/* Sidebar Collapse State */
+.sidebar-collapsed .desktop-sidebar {
+    width: 80px;
+}
+.sidebar-collapsed .sidebar-text,
+.sidebar-collapsed .sidebar-logo h3 {
+    display: none !important;
+}
+.sidebar-collapsed .logo-icon {
+    font-size: 2rem !important;
+}
+.sidebar-collapsed .sidebar-link {
+    justify-content: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.sidebar-collapsed .sidebar-link i {
+    margin-right: 0 !important;
+    font-size: 1.5rem !important;
+}
+.sidebar-collapsed .sidebar-btn {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    justify-content: center !important;
+}
+.sidebar-collapsed .sidebar-btn span {
+    display: none !important;
+}
+.sidebar-collapsed .sidebar-btn i {
+    margin-right: 0 !important;
+    font-size: 1.5rem !important;
+}
+
+.font-logo {
+    letter-spacing: 1px;
+}
+.logo-icon {
+    color: #f97316;
+}
+.sidebar-btn {
+    border: 1px solid rgba(255,255,255,0.2) !important;
+}
+.sidebar-btn:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+}
+.topbar-search::placeholder {
+    color: rgba(255,255,255,0.7);
 }
 
 /* Override de Tabelas do Bootstrap para Dark Mode */

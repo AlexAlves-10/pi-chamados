@@ -5,6 +5,7 @@ import Script from "next/script";
 
 import "./globals.css"
 import MenuLateral from "./components/MenuLateral";
+import TopBar from "./components/TopBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +33,7 @@ export default function RootLayout({ children }) {
                 try {
                   var theme = localStorage.getItem('theme');
                   if (!theme) {
-                    theme = 'light'; // default to light
+                    theme = 'light';
                   }
                   if (theme === 'dark') {
                     document.documentElement.setAttribute('data-theme', 'dark');
@@ -43,17 +44,20 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} custom-gradient-bg-page`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} app-bg`}>
         
-
-        <div className="d-flex flex-column min-vh-100 w-100">
+        <div className="layout-wrapper d-flex w-100 vh-100 overflow-hidden">
           
           <MenuLateral />
 
-          {/* Conteúdo Principal */}
-          <main className="flex-grow-1 p-3 p-md-4 w-100" style={{ maxWidth: "100%", overflowX: "hidden" }}>
-            {children}
-          </main>
+          {/* Área de Conteúdo */}
+          <div className="main-content-wrapper flex-grow-1 d-flex flex-column h-100 overflow-hidden" style={{ minWidth: 0 }}>
+            <TopBar />
+            
+            <main className="flex-grow-1 p-3 p-md-4 w-100" style={{ overflowX: "hidden", overflowY: "auto" }}>
+              {children}
+            </main>
+          </div>
 
         </div>
 

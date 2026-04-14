@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import supabase from "../conexao/bancos";
 import { ToastContainer, toast } from 'react-toastify';
+import Paginacao from "../components/Paginacao";
 
 export default function Pedidos() {
 
@@ -53,6 +54,12 @@ export default function Pedidos() {
   const qtdManha = listaPedidos.filter(p => p.turno?.toLowerCase().includes('man')).length;
   const qtdTarde = listaPedidos.filter(p => p.turno?.toLowerCase().includes('tarde')).length;
   const qtdNoite = listaPedidos.filter(p => p.turno?.toLowerCase().includes('noite')).length;
+
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const itensPorPagina = 5;
+  const indexUltimoItem = paginaAtual * itensPorPagina;
+  const indexPrimeiroItem = indexUltimoItem - itensPorPagina;
+  const itensAtuais = listaPedidos.slice(indexPrimeiroItem, indexUltimoItem);
 
   return (
     <div className="container py-4">
@@ -129,7 +136,7 @@ export default function Pedidos() {
                     </tr>
                   </thead>
                   <tbody>
-                    {listaPedidos.map((pedido) => {
+                    {itensAtuais.map((pedido) => {
                       
                       // Badge logic
                       let badgeClass = "bg-primary";
@@ -166,6 +173,9 @@ export default function Pedidos() {
                     )}
                   </tbody>
               </table>
+          </div>
+          <div className="p-3 border-top border-secondary-subtle bg-light bg-opacity-50">
+              <Paginacao totalItens={listaPedidos.length} itensPorPagina={itensPorPagina} paginaAtual={paginaAtual} setPaginaAtual={setPaginaAtual} />
           </div>
       </div>
     </div>

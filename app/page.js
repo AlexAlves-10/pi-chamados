@@ -44,7 +44,6 @@ export default function Home() {
     }
 
     localStorage.setItem('id_usuario', data.user.id)
-    localStorage.setItem('administrador', usuario.administrador)
 
     localStorage.setItem("logado", JSON.stringify({
       id: data.user.id,
@@ -67,7 +66,7 @@ export default function Home() {
   return (
 
     <div style={{
-      minHeight: "100vh",
+      height: "100%",
       width: "100%",
       display: "flex",
       justifyContent: "center",
@@ -85,12 +84,12 @@ export default function Home() {
             <p className="text-center text-muted mb-4">Bem-vindo ao Sistema de Chamados</p>
             <div className=" mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label fw-semibold">E-mail</label>
-              <input type="email" placeholder="Digite seu e-mail" className="form-control form-control-lg" onChange={e => alteraEmail(e.target.value)} />
+              <input type="email" placeholder="Digite seu e-mail" className="form-control form-control-lg" onChange={e => alteraEmail(e.target.value)} onKeyDown={e => e.key === 'Enter' && autenticar()} />
             </div>
             
             <div className="mb-4">
               <label htmlFor="exampleFormControlInput2" className="form-label fw-semibold">Senha</label>
-              <input type="password" placeholder="Digite sua senha" className="form-control form-control-lg" onChange={e => alteraSenha(e.target.value)} />
+              <input type="password" placeholder="Digite sua senha" className="form-control form-control-lg" onChange={e => alteraSenha(e.target.value)} onKeyDown={e => e.key === 'Enter' && autenticar()} />
             </div>
 
             <button onClick={autenticar} type='button' className="btn btn-primary btn-lg w-100 rounded-pill fw-bold" > Entrar </button>

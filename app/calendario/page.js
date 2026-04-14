@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import supabase from '../conexao/bancos';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Calendario() {
 
@@ -69,7 +70,8 @@ export default function Calendario() {
   const dias = gerarDias();
 
   return (
-    <div className="container mt-5 mb-5 d-flex justify-content-center">
+    <div className="container mt-2 mb-4 d-flex justify-content-center">
+      <ToastContainer position="top-right" theme="colored" autoClose={4000} />
       <div className="glass-card shadow-lg border-0 w-100" style={{ maxWidth: '900px' }}>
         
         {/* Header */}
@@ -158,6 +160,11 @@ export default function Calendario() {
                   onClick={() => {
                     if (!dia) return;
 
+                    if (diaCheio) {
+                        toast.error('Este dia já está completamente lotado (3 turnos ocupados)!');
+                        return;
+                    }
+
                     setDataSelecionada(dia);
 
                     // Ajustando timezone issues
@@ -178,7 +185,7 @@ export default function Calendario() {
                     transform,
                     boxShadow,
                     fontWeight,
-                    cursor: dia ? 'pointer' : 'default',
+                    cursor: dia ? (diaCheio ? 'not-allowed' : 'pointer') : 'default',
                     transition: 'all 0.2s ease-in-out'
                   }}
                 >

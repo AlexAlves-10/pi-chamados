@@ -1,26 +1,39 @@
 'use client'
 import Link from "next/link"
-import supabase from "../conexao/bancos";
+import { usePathname } from "next/navigation"
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState } from "react";
+import supabase from "../conexao/bancos";
 
 export default function MenuLateral() {
-    const idUsuario = typeof window !== "undefined"
-        ? localStorage.getItem("id_usuario")
-        : null
-
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const pathname = usePathname();
+    const [idUsuario, setIdUsuario] = useState(null);
+    const [admin, setAdmin] = useState("false");
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        const savedTheme = localStorage.getItem("theme")
-        if (savedTheme === "dark") {
-            setIsDarkMode(true)
-            document.documentElement.setAttribute('data-theme', 'dark')
-        } else if (savedTheme === "light") {
-            setIsDarkMode(false)
-            document.documentElement.setAttribute('data-theme', 'light')
+        setIsClient(true);
+        const user = localStorage.getItem("id_usuario");
+        setIdUsuario(user);
+        
+        if (user) {
+            supabase.from('usuarios').select('administrador').eq('id', user).single().then(({ data }) => {
+                if (data) {
+                    setAdmin(data.administrador ? "true" : "false");
+                }
+            });
         }
-    }, [])
+
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+            setIsDarkMode(true);
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else if (savedTheme === "light") {
+            setIsDarkMode(false);
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    }, [pathname])
 
     function toggleTheme() {
         if (isDarkMode) {
@@ -35,11 +48,7 @@ export default function MenuLateral() {
     }
 
     function desconectar() {
-        const promessa = new Promise((resolve) => {
-            setTimeout(() => {
-                resolve()
-            }, 1200)
-        })
+        const promessa = new Promise((resolve) => setTimeout(() => resolve(), 1200))
 
         toast.promise(promessa, {
             pending: "Saindo...",
@@ -49,82 +58,84 @@ export default function MenuLateral() {
 
         promessa.then(() => {
             localStorage.removeItem("id_usuario")
-            localStorage.removeItem("administrador")
             localStorage.removeItem("logado")
-
             window.location.href = "/"
         })
     }
 
-    if (!idUsuario) return null
+    if (!isClient) return null;
+    if (!idUsuario) return null;
+
+    const navLinks = [
+        { href: '/', icon: 'bi-house-door-fill', label: 'Inicio' },
+        ...(admin === "true" ? [{ href: '/dashboard', icon: 'bi-check2-square', label: 'Dashboard' }] : []),
+        { href: '/pedidos', icon: 'bi-card-checklist', label: 'Pedidos' },
+        { href: '/calendario', icon: 'bi-calendar3', label: 'Calendário' },
+        ...(admin === "true" ? [
+            { href: '/equipamentos', icon: 'bi-tools', label: 'Equipamentos' },
+            { href: '/setores', icon: 'bi-building', label: 'Setores' },
+            { href: '/gerenciador_usuarios', icon: 'bi-people-fill', label: 'Usuários' }
+        ] : [])
+    ];
+
+    const SidebarContent = () => (
+        <>
+            <ToastContainer position="top-right" theme={isDarkMode ? "dark" : "colored"} autoClose={3000} />
+            
+            <div className="sidebar-logo d-flex align-items-center justify-content-center py-4 flex-column">
+                {/* Simulated Logo based on image */}
+                <i className="bi bi-layers-half logo-icon fs-1 mb-1"></i>
+                <h3 className="text-white fw-bold m-0 tracking-wide font-logo">Senac</h3>
+            </div>
+
+            <div className="sidebar-menu flex-grow-1 py-3 px-3 overflow-auto">
+                <ul className="nav flex-column gap-2">
+                    {navLinks.map((link) => {
+                        const isActive = pathname === link.href;
+                        return (
+                            <li className="nav-item" key={link.href}>
+                                <Link 
+                                    href={link.href} 
+                                    className={`nav-link sidebar-link rounded-3 px-3 py-2 d-flex align-items-center ${isActive ? 'active' : ''}`}
+                                >
+                                    <i className={`bi ${link.icon} me-3 fs-5`}></i> 
+                                    <span className="fw-medium sidebar-text">{link.label}</span>
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
+
+            <div className="sidebar-footer p-3 mt-auto border-top border-secondary border-opacity-25">
+                 <button onClick={toggleTheme} className="btn sidebar-btn w-100 d-flex align-items-center mb-2 rounded-3 text-white">
+                    <i className={isDarkMode ? "bi bi-sun-fill me-3 fs-5" : "bi bi-moon-fill me-3 fs-5"}></i>
+                    <span className="fw-medium sidebar-text">{isDarkMode ? "Modo Claro" : "Modo Escuro"}</span>
+                </button>
+                 <button onClick={desconectar} className="btn btn-outline-danger sidebar-btn w-100 d-flex align-items-center text-start px-3 py-2 rounded-3">
+                    <i className="bi bi-box-arrow-right me-3 fs-5"></i> 
+                    <span className="fw-medium text-danger sidebar-text">Sair da conta</span>
+                </button>
+            </div>
+        </>
+    );
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark shadow-sm custom-gradient-bg py-1 w-100" style={{ backgroundImage: "linear-gradient(90deg, var(--menu-bg-start), var(--menu-bg-end))" }}>
-            <ToastContainer position="top-right" theme={isDarkMode ? "dark" : "colored"} autoClose={3000} />
-            <div className="container-fluid px-2 px-md-4">
-                
-                {/* Brand */}
-                <Link className="navbar-brand fw-bold d-flex align-items-center" href="/">
-                    <i className="bi bi-boxes me-2 fs-4 text-white"></i> 
-                    <span className="text-white d-none d-sm-inline fs-5">SENAC Chamados</span>
-                    <span className="text-white d-sm-none fs-5">SENAC</span>
-                </Link>
+        <>
+            {/* Desktop Sidebar (Fixed) */}
+            <aside className="sidebar desktop-sidebar d-none d-lg-flex flex-column vh-100 bg-sidebar">
+                <SidebarContent />
+            </aside>
 
-                {/* Mobile Toggle Button */}
-                <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCore" aria-controls="navbarCore" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-
-                {/* Nav Links */}
-                <div className="collapse navbar-collapse rounded-3 mt-3 mt-lg-0 p-3 p-lg-0" id="navbarCore" style={{ backgroundColor: "rgba(0,0,0,0.1)" }}>
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0 gap-1 ms-lg-4 align-items-lg-center">
-                        <li className="nav-item">
-                            <Link href="/" className="nav-link text-white fw-medium px-3 rounded px-lg-3">Início</Link>
-                        </li>
-
-                        {localStorage.getItem("administrador") === "true" && (
-                            <li className="nav-item">
-                                <Link href="/dashboard" className="nav-link text-white fw-medium px-3 rounded px-lg-3">Dashboard</Link>
-                            </li>
-                        )}
-
-                        <li className="nav-item">
-                            <Link href="/pedidos" className="nav-link text-white fw-medium px-2 rounded px-lg-3">Pedidos</Link>
-                        </li>
-
-                        <li className="nav-item">
-                            <Link href="/calendario" className="nav-link text-white fw-medium px-2 rounded px-lg-3">Calendário</Link>
-                        </li>
-
-                        {localStorage.getItem("administrador") === "true" && (
-                            <>
-                                <li className="nav-item">
-                                    <Link href="/equipamentos" className="nav-link text-white fw-medium px-2 rounded px-lg-3">Equipamentos</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link href="/setores" className="nav-link text-white fw-medium px-2 rounded px-lg-3">Setores</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link href="/gerenciador_usuarios" className="nav-link text-white fw-medium px-2 rounded px-lg-3">Usuários</Link>
-                                </li>
-                            </>
-                        )}
-                    </ul>
-
-                    {/* Actions Right */}
-                    <div className="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2 mt-3 mt-lg-0">
-                        <button onClick={toggleTheme} className="btn btn-outline-light d-flex align-items-center justify-content-center gap-2 fw-medium border-0 px-3">
-                            {isDarkMode ? <i className="bi bi-sun-fill"></i> : <i className="bi bi-moon-fill"></i>}
-                            {isDarkMode ? "Claro" : "Escuro"}
-                        </button>
-                        
-                        <button onClick={desconectar} type='button' className="btn btn-light text-danger fw-bold shadow-sm d-flex align-items-center gap-2 mx-auto ms-lg-2 w-100 w-lg-auto justify-content-center">
-                            <i className="bi bi-box-arrow-right"></i> Sair
-                        </button>
-                    </div>
+            {/* Mobile Sidebar (Offcanvas) */}
+            <div className="offcanvas offcanvas-start bg-sidebar" tabIndex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+                <div className="offcanvas-header justify-content-end pb-0">
+                    <button type="button" className="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
-
+                <div className="offcanvas-body d-flex flex-column p-0">
+                    <SidebarContent />
+                </div>
             </div>
-        </nav>
+        </>
     )
 }

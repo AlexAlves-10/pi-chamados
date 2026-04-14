@@ -2,6 +2,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import Paginacao from '../components/Paginacao';
 const supabase = createClient('https://ekdskhpbgorgflhhehfp.supabase.co', 'sb_publishable_IXnnnkyVkAxmOe4AhwF6VA_F3RzJrnJ');
 
 
@@ -108,6 +109,12 @@ export default function Setores() {
         (item) => item.salas.toLocaleLowerCase().includes(pesquisa.toLocaleLowerCase())
     )
 
+    const [paginaAtual, setPaginaAtual] = useState(1);
+    const itensPorPagina = 8;
+    const indexUltimoItem = paginaAtual * itensPorPagina;
+    const indexPrimeiroItem = indexUltimoItem - itensPorPagina;
+    const itensAtuais = listaFiltrada.slice(indexPrimeiroItem, indexUltimoItem);
+
     return (
         <div className="container py-4">
             <ToastContainer position="top-right" theme="colored" autoClose={3000} />
@@ -158,9 +165,9 @@ export default function Setores() {
                                     </thead>
                                     <tbody className="table-group-divider">
                                         {
-                                            listaFiltrada.map(
+                                            itensAtuais.map(
                                                 (item) =>
-                                                    <tr>
+                                                    <tr key={item.id}>
                                                         <th scope="row"> {item.salas} </th>
                                                         <th> 
                                                             <button data-bs-toggle="modal" data-bs-target="#editarModal" className='btn btn-primary me-2 shadow-sm' onClick={() => editar(item)} > <i className="bi bi-pencil-fill"></i> </button> 
@@ -171,6 +178,8 @@ export default function Setores() {
                                         }
                                     </tbody>
                                 </table>
+                                
+                                <Paginacao totalItens={listaFiltrada.length} itensPorPagina={itensPorPagina} paginaAtual={paginaAtual} setPaginaAtual={setPaginaAtual} />
                             </div>
                         </span>
 
