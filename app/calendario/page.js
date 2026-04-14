@@ -1,21 +1,45 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import supabase from '../conexao/bancos';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Calendario() {
 
   const [dataAtual, setDataAtual] = useState(new Date());
   const [dataSelecionada, setDataSelecionada] = useState(null);
   const [hoverIndex, setHoverIndex] = useState(null);
+  const [pedidosPorDia, setPedidosPorDia] = useState({});
 
   const hoje = new Date();
 
-  // 🔥 DADOS DE EXEMPLO (depois você vai puxar do banco)
-  const pedidosPorDia = {
-    '2026-04-06': ['manha', 'tarde'],
-    '2026-04-07': ['noite'],
-  };
-
   const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+  async function buscarPedidos() {
+    const { data, error } = await supabase.from('pedidos').select('turno, data_agendada');
+    if (data && !error) {
+      const mapaPedidos = {};
+      data.forEach(p => {
+        if (!p.data_agendada) return;
+        const dataFormatada = p.data_agendada.split('T')[0];
+        
+        let turnoNorm = p.turno.toLowerCase();
+        if (turnoNorm === 'manhã') turnoNorm = 'manha';
+
+        if (!mapaPedidos[dataFormatada]) {
+          mapaPedidos[dataFormatada] = [];
+        }
+        
+        if (!mapaPedidos[dataFormatada].includes(turnoNorm)) {
+          mapaPedidos[dataFormatada].push(turnoNorm);
+        }
+      });
+      setPedidosPorDia(mapaPedidos);
+    }
+  }
+
+  useEffect(() => {
+    buscarPedidos();
+  }, [dataAtual]);
 
   function gerarDias() {
     const ano = dataAtual.getFullYear();
@@ -46,164 +70,183 @@ export default function Calendario() {
   const dias = gerarDias();
 
   return (
-    <div style={styles.container}>
+    <div className="container mt-2 mb-4 d-flex justify-content-center">
+      <ToastContainer position="top-right" theme="colored" autoClose={4000} />
+      <div className="glass-card shadow-lg border-0 w-100" style={{ maxWidth: '900px' }}>
+        
+        {/* Header */}
+        <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center p-4 border-0" style={{ borderTopLeftRadius: '1rem', borderTopRightRadius: '1rem' }}>
+          <button onClick={() => mudarMes(-1)} className="btn btn-light btn-sm text-primary fw-bold px-3 py-2 rounded-3 shadow-sm">
+            <i className="bi bi-chevron-left me-1"></i> Anterior
+          </button>
 
-      {/* Header */}
-      <div style={styles.header}>
-        <button onClick={() => mudarMes(-1)} style={styles.btn}>
-          <i class="bi bi-chevron-left"></i>
-        </button>
+          <h3 className="m-0 fw-bold text-uppercase" style={{ letterSpacing: '1px' }}>
+            {dataAtual.toLocaleString('pt-BR', { month: 'long' })} {dataAtual.getFullYear()}
+          </h3>
 
-        <h2 style={{ margin: 0 }}>
-          {dataAtual.toLocaleString('pt-BR', { month: 'long' })} {dataAtual.getFullYear()}
-        </h2>
+          <button onClick={() => mudarMes(1)} className="btn btn-light btn-sm text-primary fw-bold px-3 py-2 rounded-3 shadow-sm">
+            Próximo <i className="bi bi-chevron-right ms-1"></i>
+          </button>
+        </div>
 
-        <button onClick={() => mudarMes(1)} style={styles.btn}>
-          <i class="bi bi-chevron-right"></i>
-        </button>
-      </div>
+        <div className="card-body p-4">
+          <div className="d-flex justify-content-center gap-4 mb-4">
+            <div className="d-flex align-items-center"><span style={{ color: 'orange', fontSize: '1.2rem' }}>●</span> <span className="ms-1 small fw-medium text-muted">Manhã</span></div>
+            <div className="d-flex align-items-center"><span style={{ color: 'red', fontSize: '1.2rem' }}>●</span> <span className="ms-1 small fw-medium text-muted">Tarde</span></div>
+            <div className="d-flex align-items-center"><span style={{ color: 'blue', fontSize: '1.2rem' }}>●</span> <span className="ms-1 small fw-medium text-muted">Noite</span></div>
+            <div className="d-flex align-items-center"><div style={{ width: '15px', height: '15px', backgroundColor: '#fdf3f4', border: '1px solid #f5c2c7', borderRadius: '3px' }} className="me-1"></div> <span className="small fw-medium text-danger">Dia Cheio</span></div>
+          </div>
 
-      {/* Dias da semana */}
-      <div style={styles.grid}>
-        {diasSemana.map(d => (
-          <div key={d} style={styles.diaSemana}>{d}</div>
-        ))}
-      </div>
+          {/* Dias da semana */}
+          <div style={styles.grid} className="mb-2">
+            {diasSemana.map(d => (
+              <div key={d} className="text-secondary" style={styles.diaSemana}>{d}</div>
+            ))}
+          </div>
 
-      {/* Dias */}
-      <div style={styles.grid}>
-        {dias.map((dia, index) => {
+          {/* Dias */}
+          <div style={styles.grid}>
+            {dias.map((dia, index) => {
 
-          const ehHoje =
-            dia &&
-            dia.getDate() === hoje.getDate() &&
-            dia.getMonth() === hoje.getMonth() &&
-            dia.getFullYear() === hoje.getFullYear();
+              const ehHoje =
+                dia &&
+                dia.getDate() === hoje.getDate() &&
+                dia.getMonth() === hoje.getMonth() &&
+                dia.getFullYear() === hoje.getFullYear();
 
-          const ehSelecionado =
-            dataSelecionada &&
-            dia &&
-            dia.toDateString() === dataSelecionada.toDateString();
+              const ehSelecionado =
+                dataSelecionada &&
+                dia &&
+                dia.toDateString() === dataSelecionada.toDateString();
 
-          const dataFormatada = dia
-            ? dia.toISOString().split('T')[0]
-            : null;
+              let dataFormatada = null;
 
-          const turnos = dataFormatada ? pedidosPorDia[dataFormatada] : [];
+              if (dia) {
+                // Ajustando timezone issues - Pega a data local e formata YYYY-MM-DD
+                const ano = dia.getFullYear();
+                const mes = String(dia.getMonth() + 1).padStart(2, '0');
+                const d = String(dia.getDate()).padStart(2, '0');
+                dataFormatada = `${ano}-${mes}-${d}`;
+              }
 
-          return (
-            <div
-              key={index}
-              onClick={() => {
-                if (!dia) return;
+              const turnos = dataFormatada ? (pedidosPorDia[dataFormatada] || []) : [];
+              const diaCheio = turnos.length >= 3;
 
-                setDataSelecionada(dia);
+              let backgroundColor = 'transparent';
+              let color = 'var(--text-main)';
+              let border = ehHoje ? '2px solid var(--text-primary)' : '1px solid rgba(130, 130, 130, 0.25)';
+              let transform = 'none';
+              let boxShadow = 'none';
+              let fontWeight = 'normal';
+              
+              if (diaCheio) {
+                backgroundColor = 'rgba(220, 53, 69, 0.1)';
+                border = '2px solid #dc3545';
+                color = '#dc3545';
+                fontWeight = 'bold';
+              } else if (ehSelecionado) {
+                backgroundColor = 'var(--text-primary)';
+                color = '#fff';
+                border = '1px solid var(--text-primary)';
+              } else if (hoverIndex === index && dia) {
+                backgroundColor = 'var(--glass-border)';
+                transform = 'translateY(-3px)';
+                boxShadow = '0 6px 12px rgba(0,0,0,0.1)';
+              }
 
-                const dataFormatada = dia.toISOString().split('T')[0];
-                window.location.href = `/pedidos?data=${dataFormatada}`;
-              }}
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    if (!dia) return;
 
-              onMouseEnter={() => setHoverIndex(index)}
-              onMouseLeave={() => setHoverIndex(null)}
+                    if (diaCheio) {
+                        toast.error('Este dia já está completamente lotado (3 turnos ocupados)!');
+                        return;
+                    }
 
-              style={{
-                ...styles.dia,
+                    setDataSelecionada(dia);
 
-                backgroundColor:
-                  ehSelecionado
-                    ? '#0d6efd'
-                    : hoverIndex === index
-                    ? '#0d6efd'
-                    : '#fff',
+                    // Ajustando timezone issues
+                    const ano = dia.getFullYear();
+                    const mes = String(dia.getMonth() + 1).padStart(2, '0');
+                    const d = String(dia.getDate()).padStart(2, '0');
+                    const formated = `${ano}-${mes}-${d}`;
 
-                color:
-                  (ehSelecionado || hoverIndex === index)
-                    ? '#fff'
-                    : '#000',
+                    window.location.href = `/pedidos?data=${formated}`;
+                  }}
+                  onMouseEnter={() => setHoverIndex(index)}
+                  onMouseLeave={() => setHoverIndex(null)}
+                  style={{
+                    ...styles.dia,
+                    backgroundColor,
+                    color,
+                    border,
+                    transform,
+                    boxShadow,
+                    fontWeight,
+                    cursor: dia ? (diaCheio ? 'not-allowed' : 'pointer') : 'default',
+                    transition: 'all 0.2s ease-in-out'
+                  }}
+                >
+                  <span style={{ zIndex: 2 }}>{dia ? dia.getDate() : ''}</span>
+                  
+                  {diaCheio && dia && (
+                     <div style={{ position: 'absolute', top: '5px', right: '5px', fontSize: '10px', color: '#dc3545' }}>
+                       <i className="bi bi-x-circle-fill"></i>
+                     </div>
+                  )}
 
-                border: ehHoje
-                  ? '2px solid #198754'
-                  : '1px solid #eee',
+                  {/* 🔥 TURNOS */}
+                  {dia && (
+                    <div style={styles.turnos}>
+                      {turnos?.includes('manha') && <span style={{ color: 'orange' }}>●</span>}
+                      {turnos?.includes('tarde') && <span style={{ color: 'red' }}>●</span>}
+                      {turnos?.includes('noite') && <span style={{ color: 'blue' }}>●</span>}
+                    </div>
+                  )}
 
-                cursor: dia ? 'pointer' : 'default'
-              }}
-            >
-              {dia ? dia.getDate() : ''}
-
-              {/* 🔥 TURNOS */}
-              {dia && (
-                <div style={styles.turnos}>
-                  {turnos?.includes('manha') && <span style={{ color: 'orange' }}>●</span>}
-                  {turnos?.includes('tarde') && <span style={{ color: 'red' }}>●</span>}
-                  {turnos?.includes('noite') && <span style={{ color: 'blue' }}>●</span>}
                 </div>
-              )}
-
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        </div>
       </div>
-
     </div>
   );
 }
 
 const styles = {
-  container: {
-    width: '100%',
-    maxWidth: '900px',
-    margin: '40px auto',
-    padding: '15px',
-    border: '1px solid #ddd',
-    borderRadius: '10px',
-    backgroundColor: '#f8f9fa',
-    boxSizing: 'border-box'
-  },
-
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '15px'
-  },
-
-  btn: {
-    border: 'none',
-    background: '#0d6efd',
-    color: '#fff',
-    padding: '6px 12px',
-    borderRadius: '5px',
-    cursor: 'pointer'
-  },
-
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
-    gap: '3px',
+    gap: '8px',
     width: '100%'
   },
-
   diaSemana: {
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    paddingBottom: '10px',
+    fontSize: '14px',
+    textTransform: 'uppercase'
   },
-
   dia: {
-    position: 'relative', // 🔥 necessário pros turnos
+    position: 'relative',
     aspectRatio: '1 / 1',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: '5px',
+    borderRadius: '8px',
     fontSize: '16px',
-    transition: '0.2s'
+    transition: 'all 0.2s ease-in-out',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
   },
-
   turnos: {
     position: 'absolute',
     bottom: '5px',
     display: 'flex',
-    gap: '3px',
-    fontSize: '10px'
+    gap: '4px',
+    fontSize: '11px',
+    zIndex: 2
   }
 };

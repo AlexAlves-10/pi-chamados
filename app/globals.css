@@ -1,60 +1,289 @@
-/* MENU LATERAL - TEMA SENAC */
-.menuLateral {
-    /* Fundo em degradê com o Azul Institucional */
-    background: linear-gradient(180deg, #004a8f, #003366);
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* LIGHT THEME VARIABLES (SENAC IDENTITY) */
+  --bg-gradient-start: #004a8d;
+  --bg-gradient-end: #002d5c;
+  
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  
+  --text-main: #212529;
+  --text-primary: #004a8d;
+  --text-secondary: #6c757d;
+  
+  --menu-bg-start: #004a8d;
+  --menu-bg-end: #002d5c;
+  --menu-hover: #f37021;
+  --menu-text: #e2e8f0;
+  
+  --app-bg: #f1f5f9;
+  --table-bg: #ffffff;
+  --card-bg-light: #f8f9fa;
+}
+
+[data-theme="dark"] {
+  /* DARK THEME VARIABLES */
+  --bg-gradient-start: #0f172a; /* slate-900 */
+  --bg-gradient-end: #020617; /* slate-950 */
+  
+  --glass-bg: rgba(30, 41, 59, 0.85); /* slate-800 translucent */
+  --glass-border: rgba(255, 255, 255, 0.08); /* faint white */
+  
+  --text-main: #f8fafc;
+  --text-primary: #60a5fa; /* blue-400 */
+  --text-secondary: #94a3b8; /* slate-400 */
+  
+  --menu-bg-start: #1e293b; /* slate-800 */
+  --menu-bg-end: #0f172a; /* slate-900 */
+  --menu-hover: #f37021; /* SENAC Orange */
+  --menu-text: #cbd5e1;
+  
+  --app-bg: #0f172a;
+  --table-bg: rgba(15, 23, 42, 0.95);
+  --card-bg-light: #1e293b;
+
+  /* Bootstrap Variable Overrides */
+  --bs-body-color: var(--text-main);
+  --bs-primary: #60a5fa;
+  --bs-secondary: #94a3b8;
+  --bs-light: #1e293b;
+  --bs-dark: #f8fafc;
+  --bs-body-bg: var(--app-bg);
+}
+
+/* Base Body Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--app-bg);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Global Background Wrapper */
+.custom-gradient-bg {
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: background 0.3s ease;
+}
+
+.custom-gradient-bg-page {
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
     min-height: 100vh;
-    padding: 25px;
-    box-shadow: 4px 0 15px rgba(0,0,0,0.15);
+    width: 100%;
+    padding: 30px;
+    transition: background 0.3s ease;
 }
 
-/* Título */
-.menuLateral h4 {
-    color: #ffffff;
-    font-weight: 700;
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 25px;
-    
-    /* Fundo Laranja Vibrante para destacar a logo/título */
-    background-color: #f26922;
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-/* Itens da Lista */
-.menuLateral .list-group-item {
-    background-color: transparent;
-    color: #e2e8f0; /* Branco levemente suave para não cansar a vista */
-    border: none;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    padding: 12px 15px;
-    font-weight: 500;
-    
+/* Glassmorphism Class */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
 
-/* Efeito Hover mais moderno */
-.menuLateral .list-group-item:hover {
-    background-color: #f26922; /* Laranja Senac no hover */
-    color: #ffffff;
-    transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(242, 105, 34, 0.4);
+/* Global typography resets for themes */
+.text-primary-custom { color: var(--text-primary) !important; }
+.text-secondary-custom { color: var(--text-secondary) !important; }
+
+/* LAYOUT BASE & SIDEBAR */
+.layout-wrapper {
+    background-color: var(--app-bg);
+    overflow: hidden;
 }
 
-/* Item Ativo (página atual) */
-.menuLateral .active {
-    background-color: #f26922;
-    color: #ffffff;
+.app-bg {
+    background-color: var(--app-bg) !important;
+}
+
+.bg-sidebar {
+    background-color: var(--menu-bg-start);
+}
+
+.desktop-sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, var(--menu-bg-start), var(--menu-bg-end));
+    box-shadow: 4px 0 15px rgba(0,0,0,0.15);
+    z-index: 1030;
+    transition: width 0.3s ease;
+    flex-shrink: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Oculta scrollbar na sidebar para ficar clean */
+.desktop-sidebar::-webkit-scrollbar {
+    width: 0px;
+}
+
+[data-theme="dark"] .desktop-sidebar,
+[data-theme="dark"] .offcanvas.bg-sidebar {
+    background: linear-gradient(180deg, var(--menu-bg-start), var(--menu-bg-end));
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar-link {
+    color: var(--menu-text);
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-link:hover {
+    color: #f97316; /* Hover orange */
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateX(4px);
+}
+
+.sidebar-link.active {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid #f97316; /* Laranja SENAC realçado na esquerda */
+    box-shadow: inset 2px 0 8px rgba(0, 0, 0, 0.1);
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba(242, 105, 34, 0.4);
-    /* Um pequeno detalhe branco na lateral para dar mais estilo */
-    border-left: 4px solid #ffffff; 
 }
 
-/* Body */
-body {
-    /* Fundo claro para contrastar com o menu escuro e colorido */
-    background-color: #c9e0f7; 
+/* Sidebar Collapse State */
+.sidebar-collapsed .desktop-sidebar {
+    width: 80px;
+}
+.sidebar-collapsed .sidebar-text,
+.sidebar-collapsed .sidebar-logo h3 {
+    display: none !important;
+}
+.sidebar-collapsed .logo-icon {
+    font-size: 2rem !important;
+}
+.sidebar-collapsed .sidebar-link {
+    justify-content: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.sidebar-collapsed .sidebar-link i {
+    margin-right: 0 !important;
+    font-size: 1.5rem !important;
+}
+.sidebar-collapsed .sidebar-btn {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    justify-content: center !important;
+}
+.sidebar-collapsed .sidebar-btn span {
+    display: none !important;
+}
+.sidebar-collapsed .sidebar-btn i {
+    margin-right: 0 !important;
+    font-size: 1.5rem !important;
+}
+
+.font-logo {
+    letter-spacing: 1px;
+}
+.logo-icon {
+    color: #f97316;
+}
+.sidebar-btn {
+    border: 1px solid rgba(255,255,255,0.2) !important;
+}
+.sidebar-btn:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+}
+.topbar-search::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+/* Override de Tabelas do Bootstrap para Dark Mode */
+[data-theme="dark"] .table {
+    --bs-table-bg: var(--table-bg);
+    --bs-table-color: var(--text-main);
+}
+[data-theme="dark"] .card-header, [data-theme="dark"] .bg-light {
+    background-color: var(--card-bg-light) !important;
+    color: var(--text-main) !important;
+}
+[data-theme="dark"] .text-dark {
+    color: var(--text-main) !important;
+}
+[data-theme="dark"] .form-control {
+    background-color: var(--card-bg-light);
+    color: var(--text-main);
+    border-color: rgba(255,255,255,0.2);
+}
+[data-theme="dark"] .form-control::placeholder {
+    color: var(--text-secondary);
+}
+[data-theme="dark"] .modal-content {
+    background-color: var(--table-bg);
+    color: var(--text-main);
+}
+[data-theme="dark"] .text-body {
+    color: var(--text-main) !important;
+}
+
+/* ---------------------------------------------------
+   SENAC IDENTITY BOOTSTRAP OVERRIDES (Light & Dark) 
+--------------------------------------------------- */
+/* Buttons Overrides */
+.btn-primary {
+    background-color: var(--text-primary) !important;
+    border-color: var(--text-primary) !important;
+    color: #ffffff !important;
+}
+.btn-primary:hover {
+    background-color: #00366b !important; /* Darker SENAC blue */
+    border-color: #00366b !important;
+}
+.btn-outline-primary {
+    color: var(--text-primary) !important;
+    border-color: var(--text-primary) !important;
+}
+.btn-outline-primary:hover {
+    background-color: var(--text-primary) !important;
+    color: #ffffff !important;
+}
+
+/* Orange / Accent Overrides */
+.btn-warning {
+    background-color: #f37021 !important;
+    border-color: #f37021 !important;
+    color: #ffffff !important;
+}
+.btn-warning:hover {
+    background-color: #d6601b !important; /* Darker SENAC orange */
+    border-color: #d6601b !important;
+}
+.btn-outline-warning {
+    color: #f37021 !important;
+    border-color: #f37021 !important;
+}
+.btn-outline-warning:hover {
+    background-color: #f37021 !important;
+    color: #ffffff !important;
+}
+/* Dark mode buttons enhancements */
+[data-theme="dark"] .btn-primary {
+    background-color: var(--text-primary) !important;
+    border-color: var(--text-primary) !important;
+    color: #0f172a !important;
+    font-weight: 600;
+}
+[data-theme="dark"] .btn-primary:hover {
+    background-color: #93c5fd !important;
+    border-color: #93c5fd !important;
+}
+[data-theme="dark"] .btn-warning {
+    background-color: #f37021 !important;
+    border-color: #f37021 !important;
+    color: #ffffff !important;
+}
+[data-theme="dark"] .btn-warning:hover {
+    background-color: #ff8b46 !important;
+    border-color: #ff8b46 !important;
 }

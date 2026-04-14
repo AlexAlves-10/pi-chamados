@@ -5,6 +5,7 @@ import Script from "next/script";
 
 import "./globals.css"
 import MenuLateral from "./components/MenuLateral";
+import TopBar from "./components/TopBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,21 +25,43 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pt">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (!theme) {
+                    theme = 'light';
+                  }
+                  if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} app-bg`}>
         
+        <div className="layout-wrapper d-flex w-100 vh-100 overflow-hidden">
+          
+          <MenuLateral />
 
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-2 menuLateral">
-              <MenuLateral/>
-            </div>
-            <div className="col-10">
+          {/* Área de Conteúdo */}
+          <div className="main-content-wrapper flex-grow-1 d-flex flex-column h-100 overflow-hidden" style={{ minWidth: 0 }}>
+            <TopBar />
+            
+            <main className="flex-grow-1 p-3 p-md-4 w-100" style={{ overflowX: "hidden", overflowY: "auto" }}>
               {children}
-            </div>
+            </main>
           </div>
+
         </div>
 
-        <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" />
+        <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossOrigin="anonymous" />
       </body>
     </html>
   );
