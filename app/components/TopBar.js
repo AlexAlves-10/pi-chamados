@@ -72,18 +72,6 @@ export default function TopBar() {
         </div>
 
         <div className="d-flex align-items-center gap-3">
-            <div className="bg-white bg-opacity-25 rounded-pill px-3 py-1 d-flex align-items-center d-none d-md-flex">
-                <i className="bi bi-search text-white me-2"></i>
-                <input type="text" className="border-0 bg-transparent text-white shadow-none topbar-search" placeholder="Pesquisar" style={{width: '120px', outline: 'none'}} />
-            </div>
-            
-            <button className="btn btn-link text-white p-0 position-relative border-0 text-decoration-none shadow-none">
-                 <i className="bi bi-bell fs-5"></i>
-                 <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                    <span className="visually-hidden">New alerts</span>
-                </span>
-            </button>
-            
             <div className="rounded-circle overflow-hidden bg-white ms-2 border border-2 border-white shadow-sm" 
                  style={{width: "40px", height: "40px", cursor: "pointer"}}
                  onClick={handleAvatarClick}
