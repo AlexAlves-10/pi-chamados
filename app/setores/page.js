@@ -197,7 +197,7 @@ export default function Setores() {
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h3 className="modal-title fs-5">Cadastro de novo Usuário</h3>
-                                    <button className="btn-close" data-bs-dismiss="modal"></button>
+                                    <button type='button' className="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div className="modal-body">
                                     <div className="mb-3">
@@ -226,7 +226,7 @@ export default function Setores() {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h3 className="modal-title fs-5"> Editando Usuário</h3>
-                                <button className="btn-close" data-bs-dismiss="modal"></button>
+                                <button type='button' className="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div className="modal-body">
                                 <div className="mb-3">
