@@ -359,15 +359,15 @@ export default function Pedidos() {
             </div>
 
             <div className="glass-card shadow-sm border-0 overflow-hidden">
-                <div className="table-responsive">
+                <div className="table-responsive-custom">
                     <table className="table table-hover align-middle mb-0">
                         <thead className="table-light">
                             <tr>
-                                <th className="ps-4">Solicitante</th>
+                                <th className="ps-4 d-none d-md-table-cell">Solicitante</th>
                                 <th>Setor</th>
                                 <th>Equipamento</th>
                                 <th className="text-center">Qtd</th>
-                                <th>Data Agendada</th>
+                                <th className="d-none d-sm-table-cell">Data Agendada</th>
                                 <th>Turno</th>
                                 <th className="text-end pe-4">Ações</th>
                             </tr>
@@ -375,11 +375,11 @@ export default function Pedidos() {
                         <tbody>
                             {itensAtuais.map(p => (
                                 <tr key={p.id}>
-                                    <td className="ps-4 fw-medium">{p.id_usuario?.nome}</td>
-                                    <td><span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-2 py-1">{p.id_setor?.salas}</span></td>
-                                    <td className="fw-medium">{p.id_equipamento?.nome}</td>
+                                    <td className="ps-4 fw-medium d-none d-md-table-cell text-wrap" style={{ minWidth: "100px" }}>{p.id_usuario?.nome}</td>
+                                    <td><span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle px-2 py-1 text-wrap text-start" style={{ minWidth: "90px" }}>{p.id_setor?.salas}</span></td>
+                                    <td className="fw-medium text-wrap" style={{ minWidth: "100px" }}>{p.id_equipamento?.nome}</td>
                                     <td className="text-center fw-bold">{p.quantidade}</td>
-                                    <td>
+                                    <td className="d-none d-sm-table-cell">
                                         <div className="d-flex align-items-center text-secondary-custom fw-medium">
                                             <i className="bi bi-calendar-event me-2"></i>
                                             {p.data_agendada ? p.data_agendada.split('-').reverse().join('/') : '-'}

@@ -163,13 +163,13 @@ function GerenciadorUsuarios() {
                         onChange={e => alteraPesquisa(e.target.value)}
                     />
 
-                    <div className="table-responsive">
+                    <div className="table-responsive-custom">
                         <table className="table table-hover align-middle">
 
                             <thead className="table-light">
                                 <tr>
                                     <th>Nome</th>
-                                    <th>Email</th>
+                                    <th className="d-none d-sm-table-cell">Email</th>
                                     <th>Admin</th>
                                     <th className="text-center">Ações</th>
                                 </tr>
@@ -178,8 +178,8 @@ function GerenciadorUsuarios() {
                             <tbody>
                                 {itensAtuais.map(item => (
                                     <tr key={item.id}>
-                                        <td className="fw-medium">{item.nome}</td>
-                                        <td className="text-muted">{item.email}</td>
+                                        <td className="fw-medium text-wrap" style={{ minWidth: "130px" }}>{item.nome}</td>
+                                        <td className="text-muted d-none d-sm-table-cell text-wrap" style={{ minWidth: "150px" }}>{item.email}</td>
                                         <td>
                                             {item.administrador ?
                                                 <span className="badge bg-primary rounded-pill">Sim</span> :
@@ -187,7 +187,7 @@ function GerenciadorUsuarios() {
                                             }
                                         </td>
 
-                                        <td className="text-center">
+                                        <td className="text-center text-nowrap">
                                             {/* BOTÃO EDITAR - Azul Senac */}
                                             <button
                                                 className="btn btn-primary btn-sm me-2 fw-medium shadow-sm rounded-2"

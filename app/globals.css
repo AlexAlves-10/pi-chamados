@@ -287,3 +287,61 @@ body {
     background-color: #ff8b46 !important;
     border-color: #ff8b46 !important;
 }
+
+/* ---------------------------------------------------
+   RESPONSIVE UTILITIES & MOBILE ADJUSTMENTS
+--------------------------------------------------- */
+/* Tabela mais responsiva no mobile (Evita estourar largura) */
+.table-responsive-custom {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Calendário Mobile Adjustments */
+@media (max-width: 576px) {
+    .calendar-container {
+        padding: 0 !important;
+    }
+    
+    .calendar-grid {
+        gap: 4px !important; /* Menor espaço entre os dias */
+    }
+    
+    .calendar-day-header {
+        font-size: 11px !important;
+        padding-bottom: 5px !important;
+    }
+    
+    .calendar-day {
+        font-size: 13px !important;
+        border-radius: 6px !important;
+    }
+    
+    .calendar-turnos {
+        bottom: 2px !important;
+        gap: 2px !important;
+        font-size: 8px !important;
+    }
+    
+    /* Tabelas em telas pequenas */
+    .table td, .table th {
+        padding: 0.5rem !important;
+        font-size: 14px !important;
+    }
+    
+    /* Layout global adjustments */
+    .custom-gradient-bg {
+        padding: 10px !important;
+    }
+    
+    .custom-gradient-bg-page {
+        padding: 15px !important;
+    }
+    
+    .glass-card {
+        padding: 15px !important;
+        border-radius: 12px !important;
+    }
+}

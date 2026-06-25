@@ -141,14 +141,15 @@ export default function EquipamentosEscola() {
           </div>
         </div>
 
+        <div className="table-responsive-custom">
         <table className="table table-bordered border-primary table-hover align-middle">
           <thead className="table-light table-bordered border-primary">
             <tr>
               <th>ID</th>
               <th>Equipamentos</th>
-              <th>Descrição</th>
+              <th className="d-none d-md-table-cell">Descrição</th>
               <th>Quantidade</th>
-              <th>Estoque</th>
+              <th className="d-none d-sm-table-cell">Estoque</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -157,16 +158,17 @@ export default function EquipamentosEscola() {
             {itensAtuais.map((item) => (
               <tr key={item.id}>
                 <td>{item.id}</td>
-                <td>{item.nome}</td>
-                <td>{item.descricao}</td>
+                <td className="text-wrap" style={{ minWidth: "120px" }}>{item.nome}</td>
+                <td className="d-none d-md-table-cell text-wrap" style={{ minWidth: "150px" }}>{item.descricao}</td>
                 <td>{item.quantidade}</td>
-                <td>{item.estoque ? "Sim" : "Não"}</td>
+                <td className="d-none d-sm-table-cell">{item.estoque ? "Sim" : "Não"}</td>
                 <td> <button className='btn btn-warning btn-sm me-2' onClick={() => editar(item)}>  EDITAR </button> </td>
               </tr>
             ))}
           </tbody>
 
         </table>
+        </div>
         
         <Paginacao totalItens={listaFiltrada.length} itensPorPagina={itensPorPagina} paginaAtual={paginaAtual} setPaginaAtual={setPaginaAtual} />
 

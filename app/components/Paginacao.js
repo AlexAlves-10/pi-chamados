@@ -11,7 +11,7 @@ const Paginacao = ({ totalItens, itensPorPagina, paginaAtual, setPaginaAtual }) 
     }
 
     return (
-        <nav className="d-flex justify-content-end mt-3">
+        <nav className="d-flex justify-content-end mt-3 flex-wrap gap-2">
             <ul className="pagination pagination-sm mb-0 shadow-sm">
                 <li className={`page-item ${paginaAtual === 1 ? 'disabled' : ''}`}>
                     <button 
@@ -46,8 +46,8 @@ const Paginacao = ({ totalItens, itensPorPagina, paginaAtual, setPaginaAtual }) 
                 </li>
             </ul>
             
-            <div className="ms-3 d-flex align-items-center">
-                <span className="text-muted small me-2 fw-medium">Ir para:</span>
+            <div className="ms-0 ms-sm-3 d-flex align-items-center">
+                <span className="text-muted small me-2 fw-medium text-nowrap">Ir para:</span>
                 <input 
                     type="number" 
                     min="1" 

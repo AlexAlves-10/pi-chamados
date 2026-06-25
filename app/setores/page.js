@@ -155,7 +155,7 @@ export default function Setores() {
                         {/* <!-- ID,foto,nome --> */}
                         <span>
 
-                            <div className="my-3 rounded-4 overflow-hidden shadow-sm table-responsive">
+                            <div className="my-3 rounded-4 overflow-hidden shadow-sm table-responsive-custom">
                                 <table className="table table-bordered border-primary table-hover" >
                                     <thead className="table-primary" >
                                         <tr>
@@ -168,8 +168,8 @@ export default function Setores() {
                                             itensAtuais.map(
                                                 (item) =>
                                                     <tr key={item.id}>
-                                                        <th scope="row"> {item.salas} </th>
-                                                        <th> 
+                                                        <th scope="row" className="text-wrap" style={{ minWidth: "150px" }}> {item.salas} </th>
+                                                        <th className="text-nowrap"> 
                                                             <button data-bs-toggle="modal" data-bs-target="#editarModal" className='btn btn-primary me-2 shadow-sm' onClick={() => editar(item)} > <i className="bi bi-pencil-fill"></i> </button> 
                                                             <button className='btn btn-danger shadow-sm' onClick={() => excluir(item.id)} > <i className="bi bi-trash3-fill"></i> </button> 
                                                         </th>

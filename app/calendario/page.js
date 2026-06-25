@@ -70,7 +70,7 @@ export default function Calendario() {
   const dias = gerarDias();
 
   return (
-    <div className="container mt-2 mb-4 d-flex justify-content-center">
+    <div className="container mt-2 mb-4 d-flex justify-content-center calendar-container">
       <ToastContainer position="top-right" theme="colored" autoClose={4000} />
       <div className="glass-card shadow-lg border-0 w-100" style={{ maxWidth: '900px' }}>
         
@@ -98,14 +98,14 @@ export default function Calendario() {
           </div>
 
           {/* Dias da semana */}
-          <div style={styles.grid} className="mb-2">
+          <div style={styles.grid} className="mb-2 calendar-grid">
             {diasSemana.map(d => (
-              <div key={d} className="text-secondary" style={styles.diaSemana}>{d}</div>
+              <div key={d} className="text-secondary calendar-day-header" style={styles.diaSemana}>{d}</div>
             ))}
           </div>
 
           {/* Dias */}
-          <div style={styles.grid}>
+          <div style={styles.grid} className="calendar-grid">
             {dias.map((dia, index) => {
 
               const ehHoje =
@@ -157,6 +157,7 @@ export default function Calendario() {
               return (
                 <div
                   key={index}
+                  className="calendar-day"
                   onClick={() => {
                     if (!dia) return;
 
@@ -199,7 +200,7 @@ export default function Calendario() {
 
                   {/* 🔥 TURNOS */}
                   {dia && (
-                    <div style={styles.turnos}>
+                    <div style={styles.turnos} className="calendar-turnos">
                       {turnos?.includes('manha') && <span style={{ color: 'orange' }}>●</span>}
                       {turnos?.includes('tarde') && <span style={{ color: 'red' }}>●</span>}
                       {turnos?.includes('noite') && <span style={{ color: 'blue' }}>●</span>}
